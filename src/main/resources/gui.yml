@@ -1,0 +1,8 @@
+gui:
+  host:
+    title: "&dHost menu"
+    size: 27
+    background:
+      material: "STAINED_GLASS_PANE"
+      amount: 1
+      short: 15

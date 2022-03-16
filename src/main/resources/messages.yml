@@ -1,0 +1,9 @@
+console:
+  enable: '&aDe plugin is succesvol geactiveerd!'
+  disable: '&cDe plugin is succesvol gedeactiveerd!'
+general:
+  noArguments: '&cTe weinig argumenten!'
+  invalidSubcommand: '&cDeze command bestaat niet!'
+  noPermissions: '&cJe hebt niet de juiste permissie om dit te doen!'
+  notInLauncher: '&cDeze actie kan niet via console!'
+  playerOffline: '&cHelaas is &4&l{player} &cniet online!'

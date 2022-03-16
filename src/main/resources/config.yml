@@ -1,0 +1,5 @@
+server:
+  name: 'CrazeMC'
+  prefix: '&5&lCraze&d&lMC'
+  consolePrefix: '&5&lCraze&d&lMC &5&lWI&d&lDM'
+  divider: '&8>>'

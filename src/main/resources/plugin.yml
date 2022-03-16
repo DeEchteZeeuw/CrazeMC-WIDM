@@ -1,0 +1,14 @@
+name: CrazeMC-WIDM
+version: '${project.version}'
+main: io.github.deechtezeeuw.crazemcwidm.CrazeMCWIDM
+authors: [ DeZeeuw ]
+description: Database version of WIDM CMC
+commands:
+  widm:
+    usage: /<command>
+  host:
+    usage: /<command>
+    description: Command to open host menu
+permissions:
+  crazemc.host:
+    description: Permission needed to do /host
