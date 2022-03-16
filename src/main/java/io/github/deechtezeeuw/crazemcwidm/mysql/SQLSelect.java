@@ -16,7 +16,7 @@ public class SQLSelect {
             ps.setString(1, uuid.toString());
 
             ResultSet resultSet = ps.executeQuery();
-            return  (resultSet.next() ? true : false);
+            return  (resultSet.next());
         } catch (SQLException e) {
             e.printStackTrace();
         }

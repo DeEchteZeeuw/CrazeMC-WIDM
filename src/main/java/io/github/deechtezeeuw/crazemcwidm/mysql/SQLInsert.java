@@ -18,7 +18,6 @@ public class SQLInsert {
                 + " (UUID) VALUES (?)");
                 ps.setString(1, uuid.toString());
                 ps.executeUpdate();
-                return;
             }
         } catch (SQLException e) {
             e.printStackTrace();

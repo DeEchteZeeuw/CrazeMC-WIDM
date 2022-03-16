@@ -11,7 +11,6 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 
 public class CommandManager implements CommandExecutor {
     private final CrazeMCWIDM plugin = CrazeMCWIDM.getInstance();
@@ -52,8 +51,7 @@ public class CommandManager implements CommandExecutor {
             return true;
         }
 
-        ArrayList<String> arrayList = new ArrayList<>();
-        arrayList.addAll(Arrays.asList(args));
+        ArrayList<String> arrayList = new ArrayList<>(Arrays.asList(args));
         arrayList.remove(0);
 
         try {
@@ -67,11 +65,8 @@ public class CommandManager implements CommandExecutor {
     }
 
     private Commands get(String name) {
-        Iterator<Commands> subCommands = this.commands.iterator();
 
-        while(subCommands.hasNext()) {
-            Commands sc = (Commands) subCommands.next();
-
+        for (Commands sc : this.commands) {
             if (sc.name().equalsIgnoreCase(name)) {
                 return sc;
             }

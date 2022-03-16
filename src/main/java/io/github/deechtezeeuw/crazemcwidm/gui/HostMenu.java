@@ -12,6 +12,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 
+
 public class HostMenu extends GraphicalUserInterface {
     private final CrazeMCWIDM plugin = CrazeMCWIDM.getInstance();
 
@@ -57,7 +58,6 @@ public class HostMenu extends GraphicalUserInterface {
     public ItemStack background() {
         ItemStack BackgroundItem = new ItemStack(Material.valueOf(plugin.getConfigManager().getGui().hostBackgroundMaterial), plugin.getConfigManager().getGui().hostBackgroundAmount, plugin.getConfigManager().getGui().hostBackgroundShort);
         ItemMeta MetaBackgroundItem = BackgroundItem.getItemMeta();
-        ArrayList<String> BackgroundItemLore = new ArrayList<String>();
         MetaBackgroundItem.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
         BackgroundItem.setItemMeta(MetaBackgroundItem);
         MetaBackgroundItem.setDisplayName(ChatColor.translateAlternateColorCodes('&', " "));

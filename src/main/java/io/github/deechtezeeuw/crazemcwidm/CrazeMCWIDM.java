@@ -2,6 +2,7 @@ package io.github.deechtezeeuw.crazemcwidm;
 
 import io.github.deechtezeeuw.crazemcwidm.managers.CommandManager;
 import io.github.deechtezeeuw.crazemcwidm.managers.ConfigManager;
+import io.github.deechtezeeuw.crazemcwidm.managers.EventManager;
 import io.github.deechtezeeuw.crazemcwidm.mysql.MySQL;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -27,8 +28,6 @@ public final class CrazeMCWIDM extends JavaPlugin {
 
         // Managers
         configManager = new ConfigManager();
-        commandManager = new CommandManager();
-        commandManager.setup();
 
         // Connect to db
         this.SQL = new MySQL();
@@ -44,6 +43,11 @@ public final class CrazeMCWIDM extends JavaPlugin {
             Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
                     configManager.getMain().consolePrefix + configManager.getMain().serverDivider + "&aDatabase is connected!"));
         }
+
+        // Managers after DB load
+        commandManager = new CommandManager();
+        commandManager.setup();
+        new EventManager();
 
         Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
                 configManager.getMain().consolePrefix + configManager.getMain().serverDivider + configManager.getMessages().consoleOnEnable));

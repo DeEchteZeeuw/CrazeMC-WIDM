@@ -18,7 +18,7 @@ public class MySQL {
     public SQLInsert sqlInsert = new SQLInsert();
 
     public boolean isConnected() {
-        return (connection == null ? false : true);
+        return (connection != null);
     }
 
     public void connect() throws ClassNotFoundException, SQLException {
@@ -42,6 +42,4 @@ public class MySQL {
     public Connection getConnection() {
         return connection;
     }
-
-
 }
