@@ -1,6 +1,7 @@
 package io.github.deechtezeeuw.crazemcwidm.configurations;
 
 import io.github.deechtezeeuw.crazemcwidm.CrazeMCWIDM;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -9,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 
 public class Main extends Config {
     private final CrazeMCWIDM plugin = CrazeMCWIDM.getInstance();
@@ -20,6 +22,8 @@ public class Main extends Config {
     public String serverPrefix;
     public String consolePrefix;
     public String serverDivider;
+
+    public ArrayList<String> mappen = new ArrayList<>();
 
     public Main() {
         this.createConfig();
@@ -53,6 +57,10 @@ public class Main extends Config {
         this.serverPrefix = config.getString("server.prefix");
         this.consolePrefix = config.getString("server.consolePrefix");
         this.serverDivider = " " + config.getString("server.divider") + " ";
+
+        for (String key : config.getConfigurationSection("mappen").getKeys(false)) {
+            mappen.add("mappen."+key);
+        }
     }
 
     @Override

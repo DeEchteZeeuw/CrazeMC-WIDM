@@ -3,3 +3,41 @@ server:
   prefix: '&5&lCraze&d&lMC'
   consolePrefix: '&5&lCraze&d&lMC &5&lWI&d&lDM'
   divider: '&8>>'
+
+mappen:
+  kingdom:
+    active: true
+    title: '&8>> &6Kingdom'
+    world: 'Kingdom'
+    permission:
+      - crazemc.tempvuller
+      - crazemc.jrgamehost
+      - crazemc.gamehost
+      - crazemc.srgamehost
+  mario:
+    active: true
+    title: '&8>> &cMario'
+    world: 'Mario'
+    permission:
+      - crazemc.tempvuller
+      - crazemc.jrgamehost
+      - crazemc.gamehost
+      - crazemc.srgamehost
+  museum:
+    active: true
+    title: '&8>> &7Museum'
+    world: 'Museum'
+    permission:
+      - crazemc.tempvuller
+      - crazemc.jrgamehost
+      - crazemc.gamehost
+      - crazemc.srgamehost
+  bikinibroek:
+    active: true
+    title: '&8>> &3Bikinibroek'
+    world: 'Bikinibroek'
+    permission:
+      - crazemc.tempvuller
+      - crazemc.jrgamehost
+      - crazemc.gamehost
+      - crazemc.srgamehost

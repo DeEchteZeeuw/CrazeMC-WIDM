@@ -2,6 +2,7 @@ package io.github.deechtezeeuw.crazemcwidm.events;
 
 import io.github.deechtezeeuw.crazemcwidm.CrazeMCWIDM;
 import io.github.deechtezeeuw.crazemcwidm.gui.HostMenu;
+import io.github.deechtezeeuw.crazemcwidm.gui.MapMenu;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -19,7 +20,7 @@ public class InventoryClick implements Listener {
         if (e.getView().getTitle() == null) return;
 
         // Click while having Host Menu open
-        if (e.getView().getTitle().equalsIgnoreCase(new HostMenu().title())) hostMenuInteraction(e);
+        if (e.getView().getTitle().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', new HostMenu().title()))) hostMenuInteraction(e);
     }
 
     // Host menu
@@ -51,7 +52,7 @@ public class InventoryClick implements Listener {
                 plugin.getCommandManager().noPermission(player, null);
                 return;
             }
-            player.sendMessage("je gaat tempvuller mappen krijgen");
+            new MapMenu().open(player);
             return;
         }
 
@@ -62,7 +63,7 @@ public class InventoryClick implements Listener {
                 plugin.getCommandManager().noPermission(player, null);
                 return;
             }
-            player.sendMessage("je gaat jrgamehost mappen krijgen");
+            new MapMenu().open(player);
             return;
         }
 
@@ -73,7 +74,7 @@ public class InventoryClick implements Listener {
                 plugin.getCommandManager().noPermission(player, null);
                 return;
             }
-            player.sendMessage("je gaat gamehost mappen krijgen");
+            new MapMenu().open(player);
             return;
         }
 
@@ -84,7 +85,7 @@ public class InventoryClick implements Listener {
                 plugin.getCommandManager().noPermission(player, null);
                 return;
             }
-            player.sendMessage("je gaat srgamehost mappen krijgen");
+            new MapMenu().open(player);
         }
     }
 }

@@ -16,11 +16,19 @@ public class Gui extends Config {
     private File configFile;
     private FileConfiguration config;
 
+    // Host GUI
     public String hostTitle;
     public Integer hostSize;
     public String hostBackgroundMaterial;
     public Integer hostBackgroundAmount;
     public Short hostBackgroundShort;
+
+    // Map GUI
+    public String mapTitle;
+    public Integer mapSize;
+    public String mapBackgroundMaterial;
+    public Integer mapBackgroundAmount;
+    public Short mapBackgroundShort;
 
     public Gui() {
         this.createConfig();
@@ -56,6 +64,13 @@ public class Gui extends Config {
         hostBackgroundAmount = config.getInt("gui.host.background.amount");
         Integer temp = config.getInt("gui.host.background.short");
         hostBackgroundShort = temp.shortValue();
+
+        mapTitle = config.getString("gui.map.title");
+        mapSize = config.getInt("gui.map.size");
+        mapBackgroundMaterial = config.getString("gui.map.background.material");
+        mapBackgroundAmount = config.getInt("gui.map.background.amount");
+        temp = config.getInt("gui.map.background.short");
+        mapBackgroundShort = temp.shortValue();
     }
 
     @Override

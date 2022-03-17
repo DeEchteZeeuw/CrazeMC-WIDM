@@ -25,7 +25,6 @@ public class Host extends Commands {
         Player player = (Player) sender;
 
         new HostMenu().open(player);
-        sender.sendMessage("open host menu");
     }
 
     @Override
