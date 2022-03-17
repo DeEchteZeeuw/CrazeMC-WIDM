@@ -21,6 +21,9 @@ public class InventoryClick implements Listener {
 
         // Click while having Host Menu open
         if (e.getView().getTitle().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', new HostMenu().title()))) hostMenuInteraction(e);
+
+        // Click while having Map Menu open
+        if (e.getView().getTitle().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', new MapMenu().title()))) mapMenuInteraction(e);
     }
 
     // Host menu
@@ -87,5 +90,11 @@ public class InventoryClick implements Listener {
             }
             new MapMenu().open(player);
         }
+    }
+
+    // Map menu
+    protected void mapMenuInteraction(InventoryClickEvent e) {
+        e.setCancelled(true);
+        e.getWhoClicked().sendMessage("Click: "+e.getView().getTitle());
     }
 }

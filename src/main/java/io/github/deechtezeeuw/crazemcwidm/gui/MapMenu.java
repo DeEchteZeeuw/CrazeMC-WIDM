@@ -28,10 +28,31 @@ public class MapMenu extends GraphicalUserInterface {
             gui.setItem(i, this.background());
         }
 
-        ArrayList<String> lore = new ArrayList<>();
+        // Loop through founded maps in the config
+        for (int i =0; i < plugin.getConfigManager().getMain().mappen.size();i++) {
+            String path = plugin.getConfigManager().getMain().mappen.get(i); // Get path (mappen.<name>)
+            // Check if active or not if not then skip this item
+            if (!plugin.getConfigManager().getMain().getConfig().getBoolean(path+".active")) continue;
 
-        for (String map : plugin.getConfigManager().getMain().mappen) {
-            player.sendMessage("Map: "+map);
+            boolean hasPermission = false;
+            // Loop through the permission that you need for this map
+            for (String permission : plugin.getConfigManager().getMain().getConfig().getStringList(path+"permission")) {
+                if (player.hasPermission(permission)) hasPermission = true; // If user has permission set hasPermission to true
+            }
+            // If players did not have the permission then skip this item
+            if (!hasPermission) continue;
+            // Check if map is active to use or not
+            boolean active = plugin.getConfigManager().getMain().getConfig().getBoolean(path+".active");
+            // Get the title of the map for displaying
+            String title = plugin.getConfigManager().getMain().getConfig().getString(path+".title");
+            // Check if the world exists in the server
+            boolean world = Bukkit.getServer().getWorld(plugin.getConfigManager().getMain().getConfig().getString(path + ".world")) != null;
+            // If the map isnt active or the world did not exist then set code to Red wool (14) if both are true then set it to Lime wool (5)
+            Integer code = (!active || !world) ? 14 : 5;
+
+            ArrayList<String> lore = new ArrayList<>();
+            // Place item
+            gui.setItem(10+i, this.menuItem(title, "WOOL", 1, code, lore));
         }
 
         player.openInventory(gui);
