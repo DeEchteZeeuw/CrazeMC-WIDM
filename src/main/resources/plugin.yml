@@ -9,6 +9,9 @@ commands:
   host:
     usage: /<command>
     description: Command to open host menu
+  games:
+    usage: /<command>
+    description: Shows all games at the moment
 permissions:
   crazemc.host:
     description: Permission needed to do /host

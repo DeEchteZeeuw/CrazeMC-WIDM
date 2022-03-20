@@ -3,6 +3,7 @@ package io.github.deechtezeeuw.crazemcwidm;
 import io.github.deechtezeeuw.crazemcwidm.managers.CommandManager;
 import io.github.deechtezeeuw.crazemcwidm.managers.ConfigManager;
 import io.github.deechtezeeuw.crazemcwidm.managers.EventManager;
+import io.github.deechtezeeuw.crazemcwidm.managers.GameManager;
 import io.github.deechtezeeuw.crazemcwidm.mysql.MySQL;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -20,6 +21,7 @@ public final class CrazeMCWIDM extends JavaPlugin {
     // Managers
     private ConfigManager configManager;
     private CommandManager commandManager;
+    private GameManager gameManager;
 
     @Override
     public void onEnable() {
@@ -49,6 +51,9 @@ public final class CrazeMCWIDM extends JavaPlugin {
         commandManager.setup();
         new EventManager();
 
+        // Game manager
+        gameManager = new GameManager();
+
         Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
                 configManager.getMain().consolePrefix + configManager.getMain().serverDivider + configManager.getMessages().consoleOnEnable));
     }
@@ -75,5 +80,9 @@ public final class CrazeMCWIDM extends JavaPlugin {
 
     public CommandManager getCommandManager() {
         return commandManager;
+    }
+
+    public GameManager getGameManager() {
+        return gameManager;
     }
 }

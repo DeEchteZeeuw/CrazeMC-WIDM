@@ -16,6 +16,7 @@ public class MySQL {
     public SQLCreate sqlCreate = new SQLCreate();
     public SQLSelect sqlSelect = new SQLSelect();
     public SQLInsert sqlInsert = new SQLInsert();
+    public SQLDelete sqlDelete = new SQLDelete();
 
     public boolean isConnected() {
         return (connection != null);

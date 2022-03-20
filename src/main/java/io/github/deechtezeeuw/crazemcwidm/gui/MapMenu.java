@@ -61,8 +61,10 @@ public class MapMenu extends GraphicalUserInterface {
         gui.setItem(37, this.menuItem("&a&lMap beschikbaar", "WOOL", 1, 5, lore));
         gui.setItem(38, this.menuItem("&c&lMap niet beschikbaar", "WOOL", 1, 14, lore));
 
-        lore.add(ChatColor.translateAlternateColorCodes('&',"&dKlik om je huidige game te unclaimen!"));
-//        gui.setItem(43, this.menuItem("&e&lUnclaim", "WOOL", 1, 4, lore));
+        if (plugin.getSQL().sqlSelect.playerIsHost(player.getUniqueId())) {
+            lore.add(ChatColor.translateAlternateColorCodes('&', "&dKlik om je huidige game te unclaimen!"));
+            gui.setItem(43, this.menuItem("&e&lUnclaim", "WOOL", 1, 4, lore));
+        }
 
         player.openInventory(gui);
     }
