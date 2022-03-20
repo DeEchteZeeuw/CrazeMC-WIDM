@@ -36,7 +36,7 @@ public class MapMenu extends GraphicalUserInterface {
 
             boolean hasPermission = false;
             // Loop through the permission that you need for this map
-            for (String permission : plugin.getConfigManager().getMain().getConfig().getStringList(path+"permission")) {
+            for (String permission : plugin.getConfigManager().getMain().getConfig().getStringList(path+".permission")) {
                 if (player.hasPermission(permission)) hasPermission = true; // If user has permission set hasPermission to true
             }
             // If players did not have the permission then skip this item
@@ -51,9 +51,18 @@ public class MapMenu extends GraphicalUserInterface {
             Integer code = (!active || !world) ? 14 : 5;
 
             ArrayList<String> lore = new ArrayList<>();
+            lore.add(ChatColor.translateAlternateColorCodes('&', "&dKlik om deze map te kiezen!"));
             // Place item
             gui.setItem(10+i, this.menuItem(title, "WOOL", 1, code, lore));
         }
+
+        // Set explain items
+        ArrayList<String> lore = new ArrayList<>();
+        gui.setItem(37, this.menuItem("&a&lMap beschikbaar", "WOOL", 1, 5, lore));
+        gui.setItem(38, this.menuItem("&c&lMap niet beschikbaar", "WOOL", 1, 14, lore));
+
+        lore.add(ChatColor.translateAlternateColorCodes('&',"&dKlik om je huidige game te unclaimen!"));
+//        gui.setItem(43, this.menuItem("&e&lUnclaim", "WOOL", 1, 4, lore));
 
         player.openInventory(gui);
     }

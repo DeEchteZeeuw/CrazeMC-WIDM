@@ -95,6 +95,5 @@ public class InventoryClick implements Listener {
     // Map menu
     protected void mapMenuInteraction(InventoryClickEvent e) {
         e.setCancelled(true);
-        e.getWhoClicked().sendMessage("Click: "+e.getView().getTitle());
     }
 }
