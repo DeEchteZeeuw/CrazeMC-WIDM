@@ -9,6 +9,7 @@ mappen:
     active: true
     title: '&8>> &6Kingdom'
     world: 'Kingdom'
+    max-contestants: 4
     permission:
       - crazemc.tempvuller
       - crazemc.jrgamehost
@@ -18,6 +19,7 @@ mappen:
     active: true
     title: '&8>> &cMario'
     world: 'Mario'
+    max-contestants: 4
     permission:
       - crazemc.tempvuller
       - crazemc.jrgamehost
@@ -27,6 +29,7 @@ mappen:
     active: true
     title: '&8>> &7Museum'
     world: 'Museum'
+    max-contestants: 4
     permission:
       - crazemc.tempvuller
       - crazemc.jrgamehost
@@ -36,6 +39,7 @@ mappen:
     active: true
     title: '&8>> &3Bikinibroek'
     world: 'Bikinibroek'
+    max-contestants: 4
     permission:
       - crazemc.tempvuller
       - crazemc.jrgamehost
