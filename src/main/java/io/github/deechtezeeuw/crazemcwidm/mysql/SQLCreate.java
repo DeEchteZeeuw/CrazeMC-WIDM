@@ -23,7 +23,7 @@ public class SQLCreate {
         PreparedStatement ps;
         try {
             ps = plugin.getSQL().getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS WIDM_Contestants "
-                    + "(Game VARCHAR(128), ChatColor VARCHAR(32), Player VARCHAR(128), Role VARCHAR(32), Kills INTEGER(3), Death TINYINT(1), Peacekeeper TINYINT(1), PKKills INTEGER(2), Spawn VARCHAR(128))");
+                    + "(Game VARCHAR(128), Color VARCHAR(32), ChatColor VARCHAR(32), Player VARCHAR(128), Role VARCHAR(32), Kills INTEGER(3), Death TINYINT(1), Peacekeeper TINYINT(1), PKKills INTEGER(2), Spawn VARCHAR(128))");
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
