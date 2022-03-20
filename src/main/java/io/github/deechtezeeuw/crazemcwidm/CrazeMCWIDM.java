@@ -42,6 +42,7 @@ public final class CrazeMCWIDM extends JavaPlugin {
 
         if (SQL.isConnected()) {
             SQL.sqlCreate.gameTable();
+            SQL.sqlCreate.contestantTable();
             Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
                     configManager.getMain().consolePrefix + configManager.getMain().serverDivider + "&aDatabase is connected!"));
         }
