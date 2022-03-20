@@ -132,6 +132,7 @@ public class InventoryClick implements Listener {
             }
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                     plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&aSuccesvol de game geunclaimed!"));
+            player.closeInventory();
             return;
         }
 
@@ -141,6 +142,9 @@ public class InventoryClick implements Listener {
                     plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cJe kan geen game hosten, aangezien je er al 1 host. Unclaim deze eerst."));
             return;
         }
+
+        // Close inventory
+        player.closeInventory();
 
         // Create unique game code
         UUID uuid = UUID.randomUUID();
@@ -163,12 +167,15 @@ public class InventoryClick implements Listener {
         Game game = new Game(uuid);
         game.setMap(world.getUID());
         game.setHost(player.getUniqueId());
+        game.setTheme(strippedTitle.toLowerCase().replaceAll("\\s*", ""));
+        game.setGameStatus(0);
 
-        // Add game to database
-        plugin.getSQL().sqlInsert.insertGame(game);
-
-        // Close inventory
-        player.closeInventory();
+        try {
+            plugin.getGameManager().createGame(game);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return;
+        }
 
         // Tp host to the world
         player.teleport(world.getSpawnLocation());

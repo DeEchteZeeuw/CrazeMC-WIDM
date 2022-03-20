@@ -2,7 +2,7 @@ package io.github.deechtezeeuw.crazemcwidm.managers;
 
 import io.github.deechtezeeuw.crazemcwidm.CrazeMCWIDM;
 import io.github.deechtezeeuw.crazemcwidm.commands.Commands;
-import io.github.deechtezeeuw.crazemcwidm.commands.Games;
+import io.github.deechtezeeuw.crazemcwidm.commands.game.Game;
 import io.github.deechtezeeuw.crazemcwidm.commands.host.Host;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -20,12 +20,12 @@ public class CommandManager implements CommandExecutor {
     // Main command
     public String main = "widm";
     public String host = "host";
-    public String games = "games";
+    public String game = "game";
 
     public void setup() {
         plugin.getCommand(main).setExecutor(this);
         plugin.getCommand(host).setExecutor(this);
-        plugin.getCommand(games).setExecutor(this);
+        plugin.getCommand(game).setExecutor(this);
 
 //        plugin.getCommand(main).setTabCompleter(new tabComplEvent());
     }
@@ -38,8 +38,8 @@ public class CommandManager implements CommandExecutor {
             return true;
         }
         // Games command
-        if (command.getName().equalsIgnoreCase(games)) {
-            new Games().onCommand(sender, command, args);
+        if (command.getName().equalsIgnoreCase(game)) {
+            new Game().onCommand(sender, command, args);
             return true;
         }
 

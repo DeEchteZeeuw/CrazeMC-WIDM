@@ -58,6 +58,23 @@ public class SQLSelect {
         return game;
     }
 
+    // Get game that user is playing
+    public Game playerGame(UUID uuid) {
+        Game game = null;
+        if (playerIsHost(uuid)) {
+            for (Game singleGame : gameList()) {
+                for (UUID singleGamePlayer : singleGame.AllPlayersInsideGame()) {
+                    if (singleGamePlayer.equals(uuid)) {
+                        game = singleGame;
+                        break;
+                    }
+                }
+            }
+        }
+
+        return game;
+    }
+
     // Check if game exists
     public boolean gameExists(UUID uuid) {
         try {
@@ -102,6 +119,14 @@ public class SQLSelect {
                         if (player == null) continue;
                         newGame.setHost(UUID.fromString(player));
                     }
+                }
+                // Set theme
+                if (resultSet.getString("Theme") != null) {
+                    newGame.setTheme(resultSet.getString("Theme"));
+                }
+                // Set Status
+                if (resultSet.getString("GameStatus") != null) {
+                    newGame.setGameStatus(resultSet.getInt("GameStatus"));
                 }
                 allGames.add(newGame);
             }

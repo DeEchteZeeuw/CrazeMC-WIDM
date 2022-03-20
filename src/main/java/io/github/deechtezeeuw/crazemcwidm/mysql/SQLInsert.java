@@ -33,10 +33,12 @@ public class SQLInsert {
         try {
             if (!plugin.getSQL().sqlSelect.gameExists(game.getUuid())) {
                 PreparedStatement ps = plugin.getSQL().getConnection().prepareStatement("INSERT INTO widm_games"
-                        + " (UUID, Map, Hosts) VALUES (?,?,?)");
+                        + " (UUID, Map, Hosts, Theme, GameStatus) VALUES (?,?,?,?,?)");
                 ps.setString(1, game.getUuid().toString());
                 ps.setString(2, game.getMap().toString());
                 ps.setString(3, game.getHosts().toString());
+                ps.setString(4, game.getTheme());
+                ps.setInt(5, game.getGameStatus());
                 ps.executeUpdate();
             }
         } catch (SQLException e) {

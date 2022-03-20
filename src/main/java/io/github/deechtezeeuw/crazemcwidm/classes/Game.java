@@ -1,13 +1,21 @@
 package io.github.deechtezeeuw.crazemcwidm.classes;
 
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemFlag;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.UUID;
 
 public class Game {
-    protected UUID uuid;
-    protected UUID map;
-    protected ArrayList<UUID> hosts = new ArrayList<>();
+    protected UUID uuid; // Special id of the game
+    protected UUID map; // Special id of the world its playing in
+    protected ArrayList<UUID> hosts = new ArrayList<>(); // Arraylist of the host
+    protected String theme = ""; // String for the theme map
+    protected Integer gameStatus;
 
     // Default
     public Game(UUID GameKey) {
@@ -55,5 +63,35 @@ public class Game {
         }
 
         return uuidArrayList;
+    }
+
+    // Get theme
+    public String getTheme() {
+        return theme;
+    }
+
+    public void setTheme(String theme) {
+        this.theme = theme;
+    }
+
+    // Get gameStatus
+    public Integer getGameStatus() {
+        if (gameStatus == null) gameStatus = 0;
+        return gameStatus;
+    }
+
+    public void setGameStatus(Integer gameStatus) {
+        this.gameStatus = gameStatus;
+    }
+
+    protected ItemStack Item(String title, String material, Integer amount, Integer itemShort, ArrayList<String> lore) {
+        ItemStack item = new ItemStack(Material.valueOf(material), amount, itemShort.shortValue());
+        ItemMeta MetaItem = item.getItemMeta();
+        MetaItem.setLore(lore);
+        MetaItem.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+        item.setItemMeta(MetaItem);
+        MetaItem.setDisplayName(ChatColor.translateAlternateColorCodes('&', title));
+        item.setItemMeta(MetaItem);
+        return item;
     }
 }

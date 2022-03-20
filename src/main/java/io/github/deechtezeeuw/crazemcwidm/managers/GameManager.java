@@ -14,7 +14,8 @@ public class GameManager {
     private final CrazeMCWIDM plugin = CrazeMCWIDM.getInstance();
 
     public void createGame(Game game) {
-
+        // Add game to database
+        plugin.getSQL().sqlInsert.insertGame(game);
     }
 
     public void deleteGame(Game game) {
