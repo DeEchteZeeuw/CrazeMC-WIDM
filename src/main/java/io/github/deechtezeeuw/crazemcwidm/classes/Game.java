@@ -8,6 +8,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.UUID;
 
 public class Game {
@@ -15,7 +16,8 @@ public class Game {
     protected UUID map; // Special id of the world its playing in
     protected ArrayList<UUID> hosts = new ArrayList<>(); // Arraylist of the host
     protected String theme = ""; // String for the theme map
-    protected Integer gameStatus;
+    protected Integer gameStatus; // Status of the game
+    protected ArrayList<Contestant> contestants = new ArrayList<>(); // Contestants of the game
 
     // Default
     public Game(UUID GameKey) {
@@ -56,15 +58,6 @@ public class Game {
         return hosts;
     }
 
-    public ArrayList<UUID> AllPlayersInsideGame() {
-        ArrayList<UUID> uuidArrayList = new ArrayList<>();
-        for (UUID singleHost : hosts) {
-            uuidArrayList.add(singleHost);
-        }
-
-        return uuidArrayList;
-    }
-
     // Get theme
     public String getTheme() {
         return theme;
@@ -93,5 +86,27 @@ public class Game {
         MetaItem.setDisplayName(ChatColor.translateAlternateColorCodes('&', title));
         item.setItemMeta(MetaItem);
         return item;
+    }
+
+    // Get contestant
+    public ArrayList<Contestant> getContestant() {
+        return this.contestants;
+    }
+
+    public void setContestantsList(ArrayList<Contestant> contestants) {
+        this.contestants = contestants;
+    }
+
+    // Other commands
+
+
+    // All players
+    public ArrayList<UUID> AllPlayersInsideGame() {
+        ArrayList<UUID> uuidArrayList = new ArrayList<>();
+        for (UUID singleHost : hosts) {
+            uuidArrayList.add(singleHost);
+        }
+
+        return uuidArrayList;
     }
 }

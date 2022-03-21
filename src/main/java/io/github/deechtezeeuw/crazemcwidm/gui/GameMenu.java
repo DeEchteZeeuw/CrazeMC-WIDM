@@ -1,6 +1,7 @@
 package io.github.deechtezeeuw.crazemcwidm.gui;
 
 import io.github.deechtezeeuw.crazemcwidm.CrazeMCWIDM;
+import io.github.deechtezeeuw.crazemcwidm.classes.Contestant;
 import io.github.deechtezeeuw.crazemcwidm.classes.Game;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -55,6 +56,7 @@ public class GameMenu extends GraphicalUserInterface {
         }
         gui.setItem(11, this.menuItem("&d&lHost(s) &8>>", "WORKBENCH", 1, 0, lore));
 
+        // Game status details
         if (game.getGameStatus() != null) {
             switch (game.getGameStatus()) {
                 case 0:
@@ -83,6 +85,13 @@ public class GameMenu extends GraphicalUserInterface {
             lore.add(ChatColor.translateAlternateColorCodes('&', "&8>> &4Fout opgetreden"));
             gui.setItem(12, this.menuItem("&d&lStatus &8>>", "WOOL", 1, 14, lore));
         }
+
+        // Players / color
+        lore = new ArrayList<>();
+        for (Contestant contestant : game.getContestant()) {
+            lore.add(ChatColor.translateAlternateColorCodes('&', "&8>> " + contestant.getChatColor() + "(" + contestant.getColorName() + ")" + contestant.getPlayername() ));
+        }
+        gui.setItem(13, this.menuItem("&d&lPlayers &8>>", "MAGENTA_SHULKER_BOX", 1, 0, lore));
 
         player.openInventory(gui);
     }

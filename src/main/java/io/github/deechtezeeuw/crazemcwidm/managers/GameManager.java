@@ -1,13 +1,13 @@
 package io.github.deechtezeeuw.crazemcwidm.managers;
 
 import io.github.deechtezeeuw.crazemcwidm.CrazeMCWIDM;
+import io.github.deechtezeeuw.crazemcwidm.classes.Contestant;
 import io.github.deechtezeeuw.crazemcwidm.classes.Game;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
-import java.io.File;
 import java.util.UUID;
 
 public class GameManager {
@@ -16,6 +16,16 @@ public class GameManager {
     public void createGame(Game game) {
         // Add game to database
         plugin.getSQL().sqlInsert.insertGame(game);
+
+        // Add contestants to the database
+        for (Integer i = 0; i < plugin.getConfigManager().getMain().getConfig().getInt("mappen."+game.getTheme()+".max-contestants"); i++) {
+            Contestant contestant = new Contestant();
+            contestant.setUuid(UUID.randomUUID());
+            contestant.setGame(game.getUuid());
+            contestant.setColor(i);
+
+            plugin.getSQL().sqlInsert.insertContestant(contestant);
+        }
     }
 
     public void deleteGame(Game game) {
