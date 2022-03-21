@@ -89,7 +89,7 @@ public class GameMenu extends GraphicalUserInterface {
         // Players / color
         lore = new ArrayList<>();
         for (Contestant contestant : game.getContestant()) {
-            lore.add(ChatColor.translateAlternateColorCodes('&', "&8>> " + contestant.getChatColor() + "(" + contestant.getColorName() + ")" + contestant.getPlayername() ));
+            lore.add(ChatColor.translateAlternateColorCodes('&', "&8>> " + contestant.getChatColor() + "&l" + contestant.getColorName() + " " + contestant.getChatColor() + contestant.getPlayername() ));
         }
         gui.setItem(13, this.menuItem("&d&lPlayers &8>>", "MAGENTA_SHULKER_BOX", 1, 0, lore));
 
