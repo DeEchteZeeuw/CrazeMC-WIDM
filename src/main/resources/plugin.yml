@@ -61,5 +61,13 @@ commands:
     usage: /<command>
     description: Set spawn location of yellow
 permissions:
+  crazemc.tempvuller:
+    description: tempvuller permissions
+  crazemc.jrgamehost:
+    description: jrgamehost permissions
+  crazemc.gamehost:
+    description: gamehost permissions
+  crazemc.srgamehost:
+    description: srgamehost permissions
   crazemc.host:
     description: Permission needed to do /host

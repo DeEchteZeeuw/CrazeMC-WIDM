@@ -41,6 +41,53 @@ public class PanelMenu extends GraphicalUserInterface {
         }
 
         ArrayList<String> lore = new ArrayList<>();
+        // Game status
+        switch (game.getGameStatus()) {
+            case 0:
+                // Game is filling
+                lore.add(ChatColor.translateAlternateColorCodes('&', "&8>> &7Klik hier om de game te starten"));
+                gui.setItem(10, this.menuItem("&a&lStart Game &8>>", "WOOL", 1, 5, lore));
+                break;
+            case 1:
+                // Game is playing
+                lore.add(ChatColor.translateAlternateColorCodes('&', "&8>> &7Klik hier om de game te pauzeren"));
+                gui.setItem(10, this.menuItem("&5&lPauzeer game &8>>", "WOOL", 1, 9, lore));
+                break;
+            case 2:
+                // Game is paused
+                lore.add(ChatColor.translateAlternateColorCodes('&', "&8>> &7Klik hier om de game te hervatten"));
+                gui.setItem(10, this.menuItem("&a&lHervat Game &8>>", "WOOL", 1, 5, lore));
+                break;
+            default:
+                // Game is ended
+                lore.add(ChatColor.translateAlternateColorCodes('&', "&8>> &7Klik hier om de game volledig te sluiten"));
+                gui.setItem(10, this.menuItem("&c&lSluit game &8>>", "WOOL", 1, 14, lore));
+                break;
+        }
+
+        // Hosts menu
+        lore = new ArrayList<>();
+        lore.add(ChatColor.translateAlternateColorCodes('&', "&8>> &7Klik hier om host(s) aan te passen"));
+        gui.setItem(12, this.menuItem("&d&lHost(s) &8>>", "SKULL_ITEM", 1, 0, lore));
+
+        // Items
+        lore = new ArrayList<>();
+        lore.add(ChatColor.translateAlternateColorCodes('&', "&8>> &7Klik hier om het items menu te bekijken"));
+        gui.setItem(14, this.menuItem("&d&lItems menu &8>>", "WORKBENCH", 1, 0, lore));
+
+        if (game.getGameStatus() != 0) {
+            // Vote reset
+            lore = new ArrayList<>();
+            lore.add(ChatColor.translateAlternateColorCodes('&', "&8>> &7Klik hier om de votes te resetten"));
+            gui.setItem(16, this.menuItem("&d&lReset votes &8>>", "NOTE_BLOCK", 1, 0, lore));
+        } else {
+            // Unclaim game
+            lore = new ArrayList<>();
+            lore.add(ChatColor.translateAlternateColorCodes('&', "&8>> &7Klik hier om de game te unclaimen"));
+            gui.setItem(16, this.menuItem("&e&lUnclaim &8>>", "WOOL", 1, 4, lore));
+        }
+        // Color statussen
+        lore = new ArrayList<>();
         for (int i = 0; i < game.getContestant().size();i++) {
             if (28+i==35 || 28+i==36) continue;
             Contestant contestant = game.getContestant().get(i);

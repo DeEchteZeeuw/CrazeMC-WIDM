@@ -21,7 +21,7 @@ gui:
       amount: 1
       short: 15
   panel:
-    title: "&dHost menu"
+    title: "&dHost panel"
     size: 54
     background:
       material: "STAINED_GLASS_PANE"

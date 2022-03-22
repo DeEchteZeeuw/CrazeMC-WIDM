@@ -6,10 +6,8 @@ import io.github.deechtezeeuw.crazemcwidm.classes.Game;
 import io.github.deechtezeeuw.crazemcwidm.gui.GameMenu;
 import io.github.deechtezeeuw.crazemcwidm.gui.HostMenu;
 import io.github.deechtezeeuw.crazemcwidm.gui.MapMenu;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.World;
+import io.github.deechtezeeuw.crazemcwidm.gui.PanelMenu;
+import org.bukkit.*;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -38,6 +36,9 @@ public class InventoryClick implements Listener {
 
         // Click while having Game Menu open
         if (e.getView().getTitle().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', new GameMenu().title()))) gameMenuInteraction(e);
+
+        // Click while having Host Panel open
+        if (e.getView().getTitle().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', new PanelMenu().title()))) hostPanelInteraction(e);
     }
 
     // Host menu
@@ -123,6 +124,11 @@ public class InventoryClick implements Listener {
 
         // Check if its not the map available or map not available wool.
         if (strippedTitle.equalsIgnoreCase("map beschikbaar") || strippedTitle.equalsIgnoreCase("map niet beschikbaar")) return;
+
+        // Check if its red wool (map not available)
+        if (clickedItem.getType().equals(Material.WOOL)) {
+            if (clickedItem.getData().getData() == 14) return;
+        }
 
         // Check if its the unclaim wool and player is hosting an game
         if (strippedTitle.equalsIgnoreCase("unclaim") && plugin.getSQL().sqlSelect.playerIsHost(player.getUniqueId())) {
@@ -255,5 +261,10 @@ public class InventoryClick implements Listener {
                 }
             }
         }
+    }
+
+    // Host panel
+    protected void hostPanelInteraction(InventoryClickEvent e) {
+        e.setCancelled(true);
     }
 }
