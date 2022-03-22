@@ -2,8 +2,10 @@ package io.github.deechtezeeuw.crazemcwidm.managers;
 
 import io.github.deechtezeeuw.crazemcwidm.CrazeMCWIDM;
 import io.github.deechtezeeuw.crazemcwidm.commands.Commands;
+import io.github.deechtezeeuw.crazemcwidm.commands.color.Color;
 import io.github.deechtezeeuw.crazemcwidm.commands.game.Game;
 import io.github.deechtezeeuw.crazemcwidm.commands.host.Host;
+import io.github.deechtezeeuw.crazemcwidm.commands.panel.Panel;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -21,11 +23,17 @@ public class CommandManager implements CommandExecutor {
     public String main = "widm";
     public String host = "host";
     public String game = "game";
+    public String panel = "panel";
 
     public void setup() {
         plugin.getCommand(main).setExecutor(this);
         plugin.getCommand(host).setExecutor(this);
         plugin.getCommand(game).setExecutor(this);
+        plugin.getCommand(panel).setExecutor(this);
+
+        for (String color : plugin.getGameManager().getColors()) {
+            plugin.getCommand(color).setExecutor(this);
+        }
 
 //        plugin.getCommand(main).setTabCompleter(new tabComplEvent());
     }
@@ -37,10 +45,23 @@ public class CommandManager implements CommandExecutor {
             new Host().onCommand(sender, command, args);
             return true;
         }
-        // Games command
+        // Game command
         if (command.getName().equalsIgnoreCase(game)) {
             new Game().onCommand(sender, command, args);
             return true;
+        }
+        // Panel command
+        if (command.getName().equalsIgnoreCase(panel)) {
+            new Panel().onCommand(sender, command, args);
+            return true;
+        }
+
+        // Color commands
+        for (String color : plugin.getGameManager().getColors()) {
+            if (command.getName().equalsIgnoreCase(color)) {
+                new Color().onCommand(sender, command, args);
+                return true;
+            }
         }
 
         if (!(command.getName().equalsIgnoreCase(main))) return true;

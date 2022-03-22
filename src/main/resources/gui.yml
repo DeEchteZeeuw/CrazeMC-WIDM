@@ -13,3 +13,17 @@ gui:
       material: "STAINED_GLASS_PANE"
       amount: 1
       short: 15
+  game:
+    title: "&dJouw game info"
+    size: 27
+    background:
+      material: "STAINED_GLASS_PANE"
+      amount: 1
+      short: 15
+  panel:
+    title: "&dHost menu"
+    size: 54
+    background:
+      material: "STAINED_GLASS_PANE"
+      amount: 1
+      short: 15

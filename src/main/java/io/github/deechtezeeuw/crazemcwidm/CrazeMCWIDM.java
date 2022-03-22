@@ -48,12 +48,11 @@ public final class CrazeMCWIDM extends JavaPlugin {
         }
 
         // Managers after DB load
+        // Game manager
+        gameManager = new GameManager();
         commandManager = new CommandManager();
         commandManager.setup();
         new EventManager();
-
-        // Game manager
-        gameManager = new GameManager();
 
         Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
                 configManager.getMain().consolePrefix + configManager.getMain().serverDivider + configManager.getMessages().consoleOnEnable));

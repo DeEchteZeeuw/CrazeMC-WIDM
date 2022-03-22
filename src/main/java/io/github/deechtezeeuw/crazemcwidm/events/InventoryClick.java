@@ -1,7 +1,9 @@
 package io.github.deechtezeeuw.crazemcwidm.events;
 
 import io.github.deechtezeeuw.crazemcwidm.CrazeMCWIDM;
+import io.github.deechtezeeuw.crazemcwidm.classes.Contestant;
 import io.github.deechtezeeuw.crazemcwidm.classes.Game;
+import io.github.deechtezeeuw.crazemcwidm.gui.GameMenu;
 import io.github.deechtezeeuw.crazemcwidm.gui.HostMenu;
 import io.github.deechtezeeuw.crazemcwidm.gui.MapMenu;
 import org.bukkit.Bukkit;
@@ -33,6 +35,9 @@ public class InventoryClick implements Listener {
 
         // Click while having Map Menu open
         if (e.getView().getTitle().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', new MapMenu().title()))) mapMenuInteraction(e);
+
+        // Click while having Game Menu open
+        if (e.getView().getTitle().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', new GameMenu().title()))) gameMenuInteraction(e);
     }
 
     // Host menu
@@ -180,5 +185,75 @@ public class InventoryClick implements Listener {
 
         // Tp host to the world
         player.teleport(world.getSpawnLocation());
+    }
+
+    // Game menu
+    protected void gameMenuInteraction(InventoryClickEvent e) {
+        e.setCancelled(true);
+
+        if (!(e.getClickedInventory().getType().equals(InventoryType.CHEST))) return;
+        Player player = (Player) e.getWhoClicked();
+
+        // Get game of the player
+        Game game = null;
+        boolean host = false;
+        if (plugin.getSQL().sqlSelect.playerIsHost(player.getUniqueId())) {
+            game = plugin.getSQL().sqlSelect.playerHostGame(player.getUniqueId());
+            host = true;
+        }
+        if (plugin.getSQL().sqlSelect.playerIsContestant(player.getUniqueId())) {
+            game = plugin.getSQL().sqlSelect.playerGame(player.getUniqueId());
+        }
+        // If there is no game found then close it
+        if (game == null) {
+            player.closeInventory();
+            return;
+        }
+
+        if (e.getCurrentItem() == null) return;
+        ItemStack clickedItem = e.getCurrentItem();
+        if (clickedItem.getItemMeta() == null) return;
+        if (clickedItem.getItemMeta().getDisplayName() == null) return;
+
+        // Strip title
+        String strippedTitle = ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()).replace(" >>", "");
+
+        if (strippedTitle.equalsIgnoreCase("teleport")) {
+            if (!player.getWorld().getUID().equals(game.getMap())) {
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                        plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverPrefix + "&cJe bent al in de game!"));
+                return;
+            }
+
+            if (host) {
+                if (Bukkit.getServer().getWorld(game.getMap()) != null) {
+                    player.teleport(Bukkit.getServer().getWorld(game.getMap()).getSpawnLocation());
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                            plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&aJe wordt naar de wereld geteleporteerd!"));
+                    return;
+                } else {
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                            plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cEr is een fout opgetreden neem contact op met de host!"));
+                    return;
+                }
+            } else {
+                for (Contestant contestant : game.getContestant()) {
+                    if (contestant.getPlayer() == null) continue;
+                    if (contestant.getPlayer().equals(player.getUniqueId())) {
+                        // Check if spawn of the player is set
+                        if (contestant.getSpawn() != null) {
+                            player.teleport(contestant.getSpawn());
+                            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&aJe wordt naar de wereld geteleporteerd!"));
+                            return;
+                        } else {
+                            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cJouw kleur bevat nog geen spawn locatie!"));
+                            return;
+                        }
+                    }
+                }
+            }
+        }
     }
 }

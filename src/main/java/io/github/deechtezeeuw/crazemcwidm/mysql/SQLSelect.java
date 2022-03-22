@@ -29,6 +29,22 @@ public class SQLSelect {
         return false;
     }
 
+    // Check if user is an contestant
+    public boolean playerIsContestant(UUID uuid) {
+        ArrayList<Game> gameArrayList = this.gameList();
+
+        if (gameArrayList == null || gameArrayList.size() <= 0) return false;
+
+        for (Game singleGame : gameArrayList) {
+            for (Contestant singleContestant : singleGame.getContestant()) {
+                if (singleContestant.getPlayer() != null) {
+                    if (singleContestant.getPlayer().equals(uuid)) return true;
+                }
+            }
+        }
+        return false;
+    }
+
     // Check if user is an host
     public boolean playerIsHost(UUID uuid) {
         ArrayList<Game> gameArrayList = this.gameList();
@@ -41,6 +57,56 @@ public class SQLSelect {
             }
         }
         return false;
+    }
+
+    // Get game that user is in
+    public Game playerContestantGame(UUID player) {
+        if (player == null) return null;
+        Game game = null;
+
+        try {
+            PreparedStatement ps = plugin.getSQL().getConnection().prepareStatement("SELECT * FROM widm_games WHERE Player=?");
+            ps.setString(1, player.toString());
+            ResultSet resultSet = ps.executeQuery();
+
+            if(resultSet.next()) {
+                // Set game UUID
+                if (resultSet.getString("UUID") != null) {
+                    game = new Game(UUID.fromString(resultSet.getString("UUID")));
+                }
+                // Set real map UUID
+                if (resultSet.getString("Map") != null) {
+                    UUID uuidWorld = UUID.fromString(resultSet.getString("Map"));
+                    if (Bukkit.getServer().getWorld(uuidWorld) != null) {
+                        game.setMap(uuidWorld);
+                    }
+                }
+                // Set all hosts
+                if (resultSet.getString("Hosts") != null) {
+                    String stringHosts = resultSet.getString("Hosts");
+                    stringHosts = stringHosts.replaceAll("\\[", "").replaceAll("\\]", "");
+
+                    for (String playerStr : stringHosts.split(",\\s*")) {
+                        if (player == null) continue;
+                        game.setHost(UUID.fromString(playerStr));
+                    }
+                }
+                // Set theme
+                if (resultSet.getString("Theme") != null) {
+                    game.setTheme(resultSet.getString("Theme"));
+                }
+                // Set Status
+                if (resultSet.getString("GameStatus") != null) {
+                    game.setGameStatus(resultSet.getInt("GameStatus"));
+                }
+                game.setContestantsList(this.contestants(game));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        return game;
     }
 
     // Get game that user is hosting
@@ -76,6 +142,19 @@ public class SQLSelect {
     }
 
     // Check if contestant exists
+    public boolean contestantExists(UUID contestant) {
+        try {
+            PreparedStatement ps = plugin.getSQL().getConnection().prepareStatement("SELECT * FROM widm_contestants WHERE UUID=?");
+            ps.setString(1, contestant.toString());
+
+            ResultSet resultSet = ps.executeQuery();
+            return  (resultSet.next());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     public boolean contestantExists(UUID game, Integer Color) {
         try {
             PreparedStatement ps = plugin.getSQL().getConnection().prepareStatement("SELECT * FROM widm_contestants WHERE Game=? AND Color=?");

@@ -43,7 +43,7 @@ public class GameMenu extends GraphicalUserInterface {
         // Map details
         ArrayList<String> lore = new ArrayList<>();
         lore.add(ChatColor.translateAlternateColorCodes('&', "&5"+plugin.getConfigManager().getMain().getConfig().getString("mappen."+game.getTheme()+".title")));
-        gui.setItem(10, this.menuItem("&d&lMap &8>>", "MAP", 1, 0, lore));
+        gui.setItem(11, this.menuItem("&d&lMap &8>>", "MAP", 1, 0, lore));
 
         // Hosts details
         lore = new ArrayList<>();
@@ -54,7 +54,7 @@ public class GameMenu extends GraphicalUserInterface {
                 lore.add(ChatColor.translateAlternateColorCodes('&', " &8>> &4"+Bukkit.getOfflinePlayer(singleHost).getName()));
             }
         }
-        gui.setItem(11, this.menuItem("&d&lHost(s) &8>>", "WORKBENCH", 1, 0, lore));
+        gui.setItem(12, this.menuItem("&d&lHost(s) &8>>", "WORKBENCH", 1, 0, lore));
 
         // Game status details
         if (game.getGameStatus() != null) {
@@ -62,28 +62,28 @@ public class GameMenu extends GraphicalUserInterface {
                 case 0:
                     lore = new ArrayList<>();
                     lore.add(ChatColor.translateAlternateColorCodes('&', "&8>> &e&lVullende"));
-                    gui.setItem(12, this.menuItem("&d&lStatus &8>>", "WOOL", 1, 4, lore));
+                    gui.setItem(13, this.menuItem("&d&lStatus &8>>", "WOOL", 1, 4, lore));
                     break;
                 case 1:
                     lore = new ArrayList<>();
                     lore.add(ChatColor.translateAlternateColorCodes('&', "&8>> &5Spelende"));
-                    gui.setItem(12, this.menuItem("&d&lStatus &8>>", "WOOL", 1, 10, lore));
+                    gui.setItem(13, this.menuItem("&d&lStatus &8>>", "WOOL", 1, 10, lore));
                     break;
                 case 2:
                     lore = new ArrayList<>();
                     lore.add(ChatColor.translateAlternateColorCodes('&', "&8>> &9Gepauzeerd"));
-                    gui.setItem(12, this.menuItem("&d&lStatus &8>>", "WOOL", 1, 9, lore));
+                    gui.setItem(13, this.menuItem("&d&lStatus &8>>", "WOOL", 1, 9, lore));
                     break;
                 case 3:
                     lore = new ArrayList<>();
                     lore.add(ChatColor.translateAlternateColorCodes('&', "&8>> &4Afgelopen"));
-                    gui.setItem(12, this.menuItem("&d&lStatus &8>>", "WOOL", 1, 14, lore));
+                    gui.setItem(13, this.menuItem("&d&lStatus &8>>", "WOOL", 1, 14, lore));
                     break;
             }
         } else {
             lore = new ArrayList<>();
             lore.add(ChatColor.translateAlternateColorCodes('&', "&8>> &4Fout opgetreden"));
-            gui.setItem(12, this.menuItem("&d&lStatus &8>>", "WOOL", 1, 14, lore));
+            gui.setItem(13, this.menuItem("&d&lStatus &8>>", "WOOL", 1, 14, lore));
         }
 
         // Players / color
@@ -91,24 +91,29 @@ public class GameMenu extends GraphicalUserInterface {
         for (Contestant contestant : game.getContestant()) {
             lore.add(ChatColor.translateAlternateColorCodes('&', "&8>> " + contestant.getChatColor() + "&l" + contestant.getColorName() + " " + contestant.getChatColor() + contestant.getPlayername() ));
         }
-        gui.setItem(13, this.menuItem("&d&lPlayers &8>>", "MAGENTA_SHULKER_BOX", 1, 0, lore));
+        gui.setItem(14, this.menuItem("&d&lPlayers &8>>", "MAGENTA_SHULKER_BOX", 1, 0, lore));
+
+        // Teleport to the game
+        lore = new ArrayList<>();
+        lore.add(ChatColor.translateAlternateColorCodes('&', "&8>> &5Klik hierop om naar de game te gaan!"));
+        gui.setItem(15, this.menuItem("&d&lTeleport &8>>", "END_CRYSTAL", 1, 0, lore));
 
         player.openInventory(gui);
     }
 
     @Override
     public String title() {
-        return plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&dJouw game info";
+        return plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + plugin.getConfigManager().getGui().gameTitle;
     }
 
     @Override
     public Integer size() {
-        return 27;
+        return plugin.getConfigManager().getGui().gameSize;
     }
 
     @Override
     public ItemStack background() {
-        ItemStack BackgroundItem = new ItemStack(Material.valueOf(plugin.getConfigManager().getGui().hostBackgroundMaterial), plugin.getConfigManager().getGui().hostBackgroundAmount, plugin.getConfigManager().getGui().hostBackgroundShort);
+        ItemStack BackgroundItem = new ItemStack(Material.valueOf(plugin.getConfigManager().getGui().gameBackgroundMaterial), plugin.getConfigManager().getGui().gameBackgroundAmount, plugin.getConfigManager().getGui().gameBackgroundShort);
         ItemMeta MetaBackgroundItem = BackgroundItem.getItemMeta();
         MetaBackgroundItem.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
         BackgroundItem.setItemMeta(MetaBackgroundItem);

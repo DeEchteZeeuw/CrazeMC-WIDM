@@ -12,6 +12,54 @@ commands:
   game:
     usage: /<command>
     description: Shows all info of your game
+  panel:
+    usage: /<command>
+    description: Shows the panel to controle your game
+  black:
+    usage: /<command>
+    description: Set spawn location of black
+  blue:
+    usage: /<command>
+    description: Set spawn location of blue
+  cyan:
+    usage: /<command>
+    description: Set spawn location of cyan
+  gray:
+    usage: /<command>
+    description: Set spawn location of gray
+  green:
+    usage: /<command>
+    description: Set spawn location of green
+  lightblue:
+    usage: /<command>
+    description: Set spawn location of lightblue
+  lightgray:
+    usage: /<command>
+    description: Set spawn location of lightgray
+  lime:
+    usage: /<command>
+    description: Set spawn location of lime
+  magenta:
+    usage: /<command>
+    description: Set spawn location of magenta
+  orange:
+    usage: /<command>
+    description: Set spawn location of orange
+  pink:
+    usage: /<command>
+    description: Set spawn location of pink
+  purple:
+    usage: /<command>
+    description: Set spawn location of purple
+  red:
+    usage: /<command>
+    description: Set spawn location of red
+  white:
+    usage: /<command>
+    description: Set spawn location of white
+  yellow:
+    usage: /<command>
+    description: Set spawn location of yellow
 permissions:
   crazemc.host:
     description: Permission needed to do /host

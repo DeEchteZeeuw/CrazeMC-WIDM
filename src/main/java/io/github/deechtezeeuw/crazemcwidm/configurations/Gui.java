@@ -30,6 +30,20 @@ public class Gui extends Config {
     public Integer mapBackgroundAmount;
     public Short mapBackgroundShort;
 
+    // Game GUI
+    public String gameTitle;
+    public Integer gameSize;
+    public String gameBackgroundMaterial;
+    public Integer gameBackgroundAmount;
+    public Short gameBackgroundShort;
+
+    // Panel GUI
+    public String panelTitle;
+    public Integer panelSize;
+    public String panelBackgroundMaterial;
+    public Integer panelBackgroundAmount;
+    public Short panelBackgroundShort;
+
     public Gui() {
         this.createConfig();
         this.load();
@@ -71,6 +85,20 @@ public class Gui extends Config {
         mapBackgroundAmount = config.getInt("gui.map.background.amount");
         temp = config.getInt("gui.map.background.short");
         mapBackgroundShort = temp.shortValue();
+
+        gameTitle = config.getString("gui.game.title");
+        gameSize = config.getInt("gui.game.size");
+        gameBackgroundMaterial = config.getString("gui.game.background.material");
+        gameBackgroundAmount = config.getInt("gui.game.background.amount");
+        temp = config.getInt("gui.game.background.short");
+        gameBackgroundShort = temp.shortValue();
+
+        panelTitle = config.getString("gui.panel.title");
+        panelSize = config.getInt("gui.panel.size");
+        panelBackgroundMaterial = config.getString("gui.panel.background.material");
+        panelBackgroundAmount = config.getInt("gui.panel.background.amount");
+        temp = config.getInt("gui.panel.background.short");
+        panelBackgroundShort = temp.shortValue();
     }
 
     @Override

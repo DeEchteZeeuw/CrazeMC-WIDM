@@ -1,14 +1,15 @@
-package io.github.deechtezeeuw.crazemcwidm.commands.game;
+package io.github.deechtezeeuw.crazemcwidm.commands.panel;
 
 import io.github.deechtezeeuw.crazemcwidm.CrazeMCWIDM;
 import io.github.deechtezeeuw.crazemcwidm.commands.Commands;
 import io.github.deechtezeeuw.crazemcwidm.gui.GameMenu;
+import io.github.deechtezeeuw.crazemcwidm.gui.PanelMenu;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class Game extends Commands {
+public class Panel extends Commands {
     private final CrazeMCWIDM plugin = CrazeMCWIDM.getInstance();
 
     @Override
@@ -21,27 +22,27 @@ public class Game extends Commands {
 
         Player player = (Player) sender;
 
-        if (!plugin.getSQL().sqlSelect.playerIsHost(player.getUniqueId()) && !plugin.getSQL().sqlSelect.playerIsContestant(player.getUniqueId())) {
+        if (!plugin.getSQL().sqlSelect.playerIsHost(player.getUniqueId())) {
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cJe zit niet in een game!"));
+                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cJe host geen game!"));
             return;
         }
 
         // Check if there are no arguments
         if (args.length <= 0) {
-            new GameMenu().open(player);
+            new PanelMenu().open(player);
             return;
         }
     }
 
     @Override
     public String name() {
-        return "game";
+        return "panel";
     }
 
     @Override
     public String info() {
-        return "See all information about your game";
+        return "control your game";
     }
 
     @Override
