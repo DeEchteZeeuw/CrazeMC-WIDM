@@ -64,6 +64,8 @@ public class PanelMenu extends GraphicalUserInterface {
             } else {
                 lore.add(ChatColor.translateAlternateColorCodes('&', "&8>> &f&lSpawn: &c&lNiet geset"));
             }
+            // Click on me to open color menu
+            lore.add(ChatColor.translateAlternateColorCodes('&', "&8>> &7&lKlik om " + contestant.getChatColor() + "&l" + contestant.getColorName() + " &7&laan te passen"));
             gui.setItem(28+i, this.menuItem(contestant.getChatColor()+"&l"+contestant.getColorName()+" &8>>", contestant.getShulkerMaterial().toString(), 1, 0, lore));
         }
 
