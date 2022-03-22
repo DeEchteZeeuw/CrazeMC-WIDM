@@ -5,6 +5,7 @@ import io.github.deechtezeeuw.crazemcwidm.classes.Contestant;
 import io.github.deechtezeeuw.crazemcwidm.classes.Game;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -272,7 +273,7 @@ public class SQLSelect {
                 }
                 // Peacekeeper
                 if (resultSet.getString("Peacekeeper") != null) {
-                    contestant.setDeath(resultSet.getBoolean("Peacekeeper"));
+                    contestant.setPeacekeeper(resultSet.getBoolean("Peacekeeper"));
                 }
                 // PKKills
                 if (resultSet.getString("PKKills") != null) {
@@ -280,7 +281,18 @@ public class SQLSelect {
                 }
                 // Spawn
                 if (resultSet.getString("Spawn") != null) {
-                    contestant.setSpawn(null);
+                    String[] locationStr = resultSet.getString("Spawn").split("#");
+                    World world = Bukkit.getServer().getWorld(locationStr[0]);
+                    int blockX = Integer.parseInt(locationStr[1]);
+                    int blockY = Integer.parseInt(locationStr[2]);
+                    int blockZ = Integer.parseInt(locationStr[3]);
+                    float pitch = Float.parseFloat(locationStr[4]);
+                    float yawn = Float.parseFloat(locationStr[5]);
+
+                    Location location = new Location(world, blockX, blockY, blockZ);
+                    location.setPitch(pitch);
+                    location.setYaw(yawn);
+                    contestant.setSpawn(location);
                 }
                 contestantArrayList.add(contestant);
             }
