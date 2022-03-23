@@ -282,9 +282,10 @@ public class InventoryClick implements Listener {
         // Strip title
         String strippedTitle = ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()).replace(" >>", "");
 
+        Game game = plugin.getSQL().sqlSelect.playerHostGame(player.getUniqueId());
+
         // Start game
         if (strippedTitle.equalsIgnoreCase("start game") && clickedItem.getData().getData() == 5) {
-            Game game = plugin.getSQL().sqlSelect.playerHostGame(player.getUniqueId());
 
             try {
                 game.setGameStatus(1);
@@ -301,7 +302,6 @@ public class InventoryClick implements Listener {
 
         // Pause game
         if (strippedTitle.equalsIgnoreCase("pauzeer game") && clickedItem.getData().getData() == 9) {
-            Game game = plugin.getSQL().sqlSelect.playerHostGame(player.getUniqueId());
 
             try {
                 game.setGameStatus(2);
@@ -318,7 +318,6 @@ public class InventoryClick implements Listener {
 
         // Resume game
         if (strippedTitle.equalsIgnoreCase("hervat game") && clickedItem.getData().getData() == 5) {
-            Game game = plugin.getSQL().sqlSelect.playerHostGame(player.getUniqueId());
 
             try {
                 game.setGameStatus(1);
@@ -349,7 +348,6 @@ public class InventoryClick implements Listener {
 
         // Unclaim game
         if (strippedTitle.equalsIgnoreCase("unclaim") && clickedItem.getData().getData() == 4) {
-            Game game = plugin.getSQL().sqlSelect.playerHostGame(player.getUniqueId());
 
             try {
                 plugin.getGameManager().deleteGame(game);
@@ -363,6 +361,14 @@ public class InventoryClick implements Listener {
                     plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&aSuccesvol de game geunclaimed!"));
             player.closeInventory();
             return;
+        }
+
+        // Color
+        for (Contestant contestant : game.getContestant()) {
+            if (clickedItem.getType().equals(contestant.getShulkerMaterial())) {
+                new ColorPanel().openColor(contestant, player);
+                return;
+            }
         }
     }
 
