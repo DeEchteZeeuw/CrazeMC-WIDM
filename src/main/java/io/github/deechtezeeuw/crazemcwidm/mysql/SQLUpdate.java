@@ -2,6 +2,7 @@ package io.github.deechtezeeuw.crazemcwidm.mysql;
 
 import io.github.deechtezeeuw.crazemcwidm.CrazeMCWIDM;
 import io.github.deechtezeeuw.crazemcwidm.classes.Contestant;
+import io.github.deechtezeeuw.crazemcwidm.classes.Game;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -11,8 +12,10 @@ public class SQLUpdate {
 
     // Update contestant
     public void updateContestant(Contestant contestant, String what) {
+        if (contestant == null) return;
         try
         {
+            what = what.toLowerCase();
             PreparedStatement ps = null;
             switch (what) {
                 case "player":
@@ -59,6 +62,41 @@ public class SQLUpdate {
             ps.close();
         }
         catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Update
+    public void updateGame(Game game, String what) {
+        if (game == null) return;
+
+        try {
+            PreparedStatement ps = null;
+
+            what = what.toLowerCase();
+
+            switch (what) {
+                case "hosts":
+                    ps = plugin.getSQL().getConnection().prepareStatement("UPDATE widm_games SET Hosts = ? WHERE UUID = ?");
+                    if (game.getHosts().size() > 1) {
+                        ps.setString(1, game.getHosts().toString());
+                    } else {
+                        ps.setString(1, null);
+                    }
+                    ps.setString(2, game.getUuid().toString());
+                    break;
+                case "gamestatus":
+                    ps = plugin.getSQL().getConnection().prepareStatement("UPDATE widm_games SET GameStatus = ? WHERE UUID = ?");
+                    ps.setInt(1, game.getGameStatus());
+                    ps.setString(2, game.getUuid().toString());
+                    break;
+            }
+
+            if (ps == null) return;
+            // call executeUpdate to execute our sql update statement
+            ps.executeUpdate();
+            ps.close();
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }

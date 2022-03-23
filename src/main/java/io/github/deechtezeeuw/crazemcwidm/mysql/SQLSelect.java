@@ -60,6 +60,13 @@ public class SQLSelect {
         return false;
     }
 
+    // check if user is in a game
+    public boolean playerIsInAGame(UUID uuid) {
+        if (this.playerIsHost(uuid)) return true;
+        if (this.playerIsContestant(uuid)) return true;
+        return false;
+    }
+
     // Get game that user is in
     public Game playerContestantGame(UUID player) {
         if (player == null) return null;

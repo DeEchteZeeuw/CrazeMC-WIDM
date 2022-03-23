@@ -3,10 +3,7 @@ package io.github.deechtezeeuw.crazemcwidm.events;
 import io.github.deechtezeeuw.crazemcwidm.CrazeMCWIDM;
 import io.github.deechtezeeuw.crazemcwidm.classes.Contestant;
 import io.github.deechtezeeuw.crazemcwidm.classes.Game;
-import io.github.deechtezeeuw.crazemcwidm.gui.GameMenu;
-import io.github.deechtezeeuw.crazemcwidm.gui.HostMenu;
-import io.github.deechtezeeuw.crazemcwidm.gui.MapMenu;
-import io.github.deechtezeeuw.crazemcwidm.gui.PanelMenu;
+import io.github.deechtezeeuw.crazemcwidm.gui.*;
 import org.bukkit.*;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
@@ -18,6 +15,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.UUID;
 
 public class InventoryClick implements Listener {
@@ -39,6 +37,9 @@ public class InventoryClick implements Listener {
 
         // Click while having Host Panel open
         if (e.getView().getTitle().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', new PanelMenu().title()))) hostPanelInteraction(e);
+
+        // Click while having Hosts Menu open
+        if (e.getView().getTitle().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', new HostsMenu().title()))) hostsMenuInteraction(e);
     }
 
     // Host menu
@@ -227,7 +228,7 @@ public class InventoryClick implements Listener {
         if (strippedTitle.equalsIgnoreCase("teleport")) {
             if (!player.getWorld().getUID().equals(game.getMap())) {
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverPrefix + "&cJe bent al in de game!"));
+                        plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cJe bent al in de game!"));
                 return;
             }
 
@@ -266,5 +267,142 @@ public class InventoryClick implements Listener {
     // Host panel
     protected void hostPanelInteraction(InventoryClickEvent e) {
         e.setCancelled(true);
+
+        if (e.getClickedInventory() == null) return;
+        if (e.getClickedInventory().getType() == null) return;
+
+        if (!(e.getClickedInventory().getType().equals(InventoryType.CHEST))) return;
+        Player player = (Player) e.getWhoClicked();
+
+        if (e.getCurrentItem() == null) return;
+        ItemStack clickedItem = e.getCurrentItem();
+        if (clickedItem.getItemMeta() == null) return;
+        if (clickedItem.getItemMeta().getDisplayName() == null) return;
+
+        // Strip title
+        String strippedTitle = ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()).replace(" >>", "");
+
+        // Start game
+        if (strippedTitle.equalsIgnoreCase("start game") && clickedItem.getData().getData() == 5) {
+            Game game = plugin.getSQL().sqlSelect.playerHostGame(player.getUniqueId());
+
+            try {
+                game.setGameStatus(1);
+                plugin.getSQL().sqlUpdate.updateGame(game, "gamestatus");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                return;
+            }
+
+            player.closeInventory();
+            new PanelMenu().open(player);
+            return;
+        }
+
+        // Pause game
+        if (strippedTitle.equalsIgnoreCase("pauzeer game") && clickedItem.getData().getData() == 9) {
+            Game game = plugin.getSQL().sqlSelect.playerHostGame(player.getUniqueId());
+
+            try {
+                game.setGameStatus(2);
+                plugin.getSQL().sqlUpdate.updateGame(game, "gamestatus");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                return;
+            }
+
+            player.closeInventory();
+            new PanelMenu().open(player);
+            return;
+        }
+
+        // Resume game
+        if (strippedTitle.equalsIgnoreCase("hervat game") && clickedItem.getData().getData() == 5) {
+            Game game = plugin.getSQL().sqlSelect.playerHostGame(player.getUniqueId());
+
+            try {
+                game.setGameStatus(1);
+                plugin.getSQL().sqlUpdate.updateGame(game, "gamestatus");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                return;
+            }
+
+            player.closeInventory();
+            new PanelMenu().open(player);
+            return;
+        }
+
+        // Host(s) menu
+        if (strippedTitle.equalsIgnoreCase("host(s)") && clickedItem.getType().equals(Material.SKULL_ITEM)) {
+            player.closeInventory();
+            new HostsMenu().open(player);
+            return;
+        }
+
+        // Items menu
+        if (strippedTitle.equalsIgnoreCase("items menu") && clickedItem.getType().equals(Material.WORKBENCH)) {
+            player.closeInventory();
+            new ItemsMenu().open(player);
+            return;
+        }
+
+        // Unclaim game
+        if (strippedTitle.equalsIgnoreCase("unclaim") && clickedItem.getData().getData() == 4) {
+            Game game = plugin.getSQL().sqlSelect.playerHostGame(player.getUniqueId());
+
+            try {
+                plugin.getGameManager().deleteGame(game);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                        plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cEr is een fout opgetreden!"));
+                return;
+            }
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&aSuccesvol de game geunclaimed!"));
+            player.closeInventory();
+            return;
+        }
+    }
+
+    // Hosts menu
+    protected void hostsMenuInteraction(InventoryClickEvent e) {
+        e.setCancelled(true);
+
+        if (e.getClickedInventory() == null) return;
+        if (e.getClickedInventory().getType() == null) return;
+
+        if (!(e.getClickedInventory().getType().equals(InventoryType.CHEST))) return;
+        Player player = (Player) e.getWhoClicked();
+
+        if (e.getCurrentItem() == null) return;
+        ItemStack clickedItem = e.getCurrentItem();
+        if (clickedItem.getItemMeta() == null) return;
+        if (clickedItem.getItemMeta().getDisplayName() == null) return;
+        if (clickedItem.getItemMeta().getLore() == null) return;
+
+        // Check if skull
+        if (clickedItem.getType().equals(Material.SKULL_ITEM)) {
+            String strippedLore = ChatColor.stripColor(clickedItem.getItemMeta().getLore().get(0));
+            strippedLore = strippedLore.replaceAll(">> ", "");
+
+            // Delete as host
+            if (strippedLore.equalsIgnoreCase("klik hier om hem/haar te verwijderen als host")) {
+                Game game = plugin.getSQL().sqlSelect.playerHostGame(player.getUniqueId());
+
+                String playername = ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()).replace(" >>", "");
+
+                UUID uuid =(Bukkit.getServer().getPlayer(playername) != null ? Bukkit.getServer().getPlayer(playername).getUniqueId() : Bukkit.getServer().getOfflinePlayer(playername).getUniqueId() );
+                game.setHost(uuid);
+
+                plugin.getSQL().sqlUpdate.updateGame(game, "hosts");
+                player.closeInventory();
+                if (Bukkit.getServer().getPlayer(uuid) != null) Bukkit.getServer().getPlayer(uuid).teleport(Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                        plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&aSuccesvol de host(s) aangepast!"));
+                new HostsMenu().open(player);
+            }
+        }
     }
 }

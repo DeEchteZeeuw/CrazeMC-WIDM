@@ -51,7 +51,7 @@ public class GameMenu extends GraphicalUserInterface {
             if (Bukkit.getServer().getPlayer(singleHost) != null) {
                 lore.add(ChatColor.translateAlternateColorCodes('&', " &8>> &2"+Bukkit.getServer().getPlayer(singleHost).getName()));
             } else {
-                lore.add(ChatColor.translateAlternateColorCodes('&', " &8>> &4"+Bukkit.getOfflinePlayer(singleHost).getName()));
+                lore.add(ChatColor.translateAlternateColorCodes('&', " &8>> &4"+Bukkit.getServer().getOfflinePlayer(singleHost).getName()));
             }
         }
         gui.setItem(12, this.menuItem("&d&lHost(s) &8>>", "WORKBENCH", 1, 0, lore));

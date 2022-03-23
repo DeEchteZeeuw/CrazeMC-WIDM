@@ -44,6 +44,19 @@ public class Gui extends Config {
     public Integer panelBackgroundAmount;
     public Short panelBackgroundShort;
 
+    // Items GUI
+    public String itemsTitle;
+    public Integer itemsSize;
+    public String itemsBackgroundMaterial;
+    public Integer itemsBackgroundAmount;
+    public Short itemsBackgroundShort;
+
+    // Hosts GUI
+    public String hostsTitle;
+    public String hostsBackgroundMaterial;
+    public Integer hostsBackgroundAmount;
+    public Short hostsBackgroundShort;
+
     public Gui() {
         this.createConfig();
         this.load();
@@ -99,6 +112,19 @@ public class Gui extends Config {
         panelBackgroundAmount = config.getInt("gui.panel.background.amount");
         temp = config.getInt("gui.panel.background.short");
         panelBackgroundShort = temp.shortValue();
+
+        itemsTitle = config.getString("gui.items.title");
+        itemsSize = config.getInt("gui.items.size");
+        itemsBackgroundMaterial = config.getString("gui.items.background.material");
+        itemsBackgroundAmount = config.getInt("gui.items.background.amount");
+        temp = config.getInt("gui.items.background.short");
+        itemsBackgroundShort = temp.shortValue();
+
+        hostsTitle = config.getString("gui.hosts.title");
+        hostsBackgroundMaterial = config.getString("gui.hosts.background.material");
+        hostsBackgroundAmount = config.getInt("gui.hosts.background.amount");
+        temp = config.getInt("gui.hosts.background.short");
+        hostsBackgroundShort = temp.shortValue();
     }
 
     @Override
