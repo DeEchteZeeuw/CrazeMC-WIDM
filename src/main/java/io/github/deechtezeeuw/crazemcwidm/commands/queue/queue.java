@@ -90,6 +90,8 @@ public class queue extends Commands {
                         plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cJe moet een game hosten om de queue te bekijken!"));
                 return;
             }
+
+
         }
     }
 
