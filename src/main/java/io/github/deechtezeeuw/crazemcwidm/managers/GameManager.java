@@ -9,11 +9,13 @@ import org.bukkit.World;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.UUID;
 
 public class GameManager {
     private final CrazeMCWIDM plugin = CrazeMCWIDM.getInstance();
+    private final ArrayList<UUID> queue = new ArrayList<>();
     private final String[] colors = {"black", "blue", "cyan", "gray", "green", "lightblue", "lightgray", "lime", "magenta", "orange", "pink", "purple", "red", "white", "yellow"};
 
     public void createGame(Game game) {
@@ -68,5 +70,17 @@ public class GameManager {
 
     public String[] getColors() {
         return colors;
+    }
+
+    public ArrayList<UUID> getQueue() {
+        return queue;
+    }
+
+    public void setQueue(UUID uuid) {
+        if (queue.contains(uuid)) {
+            queue.remove(uuid);
+        } else {
+            queue.add(uuid);
+        }
     }
 }
