@@ -28,7 +28,7 @@ public class GameManager {
             Contestant contestant = new Contestant();
             contestant.setUuid(UUID.randomUUID());
             contestant.setGame(game.getUuid());
-            int number = new Random().nextInt(colorCodes.length);
+            int number = new Random().nextInt(colorCodes.length-1);
             contestant.setColor(number);
             ArrayUtils.remove(colorCodes, number);
 
