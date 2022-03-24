@@ -76,6 +76,7 @@ public class HostsMenu extends GraphicalUserInterface {
         }
 
         ArrayList<String> lore = new ArrayList<>();
+        lore.add(ChatColor.translateAlternateColorCodes('&', "&8>> &7Klik om terug te gaan"));
         if (possibleHostLists.size() + hostsFromGame.size() == 0) gui.setItem(4, this.menuItem("&c&lGeen speler(s) gevonden &8>>", "BARRIER", 1, 0, lore));
 
         player.openInventory(gui);

@@ -42,6 +42,7 @@ public class QueuePanel extends GraphicalUserInterface {
 
         if (plugin.getGameManager().getQueue().size() == 0) {
             ArrayList<String> lore = new ArrayList<>();
+            lore.add(ChatColor.translateAlternateColorCodes('&', "&8>> &7Kleur: " + contestant.getChatColor() + "&l" + contestant.getColorName()));
             lore.add(ChatColor.translateAlternateColorCodes('&',"&8>> &7Klik om terug te gaan"));
             gui.setItem(4, this.menuItem("&c&lGeen spelers in de queue &8>>", "BARRIER", 1, 0, lore));
         } else {

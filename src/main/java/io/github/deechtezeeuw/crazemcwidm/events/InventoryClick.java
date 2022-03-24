@@ -413,6 +413,11 @@ public class InventoryClick implements Listener {
                 new HostsMenu().open(player);
             }
         }
+
+        if (clickedItem.getType().equals(Material.BARRIER) && ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()).equalsIgnoreCase("geen speler(s) gevonden >>")) {
+            new PanelMenu().open(player);
+            return;
+        }
     }
 
     // Color panel
@@ -704,6 +709,12 @@ public class InventoryClick implements Listener {
         }
 
         if (contestant == null) return;
+
+        if (clickedItem.getType().equals(Material.BARRIER) && ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()).equalsIgnoreCase("geen spelers in de queue >>")) {
+            new ColorPanel().openColor(contestant, player);
+            return;
+        }
+
         if (Bukkit.getServer().getPlayer(ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()).replaceAll(" >>", "")) != null) wantAsColor = Bukkit.getServer().getPlayer(ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()).replaceAll(" >>", ""));
 
         contestant.setPlayer(wantAsColor.getUniqueId());
