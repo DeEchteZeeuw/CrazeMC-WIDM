@@ -116,6 +116,7 @@ public class ColorPanel extends GraphicalUserInterface {
         } else {
             lore.add(ChatColor.translateAlternateColorCodes('&', "&8>> &f&lSpawn: &c&lNiet geset"));
         }
+        lore.add(ChatColor.translateAlternateColorCodes('&', "&8>> &7Klik hier om de spawn neer te zetten op deze locatie"));
         gui.setItem(16, this.menuItem("&d&lSpawn &8>>", contestant.getShulkerMaterial().toString(), 1, 0, lore));
 
         host.openInventory(gui);

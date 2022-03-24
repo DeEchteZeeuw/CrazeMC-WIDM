@@ -40,6 +40,9 @@ public class InventoryClick implements Listener {
 
         // Click while having Hosts Menu open
         if (e.getView().getTitle().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', new HostsMenu().title()))) hostsMenuInteraction(e);
+
+        // Click while having Color panel open
+        if (ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new ColorPanel().title())) + "color panel")) colorPanelInteraction(e);
     }
 
     // Host menu
@@ -408,6 +411,52 @@ public class InventoryClick implements Listener {
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                         plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&aSuccesvol de host(s) aangepast!"));
                 new HostsMenu().open(player);
+            }
+        }
+    }
+
+    // Color panel
+    protected void colorPanelInteraction(InventoryClickEvent e) {
+        e.setCancelled(true);
+
+        if (e.getClickedInventory() == null) return;
+        if (e.getClickedInventory().getType() == null) return;
+
+        if (!(e.getClickedInventory().getType().equals(InventoryType.CHEST))) return;
+        Player player = (Player) e.getWhoClicked();
+
+        if (e.getCurrentItem() == null) return;
+        ItemStack clickedItem = e.getCurrentItem();
+        if (clickedItem.getItemMeta() == null) return;
+        if (clickedItem.getItemMeta().getDisplayName() == null) return;
+        if (clickedItem.getItemMeta().getLore() == null) return;
+
+        if (!plugin.getSQL().sqlSelect.playerIsHost(player.getUniqueId())) {
+            player.closeInventory();
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverPrefix + "&cJe bent geen host"));
+            return;
+        }
+
+        Game game = plugin.getSQL().sqlSelect.playerHostGame(player.getUniqueId());
+
+        for (Contestant contestant : game.getContestant()) {
+            if (clickedItem.getType().equals(contestant.getShulkerMaterial())) {
+                contestant.setSpawn(player.getLocation());
+
+                try {
+                    plugin.getSQL().sqlUpdate.updateContestant(contestant, "spawn");
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                            plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cEr is iets fout gegaan!"));
+                    return;
+                }
+                player.closeInventory();
+                new ColorPanel().openColor(contestant, player);
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                        plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&aSuccesvol de spawn geupdate!"));
+                return;
             }
         }
     }
