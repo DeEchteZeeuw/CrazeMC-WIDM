@@ -440,6 +440,8 @@ public class InventoryClick implements Listener {
 
         Game game = plugin.getSQL().sqlSelect.playerHostGame(player.getUniqueId());
 
+        player.sendMessage("je klikte met: "+e.isLeftClick());
+
         for (Contestant contestant : game.getContestant()) {
             if (clickedItem.getType().equals(contestant.getShulkerMaterial())) {
                 contestant.setSpawn(player.getLocation());
