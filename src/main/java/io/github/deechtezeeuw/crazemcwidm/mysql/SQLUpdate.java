@@ -20,7 +20,11 @@ public class SQLUpdate {
             switch (what) {
                 case "player":
                     ps = plugin.getSQL().getConnection().prepareStatement("UPDATE widm_contestants SET Player = ? WHERE UUID = ?");
-                    ps.setString(1, contestant.getPlayer().toString());
+                    if (contestant.getPlayer() == null) {
+                        ps.setString(1, null);
+                    } else {
+                        ps.setString(1, contestant.getPlayer().toString());
+                    }
                     ps.setString(2, contestant.getUuid().toString());
                     break;
                 case "role":
