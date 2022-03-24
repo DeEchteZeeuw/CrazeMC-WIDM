@@ -6,6 +6,7 @@ import io.github.deechtezeeuw.crazemcwidm.commands.color.Color;
 import io.github.deechtezeeuw.crazemcwidm.commands.game.Game;
 import io.github.deechtezeeuw.crazemcwidm.commands.host.Host;
 import io.github.deechtezeeuw.crazemcwidm.commands.panel.Panel;
+import io.github.deechtezeeuw.crazemcwidm.commands.queue.Queue;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -24,12 +25,14 @@ public class CommandManager implements CommandExecutor {
     public String host = "host";
     public String game = "game";
     public String panel = "panel";
+    public String queue = "queue";
 
     public void setup() {
         plugin.getCommand(main).setExecutor(this);
         plugin.getCommand(host).setExecutor(this);
         plugin.getCommand(game).setExecutor(this);
         plugin.getCommand(panel).setExecutor(this);
+        plugin.getCommand(queue).setExecutor(this);
 
         for (String color : plugin.getGameManager().getColors()) {
             plugin.getCommand(color).setExecutor(this);
@@ -62,6 +65,12 @@ public class CommandManager implements CommandExecutor {
                 new Color().onCommand(sender, command, args);
                 return true;
             }
+        }
+
+        // Queue commands
+        if (command.getName().equalsIgnoreCase(queue)) {
+            new Queue().onCommand(sender, command, args);
+            return true;
         }
 
         if (!(command.getName().equalsIgnoreCase(main))) return true;

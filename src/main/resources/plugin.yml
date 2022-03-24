@@ -60,6 +60,9 @@ commands:
   yellow:
     usage: /<command>
     description: Set spawn location of yellow
+  queue:
+    usage: /<command>
+    description: Does the queue command
 permissions:
   crazemc.tempvuller:
     description: tempvuller permissions

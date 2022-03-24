@@ -2,14 +2,17 @@ package io.github.deechtezeeuw.crazemcwidm.commands.queue;
 
 import io.github.deechtezeeuw.crazemcwidm.CrazeMCWIDM;
 import io.github.deechtezeeuw.crazemcwidm.commands.Commands;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.UUID;
 
-public class queue extends Commands {
+public class Queue extends Commands {
     private final CrazeMCWIDM plugin = CrazeMCWIDM.getInstance();
 
     @Override
@@ -72,6 +75,7 @@ public class queue extends Commands {
             if (!plugin.getGameManager().getQueue().contains(player.getUniqueId())) {
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                         plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cJe zit niet in de queue!"));
+                return;
             }
 
             plugin.getGameManager().setQueue(player.getUniqueId());
@@ -91,18 +95,31 @@ public class queue extends Commands {
                 return;
             }
 
+            int number = 1;
+            ArrayList<String> queueMessage = new ArrayList<>();
+            queueMessage.add(ChatColor.translateAlternateColorCodes('&', "&7&m-------[&f " + plugin.getConfigManager().getMain().serverPrefix + " &cQueue &7&m]-------"));
+            for(UUID uuid : plugin.getGameManager().getQueue()) {
+                if (Bukkit.getServer().getPlayer(uuid) != null) {
+                    queueMessage.add(ChatColor.translateAlternateColorCodes('&', "&7" + number + ". &f&l" + Bukkit.getServer().getPlayer(uuid).getName()));
+                    number++;
+                }
+            }
 
+            if (queueMessage.size() == 1) queueMessage.add(ChatColor.translateAlternateColorCodes('&', "&f          &c&lGeen spelers in queue"));
+            queueMessage.add(ChatColor.translateAlternateColorCodes('&', "&7&m-------[&f " + plugin.getConfigManager().getMain().serverPrefix + " &cQueue &7&m]-------"));
+
+            player.sendMessage(queueMessage.toArray(new String[0]));
         }
     }
 
     @Override
     public String name() {
-        return null;
+        return "queue";
     }
 
     @Override
     public String info() {
-        return null;
+        return "general queue command";
     }
 
     @Override
