@@ -5,6 +5,7 @@ import io.github.deechtezeeuw.crazemcwidm.classes.Contestant;
 import io.github.deechtezeeuw.crazemcwidm.classes.Game;
 import io.github.deechtezeeuw.crazemcwidm.gui.*;
 import io.github.deechtezeeuw.crazemcwidm.gui.itemsSubs.*;
+import io.github.deechtezeeuw.crazemcwidm.gui.itemsSubs.weaponsSubs.BowsMenu;
 import io.github.deechtezeeuw.crazemcwidm.gui.itemsSubs.weaponsSubs.SwordsMenu;
 import org.bukkit.*;
 import org.bukkit.command.ConsoleCommandSender;
@@ -61,7 +62,8 @@ public class InventoryClick implements Listener {
                 ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new NonLeatherMenu().title())))) itemsObjectMenuInteraction(e);
 
         // Click while having a sub menu of weapons open
-        if (ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new SwordsMenu().title())))) weaponsObjectMenuInteraction(e);
+        if (ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new SwordsMenu().title()))) ||
+                ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new BowsMenu().title())))) weaponsObjectMenuInteraction(e);
 
     }
 
@@ -882,7 +884,7 @@ public class InventoryClick implements Listener {
 
         // Bows menu
         if (clickedItem.getType().equals(Material.BOW) && ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()).equalsIgnoreCase("Bows >>")) {
-//            new WeaponsMenu().open(player);
+            new BowsMenu().open(player);
             return;
         }
 
@@ -929,6 +931,9 @@ public class InventoryClick implements Listener {
         ItemMeta newItemMeta = clickedItem.getItemMeta();
         newItemMeta.setLore(new ArrayList<>());
         clickedItem.setItemMeta(newItemMeta);
+        if (clickedItem.getType().equals(Material.ARROW) || clickedItem.getType().equals(Material.TIPPED_ARROW) || clickedItem.getType().equals(Material.SPECTRAL_ARROW)) {
+            clickedItem.setAmount(16);
+        }
 
         player.getInventory().addItem(clickedItem);
     }
