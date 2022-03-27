@@ -456,6 +456,8 @@ public class InventoryClick implements Listener {
             }
         }
 
+        // push this
+
         if (contestant == null) return;
 
         // Player
