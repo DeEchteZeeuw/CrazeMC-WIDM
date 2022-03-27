@@ -51,6 +51,34 @@ public class Gui extends Config {
     public Integer itemsBackgroundAmount;
     public Short itemsBackgroundShort;
 
+    // Enchanted Gear GUI
+    public String enchantedGearTitle;
+    public Integer enchantedGearSize;
+    public String enchantedGearBackgroundMaterial;
+    public Integer enchantedGearBackgroundAmount;
+    public Short enchantedGearBackgroundShort;
+
+    // Non Enchanted Gear GUI
+    public String nonEnchantedGearTitle;
+    public Integer nonEnchantedGearSize;
+    public String nonEnchantedGearBackgroundMaterial;
+    public Integer nonEnchantedGearBackgroundAmount;
+    public Short nonEnchantedGearBackgroundShort;
+
+    // Enchanted Leather Gear GUI
+    public String enchantedLeatherGearTitle;
+    public Integer enchantedLeatherGearSize;
+    public String enchantedLeatherGearBackgroundMaterial;
+    public Integer enchantedLeatherGearBackgroundAmount;
+    public Short enchantedLeatherGearBackgroundShort;
+
+    // Non Enchanted Leather Gear GUI
+    public String nonEnchantedLeatherGearTitle;
+    public Integer nonEnchantedLeatherGearSize;
+    public String nonEnchantedLeatherGearBackgroundMaterial;
+    public Integer nonEnchantedLeatherGearBackgroundAmount;
+    public Short nonEnchantedLeatherGearBackgroundShort;
+
     // Hosts GUI
     public String hostsTitle;
     public String hostsBackgroundMaterial;
@@ -119,6 +147,34 @@ public class Gui extends Config {
         itemsBackgroundAmount = config.getInt("gui.items.background.amount");
         temp = config.getInt("gui.items.background.short");
         itemsBackgroundShort = temp.shortValue();
+
+        enchantedGearTitle = config.getString("gui.enchantedGear.title");
+        enchantedGearSize = config.getInt("gui.enchantedGear.size");
+        enchantedGearBackgroundMaterial = config.getString("gui.enchantedGear.background.material");
+        enchantedGearBackgroundAmount = config.getInt("gui.enchantedGear.background.amount");
+        temp = config.getInt("gui.enchantedGear.background.short");
+        enchantedGearBackgroundShort = temp.shortValue();
+
+        nonEnchantedGearTitle = config.getString("gui.nonEnchantedGear.title");
+        nonEnchantedGearSize = config.getInt("gui.nonEnchantedGear.size");
+        nonEnchantedGearBackgroundMaterial = config.getString("gui.nonEnchantedGear.background.material");
+        nonEnchantedGearBackgroundAmount = config.getInt("gui.nonEnchantedGear.background.amount");
+        temp = config.getInt("gui.nonEnchantedGear.background.short");
+        nonEnchantedGearBackgroundShort = temp.shortValue();
+
+        enchantedLeatherGearTitle = config.getString("gui.leatherGear.title");
+        enchantedLeatherGearSize = config.getInt("gui.leatherGear.size");
+        enchantedLeatherGearBackgroundMaterial = config.getString("gui.leatherGear.background.material");
+        enchantedLeatherGearBackgroundAmount = config.getInt("gui.leatherGear.background.amount");
+        temp = config.getInt("gui.leatherGear.background.short");
+        enchantedLeatherGearBackgroundShort = temp.shortValue();
+
+        nonEnchantedLeatherGearTitle = config.getString("gui.nonLeatherGear.title");
+        nonEnchantedLeatherGearSize = config.getInt("gui.nonLeatherGear.size");
+        nonEnchantedLeatherGearBackgroundMaterial = config.getString("gui.nonLeatherGear.background.material");
+        nonEnchantedLeatherGearBackgroundAmount = config.getInt("gui.nonLeatherGear.background.amount");
+        temp = config.getInt("gui.nonLeatherGear.background.short");
+        nonEnchantedLeatherGearBackgroundShort = temp.shortValue();
 
         hostsTitle = config.getString("gui.hosts.title");
         hostsBackgroundMaterial = config.getString("gui.hosts.background.material");

@@ -4,6 +4,10 @@ import io.github.deechtezeeuw.crazemcwidm.CrazeMCWIDM;
 import io.github.deechtezeeuw.crazemcwidm.classes.Contestant;
 import io.github.deechtezeeuw.crazemcwidm.classes.Game;
 import io.github.deechtezeeuw.crazemcwidm.gui.*;
+import io.github.deechtezeeuw.crazemcwidm.gui.itemsSubs.GearMenu;
+import io.github.deechtezeeuw.crazemcwidm.gui.itemsSubs.LeatherMenu;
+import io.github.deechtezeeuw.crazemcwidm.gui.itemsSubs.NonGearMenu;
+import io.github.deechtezeeuw.crazemcwidm.gui.itemsSubs.NonLeatherMenu;
 import org.bukkit.*;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
@@ -13,6 +17,8 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+
+import java.util.ArrayList;
 import java.util.UUID;
 
 public class InventoryClick implements Listener {
@@ -43,6 +49,15 @@ public class InventoryClick implements Listener {
 
         // Click while having Queue panel open
         if (ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new QueuePanel().title())) + "queue panel")) queuePanelInteraction(e);
+
+        // Click while having Items menu open
+        if (ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new ItemsMenu().title())))) itemsMenuInteraction(e);
+
+        // Click while having a sub menu  open
+        if (ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new GearMenu().title()))) ||
+                ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new NonGearMenu().title()))) ||
+                ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new LeatherMenu().title()))) ||
+                ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new NonLeatherMenu().title())))) itemsObjectMenuInteraction(e);
     }
 
     // Host menu
@@ -456,8 +471,6 @@ public class InventoryClick implements Listener {
             }
         }
 
-        // push this
-
         if (contestant == null) return;
 
         // Player
@@ -738,5 +751,104 @@ public class InventoryClick implements Listener {
         player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                 plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&aSuccesvol de speler aangepast!"));
         return;
+    }
+
+    // Items menu
+    protected void itemsMenuInteraction(InventoryClickEvent e) {
+        e.setCancelled(true);
+
+        if (e.getClickedInventory() == null) return;
+        if (e.getClickedInventory().getType() == null) return;
+
+        if (!(e.getClickedInventory().getType().equals(InventoryType.CHEST))) return;
+        Player player = (Player) e.getWhoClicked();
+
+        if (e.getCurrentItem() == null) return;
+        ItemStack clickedItem = e.getCurrentItem();
+        if (clickedItem.getItemMeta() == null) return;
+        if (clickedItem.getItemMeta().getDisplayName() == null) return;
+        if (clickedItem.getItemMeta().getLore() == null) return;
+
+        // Enchanted gear
+        if (clickedItem.getType().equals(Material.DIAMOND_CHESTPLATE) && ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()).equalsIgnoreCase("Enchanted gear >>")) {
+            new GearMenu().open(player);
+        }
+        // Non enchanted gear
+        if (clickedItem.getType().equals(Material.DIAMOND_CHESTPLATE) && ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()).equalsIgnoreCase("Non enchanted gear >>")) {
+            new NonGearMenu().open(player);
+        }
+        // Enchanted leather gear
+        if (clickedItem.getType().equals(Material.LEATHER_CHESTPLATE) && ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()).equalsIgnoreCase("Enchanted leather gear >>")) {
+            new LeatherMenu().open(player);
+        }
+        // Non enchanted leather gear
+        if (clickedItem.getType().equals(Material.LEATHER_CHESTPLATE) && ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()).equalsIgnoreCase("Non enchanted leather gear >>")) {
+            new NonLeatherMenu().open(player);
+        }
+        // Back to panel
+        if (clickedItem.getType().equals(Material.BARRIER) && ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()).equalsIgnoreCase("Terug naar panel >>")) {
+            new PanelMenu().open(player);
+        }
+    }
+
+    // Items object menu
+    protected void itemsObjectMenuInteraction(InventoryClickEvent e) {
+        e.setCancelled(true);
+
+        if (e.getClickedInventory() == null) return;
+        if (e.getClickedInventory().getType() == null) return;
+
+        if (!(e.getClickedInventory().getType().equals(InventoryType.CHEST))) return;
+        Player player = (Player) e.getWhoClicked();
+
+        if (e.getCurrentItem() == null) return;
+        ItemStack clickedItem = e.getCurrentItem();
+        if (clickedItem.getItemMeta() == null) return;
+        if (clickedItem.getItemMeta().getDisplayName() == null) return;
+        if (clickedItem.getItemMeta().getLore() == null) return;
+
+        // Stained glass or barrier
+        if (clickedItem.getType().equals(Material.STAINED_GLASS_PANE)) return;
+        // Back to panel
+        if (clickedItem.getType().equals(Material.BARRIER) && ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()).equalsIgnoreCase("Terug naar items >>")) {
+            new ItemsMenu().open(player);
+            return;
+        }
+        // Next page
+        if (clickedItem.getType().equals(Material.ARROW) && ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()).equalsIgnoreCase("Volgende pagina >>")) {
+            if (ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new LeatherMenu().title())))) {
+                new LeatherMenu().openPage(player, 1);
+                return;
+            }
+            if (ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new NonLeatherMenu().title())))) {
+                new NonLeatherMenu().openPage(player, 1);
+                return;
+            }
+            return;
+        }
+        // Previous page
+        if (clickedItem.getType().equals(Material.ARROW) && ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()).equalsIgnoreCase("Vorige pagina >>")) {
+            if (ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new LeatherMenu().title())))) {
+                new LeatherMenu().openPage(player, 0);
+                return;
+            }
+            if (ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new NonLeatherMenu().title())))) {
+                new NonLeatherMenu().openPage(player, 0);
+                return;
+            }
+            return;
+        }
+
+        if (player.getInventory().firstEmpty() == -1) {
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cJe inventory zit vol!"));
+            return;
+        }
+
+        ItemMeta newItemMeta = clickedItem.getItemMeta();
+        newItemMeta.setLore(new ArrayList<>());
+        clickedItem.setItemMeta(newItemMeta);
+
+        player.getInventory().addItem(clickedItem);
     }
 }

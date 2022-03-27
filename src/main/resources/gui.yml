@@ -34,6 +34,34 @@ gui:
       material: "STAINED_GLASS_PANE"
       amount: 1
       short: 15
+  enchantedGear:
+    title: "&d&lEC gear menu"
+    size: 54
+    background:
+      material: "STAINED_GLASS_PANE"
+      amount: 1
+      short: 15
+  nonEnchantedGear:
+    title: "&d&lGear menu"
+    size: 54
+    background:
+      material: "STAINED_GLASS_PANE"
+      amount: 1
+      short: 15
+  leatherGear:
+    title: "&d&lEC leather menu"
+    size: 54
+    background:
+      material: "STAINED_GLASS_PANE"
+      amount: 1
+      short: 15
+  nonLeatherGear:
+    title: "&d&lLeather menu"
+    size: 54
+    background:
+      material: "STAINED_GLASS_PANE"
+      amount: 1
+      short: 15
   hosts:
     title: "&d&lHost(s) menu"
     background:
