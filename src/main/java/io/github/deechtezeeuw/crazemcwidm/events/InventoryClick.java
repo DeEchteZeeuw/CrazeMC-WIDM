@@ -13,6 +13,9 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+
+import java.io.*;
+import java.util.ArrayList;
 import java.util.UUID;
 
 public class InventoryClick implements Listener {
@@ -40,9 +43,6 @@ public class InventoryClick implements Listener {
 
         // Click while having Color panel open
         if (ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new ColorPanel().title())) + "color panel")) colorPanelInteraction(e);
-
-        // Click while having Queue panel open
-        if (ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new QueuePanel().title())) + "queue panel")) queuePanelInteraction(e);
     }
 
     // Host menu
@@ -413,11 +413,6 @@ public class InventoryClick implements Listener {
                 new HostsMenu().open(player);
             }
         }
-
-        if (clickedItem.getType().equals(Material.BARRIER) && ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()).equalsIgnoreCase("geen speler(s) gevonden >>")) {
-            new PanelMenu().open(player);
-            return;
-        }
     }
 
     // Color panel
@@ -444,85 +439,13 @@ public class InventoryClick implements Listener {
         }
 
         Game game = plugin.getSQL().sqlSelect.playerHostGame(player.getUniqueId());
-        Contestant contestant = null;
 
-        for (ItemStack items : e.getClickedInventory().getStorageContents()) {
-            if (items != null) {
-                if (items.getType() != null) {
-                    for (Contestant singleContestant : game.getContestant()) {
-                        if (items.getType().equals(singleContestant.getShulkerMaterial())) contestant = singleContestant;
-                    }
-                }
-            }
-        }
-
-        if (contestant == null) return;
-
-        // Player
-        if (clickedItem.getType().equals(Material.SKULL_ITEM) && ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()).equalsIgnoreCase("Speler >>")) {
-            if (contestant.getPlayer() == null) {
-                new QueuePanel().openForColor(contestant, player);
-                return;
-            }
-        }
-        if (contestant.getPlayer() != null && clickedItem.getType().equals(Material.SKULL_ITEM) && ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()).equalsIgnoreCase(contestant.getPlayername() + " >>")) {
-            contestant.setPlayer(null);
-            contestant.getPlayer();
-            try {
-                plugin.getSQL().sqlUpdate.updateContestant(contestant, "player");
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cEr is iets fout gegaan!"));
-                return;
-            }
-
-            player.closeInventory();
-            new ColorPanel().openColor(contestant, player);
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&aSuccesvol de speler verwijderd van de kleur!"));
-        }
-
-        // Role
-        if (clickedItem.getType().equals(Material.COMPASS) && ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()).equalsIgnoreCase("Role >>")) {
-            switch (contestant.getRole()) {
-                case 0:
-                    contestant.setRole(1);
-                    break;
-                case 1:
-                    contestant.setRole(2);
-                    break;
-                case 2:
-                    contestant.setRole(3);
-                    break;
-                default:
-                    contestant.setRole(0);
-            }
-
-            try {
-                plugin.getSQL().sqlUpdate.updateContestant(contestant, "role");
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cEr is iets fout gegaan!"));
-                return;
-            }
-
-            player.closeInventory();
-            new ColorPanel().openColor(contestant, player);
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&aSuccesvol de role aangepast!"));
-            return;
-        }
-
-        // Kills
-        if (clickedItem.getType().equals(Material.IRON_SWORD) && ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()).equalsIgnoreCase("Kill(s) >>")) {
-            // Kill toevoegen
-            if (e.isLeftClick()) {
-                contestant.setKills(contestant.getKills() + 1);
+        for (Contestant contestant : game.getContestant()) {
+            if (clickedItem.getType().equals(contestant.getShulkerMaterial())) {
+                contestant.setSpawn(player.getLocation());
 
                 try {
-                    plugin.getSQL().sqlUpdate.updateContestant(contestant, "kills");
+                    plugin.getSQL().sqlUpdate.updateContestant(contestant, "spawn");
                 } catch (Exception ex) {
                     ex.printStackTrace();
                     player.sendMessage(ChatColor.translateAlternateColorCodes('&',
@@ -532,209 +455,9 @@ public class InventoryClick implements Listener {
                 player.closeInventory();
                 new ColorPanel().openColor(contestant, player);
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&aSuccesvol de kills geupdate!"));
+                        plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&aSuccesvol de spawn geupdate!"));
                 return;
             }
-            // Kill verwijderen
-            if (contestant.getKills() >= 1) {
-                if (e.isRightClick()) {
-                    contestant.setKills(contestant.getKills() - 1);
-
-                    try {
-                        plugin.getSQL().sqlUpdate.updateContestant(contestant, "kills");
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                        player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                                plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cEr is iets fout gegaan!"));
-                        return;
-                    }
-                    player.closeInventory();
-                    new ColorPanel().openColor(contestant, player);
-                    player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                            plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&aSuccesvol de kills geupdate!"));
-                    return;
-                }
-            } else {
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cDe speler heeft al 0 kills!"));
-            }
-            return;
         }
-
-        // Set death
-        if (clickedItem.getType().equals(Material.POTION) && ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()).equalsIgnoreCase("dood >>")) {
-            if (contestant.getDeath()) {
-                contestant.setDeath(false);
-            } else {
-                contestant.setDeath(true);
-            }
-
-            try {
-                plugin.getSQL().sqlUpdate.updateContestant(contestant, "death");
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cEr is iet fout gegaan!"));
-                return;
-            }
-            player.closeInventory();
-            new ColorPanel().openColor(contestant, player);
-            if (Bukkit.getServer().getPlayer(contestant.getUuid()) != null) {
-                Bukkit.getServer().getPlayer(contestant.getUuid()).teleport(player.getLocation());
-                Bukkit.getServer().getPlayer(contestant.getUuid()).setGameMode(GameMode.ADVENTURE);
-            }
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&aSuccesvol de death aangepast!"));
-            return;
-        }
-
-        // Set peacekeeper
-        if (clickedItem.getType().equals(Material.DIAMOND_HELMET) && ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()).equalsIgnoreCase("Peacekeeper >>")) {
-            if (contestant.getPeacekeeper()) {
-                contestant.setPeacekeeper(false);
-            } else {
-                contestant.setPeacekeeper(true);
-            }
-
-            try {
-                plugin.getSQL().sqlUpdate.updateContestant(contestant, "peacekeeper");
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cEr is iet fout gegaan!"));
-                return;
-            }
-            player.closeInventory();
-            new ColorPanel().openColor(contestant, player);
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&aSuccesvol de Peacekeeper aangepast!"));
-            return;
-        }
-
-        // PK Kills
-        if (clickedItem.getType().equals(Material.DIAMOND_SWORD) && ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()).equalsIgnoreCase("PK Kill(s) >>")) {
-            // Kill toevoegen
-            if (e.isLeftClick()) {
-                contestant.setPeacekeeperKills(contestant.getPeacekeeperKills() + 1);
-
-                try {
-                    plugin.getSQL().sqlUpdate.updateContestant(contestant, "pkkills");
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                    player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                            plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cEr is iets fout gegaan!"));
-                    return;
-                }
-                player.closeInventory();
-                new ColorPanel().openColor(contestant, player);
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&aSuccesvol de Peacekeeper kills geupdate!"));
-                return;
-            }
-            // Kill verwijderen
-            if (contestant.getPeacekeeperKills() >= 1) {
-                if (e.isRightClick()) {
-                    contestant.setPeacekeeperKills(contestant.getPeacekeeperKills() - 1);
-
-                    try {
-                        plugin.getSQL().sqlUpdate.updateContestant(contestant, "pkkills");
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                        player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                                plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cEr is iets fout gegaan!"));
-                        return;
-                    }
-                    player.closeInventory();
-                    new ColorPanel().openColor(contestant, player);
-                    player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                            plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&aSuccesvol de Peacekeeper kills geupdate!"));
-                    return;
-                }
-            } else {
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cDe speler heeft al 0 Peacekeeper kills!"));
-            }
-            return;
-        }
-
-        // Set color spawn
-        if (clickedItem.getType().equals(contestant.getShulkerMaterial())) {
-            contestant.setSpawn(player.getLocation());
-
-            try {
-                plugin.getSQL().sqlUpdate.updateContestant(contestant, "spawn");
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cEr is iets fout gegaan!"));
-                return;
-            }
-            player.closeInventory();
-            new ColorPanel().openColor(contestant, player);
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&aSuccesvol de spawn geupdate!"));
-            return;
-        }
-    }
-
-    // Queue panel
-    protected void queuePanelInteraction(InventoryClickEvent e) {
-        e.setCancelled(true);
-
-        if (e.getClickedInventory() == null) return;
-        if (e.getClickedInventory().getType() == null) return;
-
-        if (!(e.getClickedInventory().getType().equals(InventoryType.CHEST))) return;
-        Player player = (Player) e.getWhoClicked();
-
-        if (e.getCurrentItem() == null) return;
-        ItemStack clickedItem = e.getCurrentItem();
-        if (clickedItem.getItemMeta() == null) return;
-        if (clickedItem.getItemMeta().getDisplayName() == null) return;
-        if (clickedItem.getItemMeta().getLore() == null) return;
-
-        if (!plugin.getSQL().sqlSelect.playerIsHost(player.getUniqueId())) {
-            player.closeInventory();
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverPrefix + "&cJe bent geen host"));
-            return;
-        }
-
-        Game game = plugin.getSQL().sqlSelect.playerHostGame(player.getUniqueId());
-        Contestant contestant = null;
-        Player wantAsColor = null;
-
-        for (Contestant singleContestant : game.getContestant()) {
-            if (ChatColor.stripColor(clickedItem.getItemMeta().getLore().get(0)).replaceAll(">> Kleur: ", "").equalsIgnoreCase(singleContestant.getColorName())) contestant = singleContestant;
-        }
-
-        if (contestant == null) return;
-
-        if (clickedItem.getType().equals(Material.BARRIER) && ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()).equalsIgnoreCase("geen spelers in de queue >>")) {
-            new ColorPanel().openColor(contestant, player);
-            return;
-        }
-
-        if (Bukkit.getServer().getPlayer(ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()).replaceAll(" >>", "")) != null) wantAsColor = Bukkit.getServer().getPlayer(ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()).replaceAll(" >>", ""));
-
-        contestant.setPlayer(wantAsColor.getUniqueId());
-
-        try {
-            plugin.getSQL().sqlUpdate.updateContestant(contestant, "player");
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cEr is iets fout gegaan!"));
-            return;
-        }
-
-        if (plugin.getGameManager().getQueue().contains(wantAsColor.getUniqueId())) {
-            plugin.getGameManager().setQueue(wantAsColor.getUniqueId());
-        }
-        player.closeInventory();
-        new ColorPanel().openColor(contestant, player);
-        player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&aSuccesvol de speler aangepast!"));
-        return;
     }
 }
