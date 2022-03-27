@@ -79,6 +79,34 @@ public class Gui extends Config {
     public Integer nonEnchantedLeatherGearBackgroundAmount;
     public Short nonEnchantedLeatherGearBackgroundShort;
 
+    // Weapons GUI
+    public String weaponsTitle;
+    public Integer weaponsSize;
+    public String weaponsBackgroundMaterial;
+    public Integer weaponsBackgroundAmount;
+    public Short weaponsBackgroundShort;
+
+    // Swords GUI
+    public String swordsTitle;
+    public Integer swordsSize;
+    public String swordsBackgroundMaterial;
+    public Integer swordsBackgroundAmount;
+    public Short swordsBackgroundShort;
+
+    // Bows GUI
+    public String bowsTitle;
+    public Integer bowsSize;
+    public String bowsBackgroundMaterial;
+    public Integer bowsBackgroundAmount;
+    public Short bowsBackgroundShort;
+
+    // Others GUI
+    public String othersTitle;
+    public Integer othersSize;
+    public String othersBackgroundMaterial;
+    public Integer othersBackgroundAmount;
+    public Short othersBackgroundShort;
+
     // Hosts GUI
     public String hostsTitle;
     public String hostsBackgroundMaterial;
@@ -175,6 +203,34 @@ public class Gui extends Config {
         nonEnchantedLeatherGearBackgroundAmount = config.getInt("gui.nonLeatherGear.background.amount");
         temp = config.getInt("gui.nonLeatherGear.background.short");
         nonEnchantedLeatherGearBackgroundShort = temp.shortValue();
+
+        weaponsTitle = config.getString("gui.weapons.title");
+        weaponsSize = config.getInt("gui.weapons.size");
+        weaponsBackgroundMaterial = config.getString("gui.weapons.background.material");
+        weaponsBackgroundAmount = config.getInt("gui.weapons.background.amount");
+        temp = config.getInt("gui.weapons.background.short");
+        weaponsBackgroundShort = temp.shortValue();
+
+        swordsTitle = config.getString("gui.swords.title");
+        swordsSize = config.getInt("gui.swords.size");
+        swordsBackgroundMaterial = config.getString("gui.swords.background.material");
+        swordsBackgroundAmount = config.getInt("gui.swords.background.amount");
+        temp = config.getInt("gui.swords.background.short");
+        swordsBackgroundShort = temp.shortValue();
+
+        bowsTitle = config.getString("gui.bows.title");
+        bowsSize = config.getInt("gui.bows.size");
+        bowsBackgroundMaterial = config.getString("gui.bows.background.material");
+        bowsBackgroundAmount = config.getInt("gui.bows.background.amount");
+        temp = config.getInt("gui.bows.background.short");
+        bowsBackgroundShort = temp.shortValue();
+
+        othersTitle = config.getString("gui.others.title");
+        othersSize = config.getInt("gui.others.size");
+        othersBackgroundMaterial = config.getString("gui.others.background.material");
+        othersBackgroundAmount = config.getInt("gui.others.background.amount");
+        temp = config.getInt("gui.others.background.short");
+        othersBackgroundShort = temp.shortValue();
 
         hostsTitle = config.getString("gui.hosts.title");
         hostsBackgroundMaterial = config.getString("gui.hosts.background.material");

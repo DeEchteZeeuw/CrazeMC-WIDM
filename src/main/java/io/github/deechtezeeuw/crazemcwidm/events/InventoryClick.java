@@ -4,10 +4,8 @@ import io.github.deechtezeeuw.crazemcwidm.CrazeMCWIDM;
 import io.github.deechtezeeuw.crazemcwidm.classes.Contestant;
 import io.github.deechtezeeuw.crazemcwidm.classes.Game;
 import io.github.deechtezeeuw.crazemcwidm.gui.*;
-import io.github.deechtezeeuw.crazemcwidm.gui.itemsSubs.GearMenu;
-import io.github.deechtezeeuw.crazemcwidm.gui.itemsSubs.LeatherMenu;
-import io.github.deechtezeeuw.crazemcwidm.gui.itemsSubs.NonGearMenu;
-import io.github.deechtezeeuw.crazemcwidm.gui.itemsSubs.NonLeatherMenu;
+import io.github.deechtezeeuw.crazemcwidm.gui.itemsSubs.*;
+import io.github.deechtezeeuw.crazemcwidm.gui.itemsSubs.weaponsSubs.SwordsMenu;
 import org.bukkit.*;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
@@ -53,11 +51,18 @@ public class InventoryClick implements Listener {
         // Click while having Items menu open
         if (ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new ItemsMenu().title())))) itemsMenuInteraction(e);
 
-        // Click while having a sub menu  open
+        // Click while having Weapons menu open
+        if (ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new WeaponsMenu().title())))) weaponsMenuInteraction(e);
+
+        // Click while having a sub menu items open
         if (ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new GearMenu().title()))) ||
                 ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new NonGearMenu().title()))) ||
                 ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new LeatherMenu().title()))) ||
                 ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new NonLeatherMenu().title())))) itemsObjectMenuInteraction(e);
+
+        // Click while having a sub menu of weapons open
+        if (ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new SwordsMenu().title())))) weaponsObjectMenuInteraction(e);
+
     }
 
     // Host menu
@@ -785,6 +790,10 @@ public class InventoryClick implements Listener {
         if (clickedItem.getType().equals(Material.LEATHER_CHESTPLATE) && ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()).equalsIgnoreCase("Non enchanted leather gear >>")) {
             new NonLeatherMenu().open(player);
         }
+        // Weapons gear
+        if (clickedItem.getType().equals(Material.DIAMOND_SWORD) && ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()).equalsIgnoreCase("Weapons >>")) {
+            new WeaponsMenu().open(player);
+        }
         // Back to panel
         if (clickedItem.getType().equals(Material.BARRIER) && ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()).equalsIgnoreCase("Terug naar panel >>")) {
             new PanelMenu().open(player);
@@ -801,11 +810,8 @@ public class InventoryClick implements Listener {
         if (!(e.getClickedInventory().getType().equals(InventoryType.CHEST))) return;
         Player player = (Player) e.getWhoClicked();
 
-        if (e.getCurrentItem() == null) return;
-        ItemStack clickedItem = e.getCurrentItem();
-        if (clickedItem.getItemMeta() == null) return;
-        if (clickedItem.getItemMeta().getDisplayName() == null) return;
-        if (clickedItem.getItemMeta().getLore() == null) return;
+        if (e.getInventory().getItem(e.getSlot()) == null) return;
+        ItemStack clickedItem = e.getInventory().getItem(e.getSlot());
 
         // Stained glass or barrier
         if (clickedItem.getType().equals(Material.STAINED_GLASS_PANE)) return;
@@ -839,6 +845,81 @@ public class InventoryClick implements Listener {
             return;
         }
 
+        if (player.getInventory().firstEmpty() == -1) {
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cJe inventory zit vol!"));
+            return;
+        }
+
+        ItemMeta newItemMeta = clickedItem.getItemMeta();
+        newItemMeta.setLore(new ArrayList<>());
+        clickedItem.setItemMeta(newItemMeta);
+
+        player.getInventory().addItem(clickedItem);
+    }
+
+    // Weapons menu
+    protected void weaponsMenuInteraction(InventoryClickEvent e) {
+        e.setCancelled(true);
+
+        if (e.getClickedInventory() == null) return;
+        if (e.getClickedInventory().getType() == null) return;
+
+        if (!(e.getClickedInventory().getType().equals(InventoryType.CHEST))) return;
+        Player player = (Player) e.getWhoClicked();
+
+        if (e.getCurrentItem() == null) return;
+        ItemStack clickedItem = e.getCurrentItem();
+        if (clickedItem.getItemMeta() == null) return;
+        if (clickedItem.getItemMeta().getDisplayName() == null) return;
+        if (clickedItem.getItemMeta().getLore() == null) return;
+
+        // Swords menu
+        if (clickedItem.getType().equals(Material.DIAMOND_SWORD) && ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()).equalsIgnoreCase("Swords >>")) {
+            new SwordsMenu().open(player);
+            return;
+        }
+
+        // Bows menu
+        if (clickedItem.getType().equals(Material.BOW) && ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()).equalsIgnoreCase("Bows >>")) {
+//            new WeaponsMenu().open(player);
+            return;
+        }
+
+        // Others menu
+        if (clickedItem.getType().equals(Material.STICK) && ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()).equalsIgnoreCase("Others >>")) {
+//            new WeaponsMenu().open(player);
+            return;
+        }
+
+        // Stained glass or barrier
+        if (clickedItem.getType().equals(Material.STAINED_GLASS_PANE)) return;
+        // Back to panel
+        if (clickedItem.getType().equals(Material.BARRIER) && ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()).equalsIgnoreCase("Terug naar items >>")) {
+            new ItemsMenu().open(player);
+            return;
+        }
+    }
+
+    // Weapons object menu
+    protected void weaponsObjectMenuInteraction(InventoryClickEvent e) {
+        e.setCancelled(true);
+
+        if (e.getClickedInventory() == null) return;
+        if (e.getClickedInventory().getType() == null) return;
+
+        if (!(e.getClickedInventory().getType().equals(InventoryType.CHEST))) return;
+        Player player = (Player) e.getWhoClicked();
+
+        if (e.getInventory().getItem(e.getSlot()) == null) return;
+        ItemStack clickedItem = e.getInventory().getItem(e.getSlot());
+        // Stained glass or barrier
+        if (clickedItem.getType().equals(Material.STAINED_GLASS_PANE)) return;
+        // Back to panel
+        if (clickedItem.getType().equals(Material.BARRIER) && ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()).equalsIgnoreCase("Terug naar weapons >>")) {
+            new WeaponsMenu().open(player);
+            return;
+        }
         if (player.getInventory().firstEmpty() == -1) {
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                     plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cJe inventory zit vol!"));

@@ -62,6 +62,34 @@ gui:
       material: "STAINED_GLASS_PANE"
       amount: 1
       short: 15
+  weapons:
+    title: "&d&lWeapons menu"
+    size: 36
+    background:
+      material: "STAINED_GLASS_PANE"
+      amount: 1
+      short: 15
+  swords:
+    title: "&d&lSwords menu"
+    size: 54
+    background:
+      material: "STAINED_GLASS_PANE"
+      amount: 1
+      short: 15
+  bows:
+    title: "&d&lBows menu"
+    size: 54
+    background:
+      material: "STAINED_GLASS_PANE"
+      amount: 1
+      short: 15
+  others:
+    title: "&d&lOthers menu"
+    size: 54
+    background:
+      material: "STAINED_GLASS_PANE"
+      amount: 1
+      short: 15
   hosts:
     title: "&d&lHost(s) menu"
     background:
