@@ -6,6 +6,7 @@ import io.github.deechtezeeuw.crazemcwidm.classes.Game;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
@@ -91,5 +92,19 @@ public class GameSC {
 
         player.setScoreboard(board);
 
+        this.update(player);
+    }
+
+    protected void update(Player player) {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                //methods
+                if (player.getScoreboard() == null) cancel();
+                if (player.getScoreboard().getObjective(DisplaySlot.SIDEBAR) == null) cancel();
+                if (player.getScoreboard().getObjective(DisplaySlot.SIDEBAR).getScoreboard() == null) cancel();
+
+            }
+        }.runTaskTimer(plugin, 1, 1 * 20L);
     }
 }
