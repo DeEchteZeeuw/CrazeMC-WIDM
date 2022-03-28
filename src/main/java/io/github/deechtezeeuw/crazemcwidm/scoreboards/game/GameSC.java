@@ -44,6 +44,7 @@ public class GameSC {
         // Default values
         String role = "Spectator";
         String kleur = " &7Nvt";
+        String players = "0";
 
         gamemap.addEntry("§e§lMap:");
         String line = ChatColor.translateAlternateColorCodes('&', "&7" + game.getTheme().substring(0, 1).toUpperCase() + game.getTheme().substring(1));
@@ -55,6 +56,10 @@ public class GameSC {
             if (singleConstestant.getPlayer().equals(player.getUniqueId())) {
                 role = singleConstestant.getRoleName();
                 kleur = " " + singleConstestant.getChatColor() + singleConstestant.getColorName();
+                if (!singleConstestant.getDeath()) {
+                    Integer newPlayers = Integer.parseInt(players) + 1;
+                    players = newPlayers.toString();
+                }
                 break;
             }
         }
@@ -65,7 +70,7 @@ public class GameSC {
         gamekleur.setSuffix(ChatColor.translateAlternateColorCodes('&', kleur));
 
         gamespelers.addEntry("§e§lSpelers:");
-        gamespelers.setSuffix(ChatColor.translateAlternateColorCodes('&', " &70"));
+        gamespelers.setSuffix(ChatColor.translateAlternateColorCodes('&', " &7"+players));
 
         gametime.addEntry("§e§lBezig:");
         gametime.setSuffix(ChatColor.translateAlternateColorCodes('&'," &7Niet gestart"));
