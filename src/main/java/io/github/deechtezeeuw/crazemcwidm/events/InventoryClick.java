@@ -228,7 +228,8 @@ public class InventoryClick implements Listener {
     // Game menu
     protected void gameMenuInteraction(InventoryClickEvent e) {
         e.setCancelled(true);
-
+        if (e.getClickedInventory() == null) return;
+        if (e.getClickedInventory().getType() == null) return;
         if (!(e.getClickedInventory().getType().equals(InventoryType.CHEST))) return;
         Player player = (Player) e.getWhoClicked();
 

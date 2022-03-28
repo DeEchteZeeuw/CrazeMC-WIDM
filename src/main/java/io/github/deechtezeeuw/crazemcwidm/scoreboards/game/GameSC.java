@@ -45,6 +45,7 @@ public class GameSC {
         String role = "Spectator";
         String kleur = " &7Nvt";
         String players = "0";
+        String started = "Niet gestart";
 
         gamemap.addEntry("§e§lMap:");
         String line = ChatColor.translateAlternateColorCodes('&', "&7" + game.getTheme().substring(0, 1).toUpperCase() + game.getTheme().substring(1));
@@ -73,7 +74,20 @@ public class GameSC {
         gamespelers.setSuffix(ChatColor.translateAlternateColorCodes('&', " &7"+players));
 
         gametime.addEntry("§e§lBezig:");
-        gametime.setSuffix(ChatColor.translateAlternateColorCodes('&'," &7Niet gestart"));
+        switch (game.getGameStatus()) {
+            case 1:
+                started = "00:00";
+                break;
+            case 2:
+                started = "Gepauzeerd";
+                break;
+            case 3:
+                started = "Afgelopen";
+                break;
+            default:
+                started = "Niet gestart";
+        }
+        gametime.setSuffix(ChatColor.translateAlternateColorCodes('&'," &7" + started));
 
         player.setScoreboard(board);
 
