@@ -128,6 +128,13 @@ public class Gui extends Config {
     public Integer blocksBackgroundAmount;
     public Short blocksBackgroundShort;
 
+    // Books GUI
+    public String booksTitle;
+    public Integer booksSize;
+    public String booksBackgroundMaterial;
+    public Integer booksBackgroundAmount;
+    public Short booksBackgroundShort;
+
     // Hosts GUI
     public String hostsTitle;
     public String hostsBackgroundMaterial;
@@ -273,6 +280,13 @@ public class Gui extends Config {
         blocksBackgroundAmount = config.getInt("gui.blocks.background.amount");
         temp = config.getInt("gui.blocks.background.short");
         blocksBackgroundShort = temp.shortValue();
+
+        booksTitle = config.getString("gui.books.title");
+        booksSize = config.getInt("gui.books.size");
+        booksBackgroundMaterial = config.getString("gui.books.background.material");
+        booksBackgroundAmount = config.getInt("gui.books.background.amount");
+        temp = config.getInt("gui.books.background.short");
+        booksBackgroundShort = temp.shortValue();
 
         hostsTitle = config.getString("gui.hosts.title");
         hostsBackgroundMaterial = config.getString("gui.hosts.background.material");
