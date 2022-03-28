@@ -63,6 +63,9 @@ commands:
   queue:
     usage: /<command>
     description: Does the queue command
+  items:
+    usage: /<command>
+    description: Does the items command
 permissions:
   crazemc.tempvuller:
     description: tempvuller permissions
