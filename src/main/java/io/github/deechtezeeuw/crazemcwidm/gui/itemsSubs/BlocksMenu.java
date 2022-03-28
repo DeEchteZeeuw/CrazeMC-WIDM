@@ -44,17 +44,17 @@ public class BlocksMenu extends GraphicalUserInterface {
         lore.add(ChatColor.translateAlternateColorCodes('&', "&8>> &7Klik hier om dit item te krijgen"));
 
         // Cobweb
-        gui.setItem(13, this.menuItem("&d&lCobweb", "WEB", 1, 0, lore));
+        gui.setItem(13, this.menuItem("&d&lCobweb &8>>", "WEB", 1, 0, lore));
         // Diamond block
-        gui.setItem(19, this.menuItem("&b&lDiamond block", "DIAMOND_BLOCK", 1, 0, lore));
+        gui.setItem(19, this.menuItem("&b&lDiamond block &8>>", "DIAMOND_BLOCK", 1, 0, lore));
         // Gold block
-        gui.setItem(21, this.menuItem("&e&lGold block", "GOLD_BLOCK", 1,0, lore));
+        gui.setItem(21, this.menuItem("&e&lGold block &8>>", "GOLD_BLOCK", 1,0, lore));
         // Emerald block
-        gui.setItem(23, this.menuItem("&a&lEmerald block", "EMERALD_BLOCK", 1,0, lore));
+        gui.setItem(23, this.menuItem("&a&lEmerald block &8>>", "EMERALD_BLOCK", 1,0, lore));
         // Obsidian block
-        gui.setItem(25, this.menuItem("&5&lObsidian block", "OBSIDIAN", 1, 0, lore));
+        gui.setItem(25, this.menuItem("&5&lObsidian block &8>>", "OBSIDIAN", 1, 0, lore));
         // Ladder
-        gui.setItem(31, this.menuItem("&d&lLadder", "LADDER", 1,0, lore));
+        gui.setItem(31, this.menuItem("&d&lLadder &8>>", "LADDER", 1,0, lore));
 
         // Back to panel
         lore = new ArrayList<>();

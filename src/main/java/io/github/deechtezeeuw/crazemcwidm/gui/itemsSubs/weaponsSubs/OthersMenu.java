@@ -43,39 +43,39 @@ public class OthersMenu extends GraphicalUserInterface {
         lore.add(ChatColor.translateAlternateColorCodes('&', "&8>> &7Klik hier om dit item te krijgen"));
 
         // Red dye
-        gui.setItem(10, this.menuItem("&4&lRed dye", "INK_SACK", 1, 1, lore));
+        gui.setItem(10, this.menuItem("&4&lRed dye &8>>", "INK_SACK", 1, 1, lore));
         // Orange dye
-        gui.setItem(11, this.menuItem("&6&lOrange dye", "INK_SACK", 1, 14, lore));
+        gui.setItem(11, this.menuItem("&6&lOrange dye &8>>", "INK_SACK", 1, 14, lore));
         // Yellow dye
-        gui.setItem(12, this.menuItem("&e&lYellow dye", "INK_SACK", 1, 11, lore));
+        gui.setItem(12, this.menuItem("&e&lYellow dye &8>>", "INK_SACK", 1, 11, lore));
         // Green dye
-        gui.setItem(13, this.menuItem("&2&lGreen dye", "INK_SACK", 1, 2, lore));
+        gui.setItem(13, this.menuItem("&2&lGreen dye &8>>", "INK_SACK", 1, 2, lore));
         // Lime dye
-        gui.setItem(14, this.menuItem("&a&lLime dye", "INK_SACK", 1, 10, lore));
+        gui.setItem(14, this.menuItem("&a&lLime dye &8>>", "INK_SACK", 1, 10, lore));
         // Blue dye
-        gui.setItem(15, this.menuItem("&1&lBlue dye", "INK_SACK", 1, 4, lore));
+        gui.setItem(15, this.menuItem("&1&lBlue dye &8>>", "INK_SACK", 1, 4, lore));
         // Cyan dye
-        gui.setItem(16, this.menuItem("&3&lCyan dye", "INK_SACK", 1, 6, lore));
+        gui.setItem(16, this.menuItem("&3&lCyan dye &8>>", "INK_SACK", 1, 6, lore));
         // Lightblue dye
-        gui.setItem(19, this.menuItem("&b&lLightblue dye", "INK_SACK", 1, 12, lore));
+        gui.setItem(19, this.menuItem("&b&lLightblue dye &8>>", "INK_SACK", 1, 12, lore));
         // Purple dye
-        gui.setItem(20, this.menuItem("&5&lPurple dye", "INK_SACK", 1, 5, lore));
+        gui.setItem(20, this.menuItem("&5&lPurple dye &8>>", "INK_SACK", 1, 5, lore));
         // Magenta dye
-        gui.setItem(21, this.menuItem("&d&lMagenta dye", "INK_SACK", 1, 13, lore));
+        gui.setItem(21, this.menuItem("&d&lMagenta dye &8>>", "INK_SACK", 1, 13, lore));
         // Pink dye
-        gui.setItem(22, this.menuItem("&c&lPink dye", "INK_SACK", 1, 9, lore));
+        gui.setItem(22, this.menuItem("&c&lPink dye &8>>", "INK_SACK", 1, 9, lore));
         // Gray dye
-        gui.setItem(23, this.menuItem("&8&lGray dye", "INK_SACK", 1, 8, lore));
+        gui.setItem(23, this.menuItem("&8&lGray dye &8>>", "INK_SACK", 1, 8, lore));
         // Lightgray dye
-        gui.setItem(24, this.menuItem("&7&lLightgray dye", "INK_SACK", 1, 7, lore));
+        gui.setItem(24, this.menuItem("&7&lLightgray dye &8>>", "INK_SACK", 1, 7, lore));
         // White dye
-        gui.setItem(25, this.menuItem("&f&lWhite dye", "INK_SACK", 1, 15, lore));
+        gui.setItem(25, this.menuItem("&f&lWhite dye &8>>", "INK_SACK", 1, 15, lore));
         // Stick
-        gui.setItem(30, this.menuItem("&6&lStick", "STICK", 1, 0, lore));
+        gui.setItem(30, this.menuItem("&6&lStick &8>>", "STICK", 1, 0, lore));
         // Black dye
-        gui.setItem(31, this.menuItem("&0&lBlack dye", "INK_SACK", 1, 0, lore));
+        gui.setItem(31, this.menuItem("&0&lBlack dye &8>>", "INK_SACK", 1, 0, lore));
         // Knockback Stick
-        gui.setItem(32, this.menuItem("&6&lKnockback Stick", "STICK", 1, 0, lore));
+        gui.setItem(32, this.menuItem("&6&lKnockback Stick &8>>", "STICK", 1, 0, lore));
         // Back to panel
         lore = new ArrayList<>();
         lore.add(ChatColor.translateAlternateColorCodes('&', "&8>> &7Klik hier om terug te gaan naar het weapons menu"));

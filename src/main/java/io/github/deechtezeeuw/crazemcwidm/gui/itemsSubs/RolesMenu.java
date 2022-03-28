@@ -43,11 +43,11 @@ public class RolesMenu extends GraphicalUserInterface {
         lore.add(ChatColor.translateAlternateColorCodes('&', "&8>> &7Klik hier om dit item te krijgen"));
 
         // Speler
-        gui.setItem(11, this.menuItem("&b&lSpeler", "PAPER", 1,0, lore));
+        gui.setItem(11, this.menuItem("&b&lSpeler &8>>", "PAPER", 1,0, lore));
         // Egoïst
-        gui.setItem(13, this.menuItem("&b&lEgoïst", "PAPER", 1, 0, lore));
+        gui.setItem(13, this.menuItem("&b&lEgoïst &8>>", "PAPER", 1, 0, lore));
         // Mol
-        gui.setItem(15, this.menuItem("&b&lMol", "PAPER", 1, 0, lore));
+        gui.setItem(15, this.menuItem("&b&lMol &8>>", "PAPER", 1, 0, lore));
         // Back to panel
         lore = new ArrayList<>();
         lore.add(ChatColor.translateAlternateColorCodes('&', "&8>> &7Klik hier om terug te gaan naar het items menu"));

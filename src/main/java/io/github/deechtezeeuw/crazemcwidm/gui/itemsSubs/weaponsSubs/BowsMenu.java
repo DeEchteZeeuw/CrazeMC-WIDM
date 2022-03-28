@@ -46,28 +46,28 @@ public class BowsMenu extends GraphicalUserInterface {
         lore.add(ChatColor.translateAlternateColorCodes('&', "&8>> &7Klik hier om dit item te krijgen"));
 
         // Bows
-        gui.setItem(11, this.bowItem("&d&lBow", "BOW", 1, 0, lore, 0));
-        gui.setItem(20, this.bowItem("&d&lBow", "BOW", 1, 0, lore, 1));
-        gui.setItem(29, this.bowItem("&d&lBow", "BOW", 1, 0, lore, 2));
-        gui.setItem(38, this.bowItem("&d&lBow", "BOW", 1, 0, lore, 3));
+        gui.setItem(11, this.bowItem("&d&lBow &8>>", "BOW", 1, 0, lore, 0));
+        gui.setItem(20, this.bowItem("&d&lBow &8>>", "BOW", 1, 0, lore, 1));
+        gui.setItem(29, this.bowItem("&d&lBow &8>>", "BOW", 1, 0, lore, 2));
+        gui.setItem(38, this.bowItem("&d&lBow &8>>", "BOW", 1, 0, lore, 3));
 
         // Arrows
-        gui.setItem(12, this.menuItem("&d&lArrows", "ARROW", 1,0, lore));
-        gui.setItem(13, this.tippedArrowItem("&d&lNight Vision Arrows", "TIPPED_ARROW", 1, 0, lore, "NIGHT_VISION"));
-        gui.setItem(14, this.tippedArrowItem("&d&lWeakness Arrows", "TIPPED_ARROW", 1, 0, lore, "WEAKNESS"));
-        gui.setItem(15, this.tippedArrowItem("&d&lRegeneration Arrows", "TIPPED_ARROW", 1, 0, lore, "REGEN"));
-        gui.setItem(21, this.tippedArrowItem("&d&lFire Resistance Arrows", "TIPPED_ARROW", 1, 0, lore, "FIRE_RESISTANCE"));
-        gui.setItem(22, this.tippedArrowItem("&d&lInstant Damage Arrows", "TIPPED_ARROW", 1, 0, lore, "INSTANT_DAMAGE"));
-        gui.setItem(23, this.tippedArrowItem("&d&lInstant Heal Arrows", "TIPPED_ARROW", 1, 0, lore, "INSTANT_HEAL"));
-        gui.setItem(24, this.tippedArrowItem("&d&lPoison Arrows", "TIPPED_ARROW", 1, 0, lore, "POISON"));
-        gui.setItem(30, this.tippedArrowItem("&d&lJump Arrows", "TIPPED_ARROW", 1, 0, lore, "JUMP"));
-        gui.setItem(31, this.tippedArrowItem("&d&lInvisibility Arrows", "TIPPED_ARROW", 1, 0, lore, "INVISIBILITY"));
-        gui.setItem(32, this.tippedArrowItem("&d&lSpeed Arrows", "TIPPED_ARROW", 1, 0, lore, "SPEED"));
-        gui.setItem(33, this.tippedArrowItem("&d&lLuck Arrows", "TIPPED_ARROW", 1, 0, lore, "LUCK"));
-        gui.setItem(39, this.tippedArrowItem("&d&lWater Breathing Arrows", "TIPPED_ARROW", 1, 0, lore, "WATER_BREATHING"));
-        gui.setItem(40, this.tippedArrowItem("&d&lSlowness Arrows", "TIPPED_ARROW", 1, 0, lore, "SLOWNESS"));
-        gui.setItem(41, this.tippedArrowItem("&d&lStrength Arrows", "TIPPED_ARROW", 1, 0, lore, "STRENGTH"));
-        gui.setItem(42, this.menuItem("&d&lSpectral Arrows", "SPECTRAL_ARROW", 1, 0, lore));
+        gui.setItem(12, this.menuItem("&d&lArrows &8>>", "ARROW", 1,0, lore));
+        gui.setItem(13, this.tippedArrowItem("&d&lNight Vision Arrows &8>>", "TIPPED_ARROW", 1, 0, lore, "NIGHT_VISION"));
+        gui.setItem(14, this.tippedArrowItem("&d&lWeakness Arrows &8>>", "TIPPED_ARROW", 1, 0, lore, "WEAKNESS"));
+        gui.setItem(15, this.tippedArrowItem("&d&lRegeneration Arrows &8>>", "TIPPED_ARROW", 1, 0, lore, "REGEN"));
+        gui.setItem(21, this.tippedArrowItem("&d&lFire Resistance Arrows &8>>", "TIPPED_ARROW", 1, 0, lore, "FIRE_RESISTANCE"));
+        gui.setItem(22, this.tippedArrowItem("&d&lInstant Damage Arrows &8>>", "TIPPED_ARROW", 1, 0, lore, "INSTANT_DAMAGE"));
+        gui.setItem(23, this.tippedArrowItem("&d&lInstant Heal Arrows &8>>", "TIPPED_ARROW", 1, 0, lore, "INSTANT_HEAL"));
+        gui.setItem(24, this.tippedArrowItem("&d&lPoison Arrows &8>>", "TIPPED_ARROW", 1, 0, lore, "POISON"));
+        gui.setItem(30, this.tippedArrowItem("&d&lJump Arrows &8>>", "TIPPED_ARROW", 1, 0, lore, "JUMP"));
+        gui.setItem(31, this.tippedArrowItem("&d&lInvisibility Arrows &8>>", "TIPPED_ARROW", 1, 0, lore, "INVISIBILITY"));
+        gui.setItem(32, this.tippedArrowItem("&d&lSpeed Arrows &8>>", "TIPPED_ARROW", 1, 0, lore, "SPEED"));
+        gui.setItem(33, this.tippedArrowItem("&d&lLuck Arrows &8>>", "TIPPED_ARROW", 1, 0, lore, "LUCK"));
+        gui.setItem(39, this.tippedArrowItem("&d&lWater Breathing Arrows &8>>", "TIPPED_ARROW", 1, 0, lore, "WATER_BREATHING"));
+        gui.setItem(40, this.tippedArrowItem("&d&lSlowness Arrows &8>>", "TIPPED_ARROW", 1, 0, lore, "SLOWNESS"));
+        gui.setItem(41, this.tippedArrowItem("&d&lStrength Arrows &8>>", "TIPPED_ARROW", 1, 0, lore, "STRENGTH"));
+        gui.setItem(42, this.menuItem("&d&lSpectral Arrows &8>>", "SPECTRAL_ARROW", 1, 0, lore));
 
         // Back to panel
         lore = new ArrayList<>();

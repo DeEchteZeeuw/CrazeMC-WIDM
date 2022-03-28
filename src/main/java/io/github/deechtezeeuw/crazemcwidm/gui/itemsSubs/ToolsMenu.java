@@ -44,11 +44,11 @@ public class ToolsMenu extends GraphicalUserInterface {
         lore.add(ChatColor.translateAlternateColorCodes('&', "&8>> &7Klik hier om dit item te krijgen"));
 
         // Schaar
-        gui.setItem(11, this.menuItem("&d&lSchaar", "SHEARS", 1,0, lore));
+        gui.setItem(11, this.menuItem("&d&lSchaar &8>>", "SHEARS", 1,0, lore));
         // Vishengel
-        gui.setItem(13, this.menuItem("&d&lVishengel", "FISHING_ROD", 1, 0, lore));
+        gui.setItem(13, this.menuItem("&d&lVishengel &8>>", "FISHING_ROD", 1, 0, lore));
         // Aansteker
-        gui.setItem(15, this.menuItem("&d&lAansteker", "FLINT_AND_STEEL", 1, 0, lore));
+        gui.setItem(15, this.menuItem("&d&lAansteker &8>>", "FLINT_AND_STEEL", 1, 0, lore));
         // Back to panel
         lore = new ArrayList<>();
         lore.add(ChatColor.translateAlternateColorCodes('&', "&8>> &7Klik hier om terug te gaan naar het items menu"));

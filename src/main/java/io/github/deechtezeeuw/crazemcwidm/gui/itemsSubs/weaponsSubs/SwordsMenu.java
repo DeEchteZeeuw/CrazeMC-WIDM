@@ -42,30 +42,30 @@ public class SwordsMenu extends GraphicalUserInterface {
         ArrayList<String> lore = new ArrayList<>();
         lore.add(ChatColor.translateAlternateColorCodes('&', "&8>> &7Klik hier om dit item te krijgen"));
         // Diamond sword
-        gui.setItem(11, this.swordItem("&d&lDiamond sword", "DIAMOND_SWORD", 1,0, lore, 0));
-        gui.setItem(20, this.swordItem("&d&lDiamond sword", "DIAMOND_SWORD", 1,0, lore, 1));
-        gui.setItem(29, this.swordItem("&d&lDiamond sword", "DIAMOND_SWORD", 1,0, lore, 2));
-        gui.setItem(38, this.swordItem("&d&lDiamond sword", "DIAMOND_SWORD", 1,0, lore, 3));
+        gui.setItem(11, this.swordItem("&d&lDiamond sword &8>>", "DIAMOND_SWORD", 1,0, lore, 0));
+        gui.setItem(20, this.swordItem("&d&lDiamond sword &8>>", "DIAMOND_SWORD", 1,0, lore, 1));
+        gui.setItem(29, this.swordItem("&d&lDiamond sword &8>>", "DIAMOND_SWORD", 1,0, lore, 2));
+        gui.setItem(38, this.swordItem("&d&lDiamond sword &8>>", "DIAMOND_SWORD", 1,0, lore, 3));
         // Gold sword
-        gui.setItem(12, this.swordItem("&d&lGold sword", "GOLD_SWORD", 1,0, lore, 0));
-        gui.setItem(21, this.swordItem("&d&lGold sword", "GOLD_SWORD", 1,0, lore, 1));
-        gui.setItem(30, this.swordItem("&d&lGold sword", "GOLD_SWORD", 1,0, lore, 2));
-        gui.setItem(39, this.swordItem("&d&lGold sword", "GOLD_SWORD", 1,0, lore, 3));
+        gui.setItem(12, this.swordItem("&d&lGold sword &8>>", "GOLD_SWORD", 1,0, lore, 0));
+        gui.setItem(21, this.swordItem("&d&lGold sword &8>>", "GOLD_SWORD", 1,0, lore, 1));
+        gui.setItem(30, this.swordItem("&d&lGold sword &8>>", "GOLD_SWORD", 1,0, lore, 2));
+        gui.setItem(39, this.swordItem("&d&lGold sword &8>>", "GOLD_SWORD", 1,0, lore, 3));
         // Iron sword
-        gui.setItem(13, this.swordItem("&d&lIron sword", "IRON_SWORD", 1,0, lore, 0));
-        gui.setItem(22, this.swordItem("&d&lIron sword", "IRON_SWORD", 1,0, lore, 1));
-        gui.setItem(31, this.swordItem("&d&lIron sword", "IRON_SWORD", 1,0, lore, 2));
-        gui.setItem(40, this.swordItem("&d&lIron sword", "IRON_SWORD", 1,0, lore, 3));
+        gui.setItem(13, this.swordItem("&d&lIron sword &8>>", "IRON_SWORD", 1,0, lore, 0));
+        gui.setItem(22, this.swordItem("&d&lIron sword &8>>", "IRON_SWORD", 1,0, lore, 1));
+        gui.setItem(31, this.swordItem("&d&lIron sword &8>>", "IRON_SWORD", 1,0, lore, 2));
+        gui.setItem(40, this.swordItem("&d&lIron sword &8>>", "IRON_SWORD", 1,0, lore, 3));
         // Stone sword
-        gui.setItem(14, this.swordItem("&d&lStone sword", "STONE_SWORD", 1,0, lore, 0));
-        gui.setItem(23, this.swordItem("&d&lStone sword", "STONE_SWORD", 1,0, lore, 1));
-        gui.setItem(32, this.swordItem("&d&lStone sword", "STONE_SWORD", 1,0, lore, 2));
-        gui.setItem(41, this.swordItem("&d&lStone sword", "STONE_SWORD", 1,0, lore, 3));
+        gui.setItem(14, this.swordItem("&d&lStone sword &8>>", "STONE_SWORD", 1,0, lore, 0));
+        gui.setItem(23, this.swordItem("&d&lStone sword &8>>", "STONE_SWORD", 1,0, lore, 1));
+        gui.setItem(32, this.swordItem("&d&lStone sword &8>>", "STONE_SWORD", 1,0, lore, 2));
+        gui.setItem(41, this.swordItem("&d&lStone sword &8>>", "STONE_SWORD", 1,0, lore, 3));
         // Wood sword
-        gui.setItem(15, this.swordItem("&d&lWood sword", "WOOD_SWORD", 1,0, lore, 0));
-        gui.setItem(24, this.swordItem("&d&lWood sword", "WOOD_SWORD", 1,0, lore, 1));
-        gui.setItem(33, this.swordItem("&d&lWood sword", "WOOD_SWORD", 1,0, lore, 2));
-        gui.setItem(42, this.swordItem("&d&lWood sword", "WOOD_SWORD", 1,0, lore, 3));
+        gui.setItem(15, this.swordItem("&d&lWood sword &8>>", "WOOD_SWORD", 1,0, lore, 0));
+        gui.setItem(24, this.swordItem("&d&lWood sword &8>>", "WOOD_SWORD", 1,0, lore, 1));
+        gui.setItem(33, this.swordItem("&d&lWood sword &8>>", "WOOD_SWORD", 1,0, lore, 2));
+        gui.setItem(42, this.swordItem("&d&lWood sword &8>>", "WOOD_SWORD", 1,0, lore, 3));
 
         // Back to panel
         lore = new ArrayList<>();
