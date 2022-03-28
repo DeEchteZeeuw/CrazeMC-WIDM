@@ -97,6 +97,13 @@ gui:
       material: "STAINED_GLASS_PANE"
       amount: 1
       short: 15
+  tools:
+    title: "&d&lTools menu"
+    size: 27
+    background:
+      material: "STAINED_GLASS_PANE"
+      amount: 1
+      short: 15
   hosts:
     title: "&d&lHost(s) menu"
     background:

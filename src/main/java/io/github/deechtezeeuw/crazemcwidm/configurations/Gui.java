@@ -114,6 +114,13 @@ public class Gui extends Config {
     public Integer rolesBackgroundAmount;
     public Short rolesBackgroundShort;
 
+    // Tools GUI
+    public String toolsTitle;
+    public Integer toolsSize;
+    public String toolsBackgroundMaterial;
+    public Integer toolsBackgroundAmount;
+    public Short toolsBackgroundShort;
+
     // Hosts GUI
     public String hostsTitle;
     public String hostsBackgroundMaterial;
@@ -245,6 +252,13 @@ public class Gui extends Config {
         rolesBackgroundAmount = config.getInt("gui.roles.background.amount");
         temp = config.getInt("gui.roles.background.short");
         rolesBackgroundShort = temp.shortValue();
+
+        toolsTitle = config.getString("gui.tools.title");
+        toolsSize = config.getInt("gui.tools.size");
+        toolsBackgroundMaterial = config.getString("gui.tools.background.material");
+        toolsBackgroundAmount = config.getInt("gui.tools.background.amount");
+        temp = config.getInt("gui.tools.background.short");
+        toolsBackgroundShort = temp.shortValue();
 
         hostsTitle = config.getString("gui.hosts.title");
         hostsBackgroundMaterial = config.getString("gui.hosts.background.material");

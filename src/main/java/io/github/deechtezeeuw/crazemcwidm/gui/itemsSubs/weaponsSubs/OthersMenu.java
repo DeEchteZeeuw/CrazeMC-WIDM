@@ -111,9 +111,11 @@ public class OthersMenu extends GraphicalUserInterface {
         ItemMeta MetaItem = item.getItemMeta();
         MetaItem.setLore(lore);
         MetaItem.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
-        MetaItem.addEnchant(Enchantment.DAMAGE_ALL, 2, true);
-        if (title.toLowerCase().contains("knockback")) {
-            MetaItem.addEnchant(Enchantment.KNOCKBACK, 2, true);
+        if (!material.equalsIgnoreCase("barrier")) {
+            MetaItem.addEnchant(Enchantment.DAMAGE_ALL, 2, true);
+            if (title.toLowerCase().contains("knockback")) {
+                MetaItem.addEnchant(Enchantment.KNOCKBACK, 2, true);
+            }
         }
         item.setItemMeta(MetaItem);
         MetaItem.setDisplayName(ChatColor.translateAlternateColorCodes('&', title));

@@ -61,7 +61,8 @@ public class InventoryClick implements Listener {
                 ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new NonGearMenu().title()))) ||
                 ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new LeatherMenu().title()))) ||
                 ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new NonLeatherMenu().title()))) ||
-                ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new RolesMenu().title())))) itemsObjectMenuInteraction(e);
+                ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new RolesMenu().title()))) ||
+                ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new ToolsMenu().title())))) itemsObjectMenuInteraction(e);
 
         // Click while having a sub menu of weapons open
         if (ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new SwordsMenu().title()))) ||
@@ -802,6 +803,10 @@ public class InventoryClick implements Listener {
         // Roles
         if (clickedItem.getType().equals(Material.PAPER) && ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()).equalsIgnoreCase("Roles >>")) {
             new RolesMenu().open(player);
+        }
+        // Tools
+        if (clickedItem.getType().equals(Material.DIAMOND_PICKAXE) && ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()).equalsIgnoreCase("Tools >>")) {
+            new ToolsMenu().open(player);
         }
         // Back to panel
         if (clickedItem.getType().equals(Material.BARRIER) && ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()).equalsIgnoreCase("Terug naar panel >>")) {
