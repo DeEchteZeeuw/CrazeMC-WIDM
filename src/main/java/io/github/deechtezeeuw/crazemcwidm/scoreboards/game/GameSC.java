@@ -1,6 +1,7 @@
 package io.github.deechtezeeuw.crazemcwidm.scoreboards.game;
 
 import io.github.deechtezeeuw.crazemcwidm.CrazeMCWIDM;
+import io.github.deechtezeeuw.crazemcwidm.classes.Contestant;
 import io.github.deechtezeeuw.crazemcwidm.classes.Game;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -40,15 +41,28 @@ public class GameSC {
         obj.getScore("§e§lBezig:").setScore(1);
         obj.getScore(ChatColor.translateAlternateColorCodes('&', "&7play.crazemc.com")).setScore(0);
 
+        // Default values
+        String role = "Spectator";
+        String kleur = " &7Nvt";
+
         gamemap.addEntry("§e§lMap:");
         String line = ChatColor.translateAlternateColorCodes('&', "&7" + game.getTheme().substring(0, 1).toUpperCase() + game.getTheme().substring(1));
         gamemap.setSuffix(" " + line);
 
         gamerole.addEntry("§e§lRol:");
-        gamerole.setSuffix(ChatColor.translateAlternateColorCodes('&', " &bSpectator"));
+        for (Contestant singleConstestant : game.getContestant()) {
+            if (singleConstestant.getPlayer() == null) continue;
+            if (singleConstestant.getPlayer().equals(player.getUniqueId())) {
+                role = singleConstestant.getRoleName();
+                kleur = " " + singleConstestant.getChatColor() + singleConstestant.getColorName();
+                break;
+            }
+        }
+        if (game.getHosts().contains(player.getUniqueId())) role = "Host";
+        gamerole.setSuffix(ChatColor.translateAlternateColorCodes('&', " &b"+role));
 
         gamekleur.addEntry("§e§lKleur:");
-        gamekleur.setSuffix(ChatColor.translateAlternateColorCodes('&', " &7Nvt"));
+        gamekleur.setSuffix(ChatColor.translateAlternateColorCodes('&', kleur));
 
         gamespelers.addEntry("§e§lSpelers:");
         gamespelers.setSuffix(ChatColor.translateAlternateColorCodes('&', " &70"));
