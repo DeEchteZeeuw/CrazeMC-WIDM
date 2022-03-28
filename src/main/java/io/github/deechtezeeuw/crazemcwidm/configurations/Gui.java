@@ -121,6 +121,13 @@ public class Gui extends Config {
     public Integer toolsBackgroundAmount;
     public Short toolsBackgroundShort;
 
+    // Blocks GUI
+    public String blocksTitle;
+    public Integer blocksSize;
+    public String blocksBackgroundMaterial;
+    public Integer blocksBackgroundAmount;
+    public Short blocksBackgroundShort;
+
     // Hosts GUI
     public String hostsTitle;
     public String hostsBackgroundMaterial;
@@ -259,6 +266,13 @@ public class Gui extends Config {
         toolsBackgroundAmount = config.getInt("gui.tools.background.amount");
         temp = config.getInt("gui.tools.background.short");
         toolsBackgroundShort = temp.shortValue();
+
+        blocksTitle = config.getString("gui.blocks.title");
+        blocksSize = config.getInt("gui.blocks.size");
+        blocksBackgroundMaterial = config.getString("gui.blocks.background.material");
+        blocksBackgroundAmount = config.getInt("gui.blocks.background.amount");
+        temp = config.getInt("gui.blocks.background.short");
+        blocksBackgroundShort = temp.shortValue();
 
         hostsTitle = config.getString("gui.hosts.title");
         hostsBackgroundMaterial = config.getString("gui.hosts.background.material");
