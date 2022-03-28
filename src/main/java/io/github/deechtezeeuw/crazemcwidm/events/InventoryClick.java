@@ -257,7 +257,7 @@ public class InventoryClick implements Listener {
         String strippedTitle = ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()).replace(" >>", "");
 
         if (strippedTitle.equalsIgnoreCase("teleport")) {
-            if (!player.getWorld().getUID().equals(game.getMap())) {
+            if (player.getWorld().getUID().equals(game.getMap())) {
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                         plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cJe bent al in de game!"));
                 return;

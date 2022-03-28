@@ -117,6 +117,55 @@ public class SQLSelect {
         return game;
     }
 
+    // Get game from world
+    public Game worldGame(UUID world) {
+        if (world == null) return null;
+        Game game = null;
+
+        try {
+            PreparedStatement ps = plugin.getSQL().getConnection().prepareStatement("SELECT * FROM widm_games WHERE Map=?");
+            ps.setString(1, world.toString());
+            ResultSet resultSet = ps.executeQuery();
+
+            if(resultSet.next()) {
+                // Set game UUID
+                if (resultSet.getString("UUID") != null) {
+                    game = new Game(UUID.fromString(resultSet.getString("UUID")));
+                }
+                // Set real map UUID
+                if (resultSet.getString("Map") != null) {
+                    UUID uuidWorld = UUID.fromString(resultSet.getString("Map"));
+                    if (Bukkit.getServer().getWorld(uuidWorld) != null) {
+                        game.setMap(uuidWorld);
+                    }
+                }
+                // Set all hosts
+                if (resultSet.getString("Hosts") != null) {
+                    String stringHosts = resultSet.getString("Hosts");
+                    stringHosts = stringHosts.replaceAll("\\[", "").replaceAll("\\]", "");
+
+                    for (String playerStr : stringHosts.split(",\\s*")) {
+                        game.setHost(UUID.fromString(playerStr));
+                    }
+                }
+                // Set theme
+                if (resultSet.getString("Theme") != null) {
+                    game.setTheme(resultSet.getString("Theme"));
+                }
+                // Set Status
+                if (resultSet.getString("GameStatus") != null) {
+                    game.setGameStatus(resultSet.getInt("GameStatus"));
+                }
+                game.setContestantsList(this.contestants(game));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        return game;
+    }
+
     // Get game that user is hosting
     public Game playerHostGame(UUID uuid) {
         Game game = null;
@@ -182,6 +231,20 @@ public class SQLSelect {
         try {
             PreparedStatement ps = plugin.getSQL().getConnection().prepareStatement("SELECT * FROM widm_games WHERE UUID=?");
             ps.setString(1, uuid.toString());
+
+            ResultSet resultSet = ps.executeQuery();
+            return  (resultSet.next());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    // Check if game exists in world
+    public boolean mapExists(UUID world) {
+        try {
+            PreparedStatement ps = plugin.getSQL().getConnection().prepareStatement("SELECT * FROM widm_games WHERE Map=?");
+            ps.setString(1, world.toString());
 
             ResultSet resultSet = ps.executeQuery();
             return  (resultSet.next());
