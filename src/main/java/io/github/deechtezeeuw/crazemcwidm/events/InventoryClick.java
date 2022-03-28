@@ -6,6 +6,7 @@ import io.github.deechtezeeuw.crazemcwidm.classes.Game;
 import io.github.deechtezeeuw.crazemcwidm.gui.*;
 import io.github.deechtezeeuw.crazemcwidm.gui.itemsSubs.*;
 import io.github.deechtezeeuw.crazemcwidm.gui.itemsSubs.weaponsSubs.BowsMenu;
+import io.github.deechtezeeuw.crazemcwidm.gui.itemsSubs.weaponsSubs.OthersMenu;
 import io.github.deechtezeeuw.crazemcwidm.gui.itemsSubs.weaponsSubs.SwordsMenu;
 import org.bukkit.*;
 import org.bukkit.command.ConsoleCommandSender;
@@ -63,7 +64,8 @@ public class InventoryClick implements Listener {
 
         // Click while having a sub menu of weapons open
         if (ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new SwordsMenu().title()))) ||
-                ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new BowsMenu().title())))) weaponsObjectMenuInteraction(e);
+                ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new BowsMenu().title()))) ||
+                ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new OthersMenu().title())))) weaponsObjectMenuInteraction(e);
 
     }
 
@@ -890,7 +892,7 @@ public class InventoryClick implements Listener {
 
         // Others menu
         if (clickedItem.getType().equals(Material.STICK) && ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()).equalsIgnoreCase("Others >>")) {
-//            new WeaponsMenu().open(player);
+            new OthersMenu().open(player);
             return;
         }
 
