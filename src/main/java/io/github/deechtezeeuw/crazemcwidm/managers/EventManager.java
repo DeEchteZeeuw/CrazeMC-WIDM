@@ -12,5 +12,6 @@ public class EventManager {
         plugin.getServer().getPluginManager().registerEvents(new PlayerChangedWorld(), plugin);
         plugin.getServer().getPluginManager().registerEvents(new PlayerMove(), plugin);
         plugin.getServer().getPluginManager().registerEvents(new PlayerInteract(), plugin);
+        plugin.getServer().getPluginManager().registerEvents(new CraftItem(), plugin);
     }
 }

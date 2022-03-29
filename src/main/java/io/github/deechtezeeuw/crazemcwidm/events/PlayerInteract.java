@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 public class PlayerInteract implements Listener {
     private final CrazeMCWIDM plugin = CrazeMCWIDM.getInstance();
-    private ArrayList<Material> shulkers = new ArrayList<>();
+    private final ArrayList<Material> shulkers = new ArrayList<>();
 
     public PlayerInteract() {
         shulkers.add(Material.BLACK_SHULKER_BOX);
