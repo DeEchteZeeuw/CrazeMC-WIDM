@@ -1,10 +1,14 @@
 package io.github.deechtezeeuw.crazemcwidm.classes;
 
+import io.github.deechtezeeuw.crazemcwidm.CrazeMCWIDM;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,12 +16,15 @@ import java.util.HashMap;
 import java.util.UUID;
 
 public class Game {
+    private final CrazeMCWIDM plugin = CrazeMCWIDM.getInstance();
+
     protected UUID uuid; // Special id of the game
     protected UUID map; // Special id of the world its playing in
     protected ArrayList<UUID> hosts = new ArrayList<>(); // Arraylist of the host
     protected String theme = ""; // String for the theme map
     protected Integer gameStatus; // Status of the game
     protected ArrayList<Contestant> contestants = new ArrayList<>(); // Contestants of the game
+    protected int time;
 
     // Default
     public Game(UUID GameKey) {
@@ -97,8 +104,39 @@ public class Game {
         this.contestants = contestants;
     }
 
-    // Other commands
+    // Time
+    public int getTime() {
+        return this.time;
+    }
 
+    public void setTime(int time) {
+        this.time = time;
+    }
+
+    // Other commands
+    public void updateTimer() {
+        if (!plugin.getGameManager().getGamesThatStarted().containsKey(this.uuid)) return;
+        final UUID uuid = this.getUuid();
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (!plugin.getSQL().sqlSelect.gameExists(uuid)) {
+                    cancel();
+                    return;
+                }
+                Game game = plugin.getSQL().sqlSelect.uuidGame(uuid);
+                if (game == null) {
+                    cancel();
+                    return;
+                }
+
+                if (game.getGameStatus() == 1) {
+                    plugin.getGameManager().getGamesThatStarted().put(uuid, plugin.getGameManager().getGamesThatStarted().get(uuid) + 1);
+                }
+            }
+        }.runTaskTimer(plugin, 1, 1 * 20L);
+    }
 
     // All players
     public ArrayList<UUID> AllPlayersInsideGame() {

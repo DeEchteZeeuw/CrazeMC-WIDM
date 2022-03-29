@@ -12,7 +12,7 @@ public class SQLCreate {
         PreparedStatement ps;
         try {
             ps = plugin.getSQL().getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS WIDM_Games "
-            + "(UUID VARCHAR(128), Map VARCHAR(128), Hosts VARCHAR(256), Theme VARCHAR(32), GameStatus INTEGER(1), PRIMARY KEY (UUID))");
+            + "(UUID VARCHAR(128), Map VARCHAR(128), Hosts VARCHAR(256), Theme VARCHAR(32), GameStatus INTEGER(1), GameTime INTEGER(10), PRIMARY KEY (UUID))");
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

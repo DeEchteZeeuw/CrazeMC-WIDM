@@ -107,6 +107,10 @@ public class SQLSelect {
                 if (resultSet.getString("GameStatus") != null) {
                     game.setGameStatus(resultSet.getInt("GameStatus"));
                 }
+                // Set Time
+                if (resultSet.getString("GameTime") != null) {
+                    game.setTime(resultSet.getInt("GameTime"));
+                }
                 game.setContestantsList(this.contestants(game));
             }
         } catch (SQLException e) {
@@ -155,6 +159,63 @@ public class SQLSelect {
                 // Set Status
                 if (resultSet.getString("GameStatus") != null) {
                     game.setGameStatus(resultSet.getInt("GameStatus"));
+                }
+                // Set Time
+                if (resultSet.getString("GameTime") != null) {
+                    game.setTime(resultSet.getInt("GameTime"));
+                }
+                game.setContestantsList(this.contestants(game));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        return game;
+    }
+
+    // Get game from world
+    public Game uuidGame(UUID gameID) {
+        if (gameID == null) return null;
+        Game game = null;
+
+        try {
+            PreparedStatement ps = plugin.getSQL().getConnection().prepareStatement("SELECT * FROM widm_games WHERE UUID=?");
+            ps.setString(1, gameID.toString());
+            ResultSet resultSet = ps.executeQuery();
+
+            if(resultSet.next()) {
+                // Set game UUID
+                if (resultSet.getString("UUID") != null) {
+                    game = new Game(UUID.fromString(resultSet.getString("UUID")));
+                }
+                // Set real map UUID
+                if (resultSet.getString("Map") != null) {
+                    UUID uuidWorld = UUID.fromString(resultSet.getString("Map"));
+                    if (Bukkit.getServer().getWorld(uuidWorld) != null) {
+                        game.setMap(uuidWorld);
+                    }
+                }
+                // Set all hosts
+                if (resultSet.getString("Hosts") != null) {
+                    String stringHosts = resultSet.getString("Hosts");
+                    stringHosts = stringHosts.replaceAll("\\[", "").replaceAll("\\]", "");
+
+                    for (String playerStr : stringHosts.split(",\\s*")) {
+                        game.setHost(UUID.fromString(playerStr));
+                    }
+                }
+                // Set theme
+                if (resultSet.getString("Theme") != null) {
+                    game.setTheme(resultSet.getString("Theme"));
+                }
+                // Set Status
+                if (resultSet.getString("GameStatus") != null) {
+                    game.setGameStatus(resultSet.getInt("GameStatus"));
+                }
+                // Set Time
+                if (resultSet.getString("GameTime") != null) {
+                    game.setTime(resultSet.getInt("GameTime"));
                 }
                 game.setContestantsList(this.contestants(game));
             }
@@ -292,6 +353,10 @@ public class SQLSelect {
                 // Set Status
                 if (resultSet.getString("GameStatus") != null) {
                     newGame.setGameStatus(resultSet.getInt("GameStatus"));
+                }
+                // Set Time
+                if (resultSet.getString("GameTime") != null) {
+                    newGame.setTime(resultSet.getInt("GameTime"));
                 }
                 newGame.setContestantsList(this.contestants(newGame));
                 allGames.add(newGame);

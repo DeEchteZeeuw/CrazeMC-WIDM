@@ -329,6 +329,8 @@ public class InventoryClick implements Listener {
 
             player.closeInventory();
             new PanelMenu().open(player);
+            plugin.getGameManager().setGamesThatStarted(game.getUuid());
+            game.updateTimer();
             return;
         }
 
@@ -495,6 +497,7 @@ public class InventoryClick implements Listener {
             }
         }
         if (contestant.getPlayer() != null && clickedItem.getType().equals(Material.SKULL_ITEM) && ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()).equalsIgnoreCase(contestant.getPlayername() + " >>")) {
+            UUID oldColor = contestant.getPlayer();
             contestant.setPlayer(null);
             contestant.getPlayer();
             try {
@@ -510,6 +513,11 @@ public class InventoryClick implements Listener {
             new ColorPanel().openColor(contestant, player);
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                     plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&aSuccesvol de speler verwijderd van de kleur!"));
+            // TP player to lobby
+            if (Bukkit.getServer().getPlayer(oldColor) != null) {
+                Bukkit.getServer().getPlayer(oldColor).teleport(Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
+            }
+
         }
 
         // Role
@@ -764,6 +772,16 @@ public class InventoryClick implements Listener {
         new ColorPanel().openColor(contestant, player);
         player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                 plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&aSuccesvol de speler aangepast!"));
+
+        // TP player to game
+        if (contestant.getSpawn() != null) {
+            wantAsColor.teleport(contestant.getSpawn());
+            wantAsColor.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&aJe wordt naar je kleur geteleporteerd!"));
+        } else {
+            wantAsColor.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cJe kleur spawn is nog niet neergezet, neem contact op met de host of gebruik /game!"));
+        }
         return;
     }
 

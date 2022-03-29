@@ -146,7 +146,21 @@ public class GameSC {
                 // Time
                 switch (game.getGameStatus()) {
                     case 1:
-                        started = "00:00";
+                        int total = plugin.getGameManager().getGamesThatStarted().get(game.getUuid());
+                        int minutes = 0;
+                        int seconds = 0;
+
+                        minutes = total/60;
+                        seconds = total - (minutes*60);
+                        String minuteString = ""+ minutes;
+                        if (minuteString.length() == 1) minuteString = "0"+minuteString;
+                        if (minuteString.length() == 0) minuteString = "00";
+
+                        String secondsString = ""+seconds;
+                        if (secondsString.length() == 1) secondsString = "0"+secondsString;
+                        if (secondsString.length() == 0) secondsString = "00";
+
+                        started = minuteString + ":" + secondsString;
                         break;
                     case 2:
                         started = "Gepauzeerd";

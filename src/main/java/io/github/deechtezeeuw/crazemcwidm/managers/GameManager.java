@@ -9,14 +9,13 @@ import org.bukkit.World;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 public class GameManager {
     private final CrazeMCWIDM plugin = CrazeMCWIDM.getInstance();
     private final ArrayList<UUID> queue = new ArrayList<>();
     private final String[] colors = {"black", "blue", "cyan", "gray", "green", "lightblue", "lightgray", "lime", "magenta", "orange", "pink", "purple", "red", "white", "yellow"};
+    private HashMap<UUID, Integer> gamesThatStarted = new HashMap<>();
 
     public void createGame(Game game) {
         // Add game to database
@@ -40,11 +39,8 @@ public class GameManager {
         if (game == null) return;
 
         // TP all users away
-        for (UUID singlePlayerInWorld : game.AllPlayersInsideGame()) {
-            if (Bukkit.getServer().getPlayer(singlePlayerInWorld) != null) {
-                Player singlePlayer = Bukkit.getServer().getPlayer(singlePlayerInWorld);
-                if (singlePlayer.getWorld().getUID().equals(game.getMap())) singlePlayer.teleport(Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
-            }
+        for (Player userInWorld : Bukkit.getServer().getWorld(game.getMap()).getPlayers()) {
+            userInWorld.teleport(Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
         }
 
         // Delete world
@@ -81,6 +77,18 @@ public class GameManager {
             queue.remove(uuid);
         } else {
             queue.add(uuid);
+        }
+    }
+
+    public HashMap<UUID, Integer> getGamesThatStarted() {
+        return gamesThatStarted;
+    }
+
+    public void setGamesThatStarted(UUID game) {
+        if (gamesThatStarted.containsKey(game)) {
+            gamesThatStarted.remove(game);
+        } else {
+            gamesThatStarted.put(game, 0);
         }
     }
 }

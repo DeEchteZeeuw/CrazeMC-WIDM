@@ -1,5 +1,6 @@
 package io.github.deechtezeeuw.crazemcwidm;
 
+import io.github.deechtezeeuw.crazemcwidm.classes.Game;
 import io.github.deechtezeeuw.crazemcwidm.managers.CommandManager;
 import io.github.deechtezeeuw.crazemcwidm.managers.ConfigManager;
 import io.github.deechtezeeuw.crazemcwidm.managers.EventManager;
@@ -7,9 +8,15 @@ import io.github.deechtezeeuw.crazemcwidm.managers.GameManager;
 import io.github.deechtezeeuw.crazemcwidm.mysql.MySQL;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.World;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scoreboard.DisplaySlot;
 
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public final class CrazeMCWIDM extends JavaPlugin {
     // Instance
@@ -54,12 +61,44 @@ public final class CrazeMCWIDM extends JavaPlugin {
         commandManager.setup();
         new EventManager();
 
+        // Push all games from database into game
+        for (Game game : this.SQL.sqlSelect.gameList()) {
+            if (!this.gameManager.getGamesThatStarted().containsKey(game.getUuid())) {
+                this.gameManager.setGamesThatStarted(game.getUuid());
+            }
+            this.getGameManager().getGamesThatStarted().put(game.getUuid(), game.getTime());
+            game.updateTimer();
+        }
+
         Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
                 configManager.getMain().consolePrefix + configManager.getMain().serverDivider + configManager.getMessages().consoleOnEnable));
     }
 
     @Override
     public void onDisable() {
+        // push all times to the database
+        for(Map.Entry<UUID, Integer> entry : this.gameManager.getGamesThatStarted().entrySet()) {
+            UUID key = entry.getKey();
+            Integer value = entry.getValue();
+
+            if (this.getSQL().sqlSelect.gameExists(key)) {
+                Game game = this.getSQL().sqlSelect.uuidGame(key);
+                if (game.getGameStatus() == 1) game.setGameStatus(2);
+                game.setTime(value);
+                this.SQL.sqlUpdate.updateGame(game, "gamestatus");
+                this.SQL.sqlUpdate.updateGame(game, "gametime");
+            }
+        }
+        World world = Bukkit.getServer().getWorlds().get(0);
+        // Teleport all players to lobby
+        for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+            player.getScoreboard().clearSlot(DisplaySlot.SIDEBAR);
+
+            player.teleport(world.getSpawnLocation());
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    this.getConfigManager().getMain().serverPrefix + this.getConfigManager().getMain().serverDivider + "&cIn verband met een plugin reload ben je naar de lobby getelporteerd!"));
+        }
+
         Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
                 configManager.getMain().consolePrefix + configManager.getMain().serverDivider + configManager.getMessages().consoleOnDisable));
     }

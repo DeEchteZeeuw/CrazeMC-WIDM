@@ -94,6 +94,11 @@ public class SQLUpdate {
                     ps.setInt(1, game.getGameStatus());
                     ps.setString(2, game.getUuid().toString());
                     break;
+                case "gametime":
+                    ps = plugin.getSQL().getConnection().prepareStatement("UPDATE widm_games SET GameTime = ? WHERE UUID = ?");
+                    ps.setInt(1, game.getTime());
+                    ps.setString(2, game.getUuid().toString());
+                    break;
             }
 
             if (ps == null) return;
