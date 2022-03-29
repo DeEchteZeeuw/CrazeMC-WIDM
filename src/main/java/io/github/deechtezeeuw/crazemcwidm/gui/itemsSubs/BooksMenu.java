@@ -43,17 +43,31 @@ public class BooksMenu extends GraphicalUserInterface {
         ArrayList<String> lore = new ArrayList<>();
         lore.add(ChatColor.translateAlternateColorCodes('&', "&8>> &7Klik hier om dit item te krijgen"));
 
-        // Deathnote
-        gui.setItem(10, this.menuItem("&8&lDeathnote &8>>", "BOOK", 1, 0, lore));
-        // Reborn
-        gui.setItem(11, this.menuItem("&c&lReborn &8>>", "BOOK", 1, 0, lore));
         // Teleport
-        gui.setItem(12, this.menuItem("&b&lTeleport &8>>", "BOOK", 1, 0, lore));
+        gui.setItem(10, this.menuItem("&b&lTeleport &8>>", "BOOK", 1, 0, lore));
+        // Switch
+        gui.setItem(11, this.menuItem("&2&lSwitch &8>>", "BOOK", 1, 0, lore));
+        // Invsee
+        gui.setItem(12, this.menuItem("&d&lInvsee &8>>", "BOOK", 1, 0, lore));
+        // Itemcheck
+        gui.setItem(13, this.menuItem("&a&lItemcheck &8>>", "BOOK", 1, 0, lore));
+        // Itemclear
+        gui.setItem(14, this.menuItem("&f&lItemclear &8>>", "BOOK", 1, 0, lore));
+        // PK Check
+        gui.setItem(15, this.menuItem("&1&lPK Check &8>>", "BOOK", 1, 0, lore));
+        // Book lock
+        gui.setItem(16, this.menuItem("&7&lBook lock &8>>", "BOOK", 1, 0, lore));
+        // Speler count
+        gui.setItem(19, this.menuItem("&c&lSpeler count &8>>", "BOOK", 1, 0, lore));
+        // Reborn
+        gui.setItem(20, this.menuItem("&6&lReborn &8>>", "BOOK", 1, 0, lore));
+        // Deathnote
+        gui.setItem(21, this.menuItem("&4&lDeathnote &8>>", "BOOK", 1, 0, lore));
 
         // Back to panel
         lore = new ArrayList<>();
         lore.add(ChatColor.translateAlternateColorCodes('&', "&8>> &7Klik hier om terug te gaan naar het items menu"));
-        gui.setItem(22, this.menuItem("&c&lTerug naar items &8>>", "BARRIER", 1 , 0, lore));
+        gui.setItem(31, this.menuItem("&c&lTerug naar items &8>>", "BARRIER", 1 , 0, lore));
 
         player.openInventory(gui);
     }
