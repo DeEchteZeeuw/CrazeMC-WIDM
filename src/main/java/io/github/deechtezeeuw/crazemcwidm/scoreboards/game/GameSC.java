@@ -105,9 +105,9 @@ public class GameSC {
                 String players = "0";
                 String started = "Niet gestart";
                 //methods
-                if (player.getScoreboard() == null) cancel();
-                if (player.getScoreboard().getObjective(DisplaySlot.SIDEBAR) == null) cancel();
-                if (player.getScoreboard().getObjective(DisplaySlot.SIDEBAR).getScoreboard() == null) cancel();
+                if (player.getScoreboard() == null) { cancel(); return; }
+                if (player.getScoreboard().getObjective(DisplaySlot.SIDEBAR) == null) { cancel(); return; }
+                if (player.getScoreboard().getObjective(DisplaySlot.SIDEBAR).getScoreboard() == null) { cancel(); return; }
 
                 // Check if world were user is now is an game map
                 if (!plugin.getSQL().sqlSelect.mapExists(player.getWorld().getUID())) {
