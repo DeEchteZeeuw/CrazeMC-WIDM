@@ -99,11 +99,65 @@ public class GameSC {
         new BukkitRunnable() {
             @Override
             public void run() {
+                // Default values
+                String role = "Spectator";
+                String kleur = " &7Nvt";
+                String players = "0";
+                String started = "Niet gestart";
                 //methods
                 if (player.getScoreboard() == null) cancel();
                 if (player.getScoreboard().getObjective(DisplaySlot.SIDEBAR) == null) cancel();
                 if (player.getScoreboard().getObjective(DisplaySlot.SIDEBAR).getScoreboard() == null) cancel();
 
+                // Check if world were user is now is an game map
+                if (!plugin.getSQL().sqlSelect.mapExists(player.getWorld().getUID())) {
+                    cancel();
+                }
+
+                // Get game
+                Game game = (plugin.getSQL().sqlSelect.worldGame(player.getWorld().getUID()) != null ?  plugin.getSQL().sqlSelect.worldGame(player.getWorld().getUID()): null);
+                if (game == null) cancel();
+
+                Scoreboard board = player.getScoreboard();
+
+                Team gamerole = board.getTeam("gamerole");
+                Team gamekleur = board.getTeam("gamekleur");
+                Team gamespelers = board.getTeam("gamespelers");
+                Team gametime = board.getTeam("gametime");
+
+                // players
+                for (Contestant singleConstestant : game.getContestant()) {
+                    if (singleConstestant.getPlayer() == null) continue;
+                    if (singleConstestant.getPlayer().equals(player.getUniqueId())) {
+                        role = singleConstestant.getRoleName();
+                        kleur = " " + singleConstestant.getChatColor() + singleConstestant.getColorName();
+                    }
+                    if (!singleConstestant.getDeath()) {
+                        Integer newPlayers = Integer.parseInt(players) + 1;
+                        players = newPlayers.toString();
+                    }
+                }
+
+                if (game.getHosts().contains(player.getUniqueId())) role = "Host";
+                gamerole.setSuffix(ChatColor.translateAlternateColorCodes('&', " &b"+role));
+                gamekleur.setSuffix(ChatColor.translateAlternateColorCodes('&', kleur)); // Player color
+                gamespelers.setSuffix(ChatColor.translateAlternateColorCodes('&', " &7"+players)); // Player size
+
+                // Time
+                switch (game.getGameStatus()) {
+                    case 1:
+                        started = "00:00";
+                        break;
+                    case 2:
+                        started = "Gepauzeerd";
+                        break;
+                    case 3:
+                        started = "Afgelopen";
+                        break;
+                    default:
+                        started = "Niet gestart";
+                }
+                gametime.setSuffix(ChatColor.translateAlternateColorCodes('&'," &7" + started));
             }
         }.runTaskTimer(plugin, 1, 1 * 20L);
     }
