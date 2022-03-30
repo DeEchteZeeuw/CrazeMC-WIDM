@@ -5,6 +5,7 @@ import io.github.deechtezeeuw.crazemcwidm.classes.Contestant;
 import io.github.deechtezeeuw.crazemcwidm.classes.Game;
 import io.github.deechtezeeuw.crazemcwidm.gui.books.DeathNote;
 import io.github.deechtezeeuw.crazemcwidm.gui.books.Reborn;
+import io.github.deechtezeeuw.crazemcwidm.gui.books.Teleport;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -146,6 +147,9 @@ public class PlayerInteract implements Listener {
                 break;
             case "reborn":
                 new Reborn().open(player);
+                break;
+            case "teleport":
+                new Teleport().open(player);
                 break;
         }
     }

@@ -6,6 +6,7 @@ import io.github.deechtezeeuw.crazemcwidm.classes.Game;
 import io.github.deechtezeeuw.crazemcwidm.gui.*;
 import io.github.deechtezeeuw.crazemcwidm.gui.books.DeathNote;
 import io.github.deechtezeeuw.crazemcwidm.gui.books.Reborn;
+import io.github.deechtezeeuw.crazemcwidm.gui.books.Teleport;
 import io.github.deechtezeeuw.crazemcwidm.gui.itemsSubs.*;
 import io.github.deechtezeeuw.crazemcwidm.gui.itemsSubs.weaponsSubs.BowsMenu;
 import io.github.deechtezeeuw.crazemcwidm.gui.itemsSubs.weaponsSubs.OthersMenu;
@@ -80,6 +81,9 @@ public class InventoryClick implements Listener {
 
         // Click while having reborn gui open
         if (ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new Reborn().title())))) rebornMenuInteraction(e);
+
+        // Click while having teleport gui open
+        if (ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new Teleport().title())))) teleportMenuInteraction(e);
     }
 
     // Host menu
@@ -1185,6 +1189,96 @@ public class InventoryClick implements Listener {
                     }
                 }
             }
+        }
+    }
+
+    // Teleport
+    protected void teleportMenuInteraction(InventoryClickEvent e) {
+        e.setCancelled(true);
+
+        if (e.getClickedInventory() == null) return;
+        if (e.getClickedInventory().getType() == null) return;
+
+        if (!(e.getClickedInventory().getType().equals(InventoryType.CHEST))) return;
+        Player player = (Player) e.getWhoClicked();
+
+        // Check if you are in a game
+        if (!plugin.getSQL().sqlSelect.playerIsInAGame(player.getUniqueId())) return;
+        Game game = plugin.getSQL().sqlSelect.playerGame(player.getUniqueId());
+
+        if (e.getInventory().getItem(e.getSlot()) == null) return;
+        ItemStack clickedItem = e.getInventory().getItem(e.getSlot());
+        // Stained glass or barrier
+        if (clickedItem.getType().equals(Material.STAINED_GLASS_PANE)) return;
+
+        // Check if its an head
+        if (!clickedItem.getType().equals(Material.SKULL_ITEM)) return;
+        String clickedHead = ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()).replaceAll(" >>", "");
+
+        // Get UUID
+        UUID clickHeadUUID = (Bukkit.getServer().getPlayer(clickedHead) != null) ? Bukkit.getServer().getPlayer(clickedHead).getUniqueId() : Bukkit.getServer().getOfflinePlayer(clickedHead).getUniqueId();
+        if (clickHeadUUID == null) return;
+
+        if (plugin.getGameManager().getTeleportChoice().containsKey(player.getUniqueId())) {
+            // Get player you want to teleport
+            UUID TeleportPlayer = plugin.getGameManager().getTeleportChoice().get(player.getUniqueId());
+            UUID TeleportTo = clickHeadUUID;
+
+            // Check if they are both in same game
+            boolean firstCheck = false;
+            Contestant TeleportPlayerContestant = null;
+            boolean secondCheck = false;
+            Contestant TeleportToContestant = null;
+
+            for (Contestant singleContestant : game.getContestant()) {
+                if (singleContestant.getPlayer() == null) continue;
+                if (singleContestant.getPlayer().equals(TeleportPlayer)) {
+                    TeleportPlayerContestant = singleContestant;
+                    firstCheck = true;
+                }
+                if (singleContestant.getPlayer().equals(TeleportTo)) {
+                    TeleportToContestant = singleContestant;
+                    secondCheck = true;
+                }
+            }
+
+            // Check
+            if (!firstCheck || TeleportPlayerContestant == null || !secondCheck || TeleportToContestant == null) return;
+
+            // Check if both online
+            if (Bukkit.getServer().getPlayer(TeleportPlayer) == null || Bukkit.getServer().getPlayer(TeleportTo) == null) {
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                        plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cÉén van de twee spelers is niet online!"));
+                return;
+            }
+
+            // Check if they are both in map
+            if (!Bukkit.getServer().getPlayer(TeleportPlayer).getWorld().getUID().equals(game.getMap()) || !Bukkit.getServer().getPlayer(TeleportTo).getWorld().getUID().equals(game.getMap())) {
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                        plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cÉén van de twee spelers is niet in de map!"));
+                return;
+            }
+
+            // Teleport
+            Bukkit.getServer().getPlayer(TeleportPlayer).teleport(Bukkit.getServer().getPlayer(TeleportTo).getLocation());
+
+            // Send message to everyone
+            for (Player singlePlayer : Bukkit.getServer().getWorld(game.getMap()).getPlayers()) {
+                singlePlayer.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                        plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + TeleportPlayerContestant.getChatColor() + TeleportPlayerContestant.getPlayername() + " &fis naar " + TeleportToContestant.getChatColor() + TeleportToContestant.getPlayername() + " &fgeteleporteerd!"));
+            }
+
+            // Remove player from TeleportChoices
+            plugin.getGameManager().getTeleportChoice().remove(player.getUniqueId());
+            player.closeInventory();
+            // Take book
+            player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);
+        } else {
+            plugin.getGameManager().setTeleportChoice(player.getUniqueId(), clickHeadUUID);
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&aMaak nu een keuze naar wie je hem / haar wilt teleporteren!"));
+            player.closeInventory();
+            new Teleport().open(player);
         }
     }
 }

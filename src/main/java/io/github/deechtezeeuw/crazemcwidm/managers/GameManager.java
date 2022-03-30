@@ -3,7 +3,6 @@ package io.github.deechtezeeuw.crazemcwidm.managers;
 import io.github.deechtezeeuw.crazemcwidm.CrazeMCWIDM;
 import io.github.deechtezeeuw.crazemcwidm.classes.Contestant;
 import io.github.deechtezeeuw.crazemcwidm.classes.Game;
-import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.ConsoleCommandSender;
@@ -15,7 +14,8 @@ public class GameManager {
     private final CrazeMCWIDM plugin = CrazeMCWIDM.getInstance();
     private final ArrayList<UUID> queue = new ArrayList<>();
     private final String[] colors = {"black", "blue", "cyan", "gray", "green", "lightblue", "lightgray", "lime", "magenta", "orange", "pink", "purple", "red", "white", "yellow"};
-    private HashMap<UUID, Integer> gamesThatStarted = new HashMap<>();
+    private final HashMap<UUID, Integer> gamesThatStarted = new HashMap<>();
+    private final HashMap<UUID, UUID> teleportChoice = new HashMap<>();
 
     public void createGame(Game game) {
         // Add game to database
@@ -26,7 +26,7 @@ public class GameManager {
             colorCodes.add(x);
         }
         // Add contestants to the database
-        for (Integer i = 0; i < plugin.getConfigManager().getMain().getConfig().getInt("mappen."+game.getTheme()+".max-contestants"); i++) {
+        for (int i = 0; i < plugin.getConfigManager().getMain().getConfig().getInt("mappen."+game.getTheme()+".max-contestants"); i++) {
             Contestant contestant = new Contestant();
             contestant.setUuid(UUID.randomUUID());
             contestant.setGame(game.getUuid());
@@ -64,6 +64,7 @@ public class GameManager {
 
         // Delete contestants
         for (Contestant contestant : game.getContestant()) {
+            if (contestant.getPlayer() != null)  this.getTeleportChoice().remove(contestant.getPlayer());
             plugin.getSQL().sqlDelete.deleteContestant(contestant.getUuid());
         }
 
@@ -96,6 +97,16 @@ public class GameManager {
             gamesThatStarted.remove(game);
         } else {
             gamesThatStarted.put(game, 0);
+        }
+    }
+
+    public HashMap<UUID, UUID> getTeleportChoice() {return teleportChoice; }
+
+    public void setTeleportChoice(UUID player, UUID choice) {
+        if (teleportChoice.containsKey(player)) {
+            teleportChoice.remove(player);
+        } else {
+            teleportChoice.put(player, choice);
         }
     }
 }
