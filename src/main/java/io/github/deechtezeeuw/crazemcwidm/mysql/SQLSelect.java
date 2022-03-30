@@ -369,6 +369,75 @@ public class SQLSelect {
         }
     }
 
+    public Contestant getPlayerContestant(UUID player) {
+        Contestant contestant = null;
+        if (player == null) return null;
+
+        try {
+            PreparedStatement ps = plugin.getSQL().getConnection().prepareStatement("SELECT * FROM widm_contestants WHERE Player=?");
+            ps.setString(1, player.toString());
+
+            ResultSet resultSet = ps.executeQuery();
+
+            if(resultSet.next()) {
+                contestant = new Contestant();
+                // UUID
+                if (resultSet.getString("UUID") == null) return null;
+                contestant.setUuid(UUID.fromString(resultSet.getString("UUID")));
+                // Game
+                if (resultSet.getString("Game") == null) return null;
+                contestant.setGame(UUID.fromString(resultSet.getString("Game")));
+                // Color
+                if (resultSet.getString("Color") == null) return null;
+                contestant.setColor(resultSet.getInt("Color"));
+                // Player
+                if (resultSet.getString("Player") != null) {
+                    contestant.setPlayer(UUID.fromString(resultSet.getString("Player")));
+                }
+                // Rol
+                if (resultSet.getString("Role") != null) {
+                    contestant.setRole(resultSet.getInt("Role"));
+                }
+                // Kills
+                if (resultSet.getString("Kills") != null) {
+                    contestant.setKills(resultSet.getInt("Kills"));
+                }
+                // Death
+                if (resultSet.getString("Death") != null) {
+                    contestant.setDeath(resultSet.getBoolean("Death"));
+                }
+                // Peacekeeper
+                if (resultSet.getString("Peacekeeper") != null) {
+                    contestant.setPeacekeeper(resultSet.getBoolean("Peacekeeper"));
+                }
+                // PKKills
+                if (resultSet.getString("PKKills") != null) {
+                    contestant.setPeacekeeperKills(resultSet.getInt("PKKills"));
+                }
+                // Spawn
+                if (resultSet.getString("Spawn") != null) {
+                    String[] locationStr = resultSet.getString("Spawn").split("#");
+                    World world = Bukkit.getServer().getWorld(locationStr[0]);
+                    int blockX = Integer.parseInt(locationStr[1]);
+                    int blockY = Integer.parseInt(locationStr[2]);
+                    int blockZ = Integer.parseInt(locationStr[3]);
+                    float pitch = Float.parseFloat(locationStr[4]);
+                    float yawn = Float.parseFloat(locationStr[5]);
+
+                    Location location = new Location(world, blockX, blockY, blockZ);
+                    location.setPitch(pitch);
+                    location.setYaw(yawn);
+                    contestant.setSpawn(location);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        return contestant;
+    }
+
     // Get all contestants of an game
     public ArrayList<Contestant> contestants(Game game) {
         ArrayList<Contestant> contestantArrayList = new ArrayList<>();

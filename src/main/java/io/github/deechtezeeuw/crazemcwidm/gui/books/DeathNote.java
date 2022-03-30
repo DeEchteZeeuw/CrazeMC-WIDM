@@ -33,8 +33,10 @@ public class DeathNote extends GraphicalUserInterface {
         ArrayList<Contestant> alivePlayers = new ArrayList<>();
         for (Contestant contestant : game.getContestant()) {
             if (contestant.getPlayer() != null) {
-                if (!contestant.getDeath()) {
-                    alivePlayers.add(contestant);
+                if (!contestant.getPlayer().equals(player.getUniqueId())) {
+                    if (!contestant.getDeath()) {
+                        alivePlayers.add(contestant);
+                    }
                 }
             }
         }

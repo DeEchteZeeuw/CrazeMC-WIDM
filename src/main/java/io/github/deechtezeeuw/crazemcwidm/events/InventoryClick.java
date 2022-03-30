@@ -4,6 +4,7 @@ import io.github.deechtezeeuw.crazemcwidm.CrazeMCWIDM;
 import io.github.deechtezeeuw.crazemcwidm.classes.Contestant;
 import io.github.deechtezeeuw.crazemcwidm.classes.Game;
 import io.github.deechtezeeuw.crazemcwidm.gui.*;
+import io.github.deechtezeeuw.crazemcwidm.gui.books.DeathNote;
 import io.github.deechtezeeuw.crazemcwidm.gui.itemsSubs.*;
 import io.github.deechtezeeuw.crazemcwidm.gui.itemsSubs.weaponsSubs.BowsMenu;
 import io.github.deechtezeeuw.crazemcwidm.gui.itemsSubs.weaponsSubs.OthersMenu;
@@ -71,6 +72,10 @@ public class InventoryClick implements Listener {
                 ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new BowsMenu().title()))) ||
                 ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new OthersMenu().title())))) weaponsObjectMenuInteraction(e);
 
+        /* BOOKS SECTION */
+
+        // Click while
+        if (ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new DeathNote().title())))) deathnoteMenuInteraction(e);
     }
 
     // Host menu
@@ -977,5 +982,102 @@ public class InventoryClick implements Listener {
         }
 
         player.getInventory().addItem(clickedItem);
+    }
+
+    /* BOOKS SECTIONS */
+
+    // Deathnote
+    protected void deathnoteMenuInteraction(InventoryClickEvent e) {
+        e.setCancelled(true);
+
+        if (e.getClickedInventory() == null) return;
+        if (e.getClickedInventory().getType() == null) return;
+
+        if (!(e.getClickedInventory().getType().equals(InventoryType.CHEST))) return;
+        Player player = (Player) e.getWhoClicked();
+
+        if (e.getInventory().getItem(e.getSlot()) == null) return;
+        ItemStack clickedItem = e.getInventory().getItem(e.getSlot());
+        // Stained glass or barrier
+        if (clickedItem.getType().equals(Material.STAINED_GLASS_PANE)) return;
+
+        // Check if its an head
+        if (!clickedItem.getType().equals(Material.SKULL_ITEM)) return;
+
+        String playername = ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()).replaceAll(" >>", "");
+
+        Player onlinePlayer = null;
+        OfflinePlayer offlinePlayer = null;
+
+        // Get player if online
+        if (Bukkit.getServer().getPlayer(playername) != null) {
+            onlinePlayer = Bukkit.getServer().getPlayer(playername);
+        }
+        // Get offline player if not online
+        if (Bukkit.getServer().getOfflinePlayer(playername) != null) {
+            offlinePlayer = Bukkit.getServer().getOfflinePlayer(playername);
+        }
+
+        if (onlinePlayer == null && offlinePlayer == null) return;
+        UUID playerUUID = (onlinePlayer != null) ? onlinePlayer.getUniqueId() : null;
+        if (playerUUID == null) playerUUID = (offlinePlayer != null) ? offlinePlayer.getUniqueId() : null;
+
+        if (playerUUID == null) return;
+        Game game = null;
+
+        game = plugin.getSQL().sqlSelect.playerGame(playerUUID);
+
+        boolean killerInGame = false;
+        boolean toKilledInGame = false;
+        Contestant killerContestant = null;
+
+        for (Contestant singleContestant : game.getContestant()) {
+            if (singleContestant.getPlayer() != null) {
+                if (singleContestant.getPlayer().equals(player.getUniqueId())) {
+                    killerInGame = true;
+                    killerContestant = singleContestant;
+                }
+                if (singleContestant.getPlayer().equals(playerUUID)) toKilledInGame = true;
+            }
+        }
+
+        // Check if both in same game
+        if (!killerInGame || !toKilledInGame) return;
+
+        if (game.getGameStatus() != 1) {
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cKan dit item alleen gebruiken terwijl de game bezig is!"));
+            return;
+        }
+
+        if (!plugin.getSQL().sqlSelect.playerIsContestant(playerUUID)) return;
+        Contestant deathcontestant = plugin.getSQL().sqlSelect.getPlayerContestant(playerUUID);
+        try {
+            deathcontestant.setDeath(true);
+            plugin.getSQL().sqlUpdate.updateContestant(deathcontestant, "death");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cEr is iets fout gegaan!"));
+            return;
+        }
+
+        player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);
+
+        // kill player
+        if (Bukkit.getServer().getPlayer(deathcontestant.getPlayer()) != null) {
+            Player deathPlayer = Bukkit.getServer().getPlayer(deathcontestant.getPlayer());
+            deathPlayer.setHealth(0.0D);
+        }
+
+        // Check if world exists
+        if (game.getMap() != null) {
+            if (Bukkit.getServer().getWorld(game.getMap()) != null) {
+                for (Player worldPlayer : Bukkit.getServer().getWorld(game.getMap()).getPlayers()) {
+                    worldPlayer.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                            plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + killerContestant.getChatColor() + killerContestant.getPlayername() + " &fheeft " + deathcontestant.getChatColor() + deathcontestant.getPlayername() + " &fgedeathnote!"));
+                }
+            }
+        }
     }
 }
