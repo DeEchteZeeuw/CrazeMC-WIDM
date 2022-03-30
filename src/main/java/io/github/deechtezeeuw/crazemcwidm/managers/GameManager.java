@@ -21,15 +21,22 @@ public class GameManager {
         // Add game to database
         plugin.getSQL().sqlInsert.insertGame(game);
 
-        int[] colorCodes = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14};
+        ArrayList<Integer> colorCodes = new ArrayList<>();
+        for (int x = 0;x < 15;x++) {
+            colorCodes.add(x);
+        }
         // Add contestants to the database
         for (Integer i = 0; i < plugin.getConfigManager().getMain().getConfig().getInt("mappen."+game.getTheme()+".max-contestants"); i++) {
             Contestant contestant = new Contestant();
             contestant.setUuid(UUID.randomUUID());
             contestant.setGame(game.getUuid());
-            int number = new Random().nextInt(colorCodes.length-1);
-            contestant.setColor(number);
-            ArrayUtils.remove(colorCodes, number);
+
+            // Get random color
+            if (colorCodes.size() > 0) {
+                Collections.shuffle(colorCodes);
+                contestant.setColor(colorCodes.get(0));
+                colorCodes.remove(0);
+            }
 
             plugin.getSQL().sqlInsert.insertContestant(contestant);
         }

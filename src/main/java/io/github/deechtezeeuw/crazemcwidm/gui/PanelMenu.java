@@ -88,8 +88,9 @@ public class PanelMenu extends GraphicalUserInterface {
         }
         // Color statussen
         lore = new ArrayList<>();
+        int place = 28;
         for (int i = 0; i < game.getContestant().size();i++) {
-            if (28+i==35 || 28+i==36) continue;
+            if (place==35) place = place+2;
             Contestant contestant = game.getContestant().get(i);
             lore = new ArrayList<>();
             // Contestant playername
@@ -113,7 +114,8 @@ public class PanelMenu extends GraphicalUserInterface {
             }
             // Click on me to open color menu
             lore.add(ChatColor.translateAlternateColorCodes('&', "&8>> &7&lKlik om " + contestant.getChatColor() + "&l" + contestant.getColorName() + " &7&laan te passen"));
-            gui.setItem(28+i, this.menuItem(contestant.getChatColor()+"&l"+contestant.getColorName()+" &8>>", contestant.getShulkerMaterial().toString(), 1, 0, lore));
+            gui.setItem(place, this.menuItem(contestant.getChatColor()+"&l"+contestant.getColorName()+" &8>>", contestant.getShulkerMaterial().toString(), 1, 0, lore));
+            place++;
         }
 
         player.openInventory(gui);
