@@ -3,6 +3,8 @@ package io.github.deechtezeeuw.crazemcwidm.events;
 import io.github.deechtezeeuw.crazemcwidm.CrazeMCWIDM;
 import io.github.deechtezeeuw.crazemcwidm.classes.Contestant;
 import io.github.deechtezeeuw.crazemcwidm.classes.Game;
+import io.github.deechtezeeuw.crazemcwidm.gui.books.DeathNote;
+import io.github.deechtezeeuw.crazemcwidm.gui.books.Reborn;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -10,6 +12,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 
@@ -39,10 +42,6 @@ public class PlayerInteract implements Listener {
     public void onPlayerInterect(PlayerInteractEvent e) {
         Player player = e.getPlayer();
 
-        if (e.getClickedBlock() == null) return;
-        Block clickedBlock = e.getClickedBlock();
-        if (clickedBlock.getType() == null) return;
-
         // Check if player is contestsant
         if (!plugin.getSQL().sqlSelect.mapExists(player.getWorld().getUID())) return;
 
@@ -54,6 +53,20 @@ public class PlayerInteract implements Listener {
         if (game == null) return;
         // Check if map is not this world
         if (!game.getMap().equals(player.getWorld().getUID())) return;
+
+        // Right click with item in hand
+        if (e.getItem() != null) {
+            // Check if item is book
+            if (e.getItem().getType().equals(Material.BOOK)) {
+                openBook(e.getItem(), player);
+                return;
+            }
+        }
+
+        // If clicked on block
+        if (e.getClickedBlock() == null) return;
+        Block clickedBlock = e.getClickedBlock();
+        if (clickedBlock.getType() == null) return;
 
         // Check if player is interacting with chest while not playing
         if (game.getGameStatus() != 1 && clickedBlock.getType().equals(Material.CHEST) ||
@@ -88,6 +101,7 @@ public class PlayerInteract implements Listener {
         if (shulkers.contains(clickedBlock.getType())) checkIfUserCanOpenShulker(e, game, player, clickedBlock);
     }
 
+    // Open shulker
     protected void checkIfUserCanOpenShulker(PlayerInteractEvent e, Game game, Player player, Block clickedBlock) {
         // Game is not playing so deny acces
         if (game.getGameStatus() != 1) {
@@ -115,6 +129,24 @@ public class PlayerInteract implements Listener {
             e.setCancelled(true);
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                     plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cJe mag alleen je eigen kleur shulker openen!"));
+        }
+    }
+
+    // Right click while having book in hand then open right menu
+    protected void openBook (ItemStack book, Player player) {
+        if (book == null) return;
+        if (book.getItemMeta() == null) return;
+        if (book.getItemMeta().getDisplayName() == null) return;
+
+        String bookTitle = ChatColor.stripColor(book.getItemMeta().getDisplayName()).replaceAll(" >>", "").toLowerCase();
+
+        switch (bookTitle) {
+            case "deathnote":
+                new DeathNote().open(player);
+                break;
+            case "reborn":
+                new Reborn().open(player);
+                break;
         }
     }
 }
