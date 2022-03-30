@@ -32,8 +32,10 @@ public class Reborn extends GraphicalUserInterface {
         ArrayList<Contestant> deadPlayers = new ArrayList<>();
         for (Contestant contestant : game.getContestant()) {
             if (contestant.getPlayer() != null) {
-                if (contestant.getDeath()) {
-                    deadPlayers.add(contestant);
+                if (!contestant.getPlayer().equals(player.getUniqueId())) {
+                    if (contestant.getDeath()) {
+                        deadPlayers.add(contestant);
+                    }
                 }
             }
         }

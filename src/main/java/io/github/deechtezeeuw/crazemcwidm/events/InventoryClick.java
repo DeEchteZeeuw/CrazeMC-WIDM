@@ -5,6 +5,7 @@ import io.github.deechtezeeuw.crazemcwidm.classes.Contestant;
 import io.github.deechtezeeuw.crazemcwidm.classes.Game;
 import io.github.deechtezeeuw.crazemcwidm.gui.*;
 import io.github.deechtezeeuw.crazemcwidm.gui.books.DeathNote;
+import io.github.deechtezeeuw.crazemcwidm.gui.books.Reborn;
 import io.github.deechtezeeuw.crazemcwidm.gui.itemsSubs.*;
 import io.github.deechtezeeuw.crazemcwidm.gui.itemsSubs.weaponsSubs.BowsMenu;
 import io.github.deechtezeeuw.crazemcwidm.gui.itemsSubs.weaponsSubs.OthersMenu;
@@ -74,8 +75,11 @@ public class InventoryClick implements Listener {
 
         /* BOOKS SECTION */
 
-        // Click while
+        // Click while having deathnote gui open
         if (ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new DeathNote().title())))) deathnoteMenuInteraction(e);
+
+        // Click while having reborn gui open
+        if (ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new Reborn().title())))) rebornMenuInteraction(e);
     }
 
     // Host menu
@@ -1076,6 +1080,109 @@ public class InventoryClick implements Listener {
                 for (Player worldPlayer : Bukkit.getServer().getWorld(game.getMap()).getPlayers()) {
                     worldPlayer.sendMessage(ChatColor.translateAlternateColorCodes('&',
                             plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + killerContestant.getChatColor() + killerContestant.getPlayername() + " &fheeft " + deathcontestant.getChatColor() + deathcontestant.getPlayername() + " &fgedeathnote!"));
+                }
+            }
+        }
+    }
+
+    // Reborn
+    protected void rebornMenuInteraction(InventoryClickEvent e) {
+        e.setCancelled(true);
+
+        if (e.getClickedInventory() == null) return;
+        if (e.getClickedInventory().getType() == null) return;
+
+        if (!(e.getClickedInventory().getType().equals(InventoryType.CHEST))) return;
+        Player player = (Player) e.getWhoClicked();
+
+        if (e.getInventory().getItem(e.getSlot()) == null) return;
+        ItemStack clickedItem = e.getInventory().getItem(e.getSlot());
+        // Stained glass or barrier
+        if (clickedItem.getType().equals(Material.STAINED_GLASS_PANE)) return;
+
+        // Check if its an head
+        if (!clickedItem.getType().equals(Material.SKULL_ITEM)) return;
+
+        String playername = ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()).replaceAll(" >>", "");
+
+        Player onlinePlayer = null;
+        OfflinePlayer offlinePlayer = null;
+
+        // Get player if online
+        if (Bukkit.getServer().getPlayer(playername) != null) {
+            onlinePlayer = Bukkit.getServer().getPlayer(playername);
+        }
+        // Get offline player if not online
+        if (Bukkit.getServer().getOfflinePlayer(playername) != null) {
+            offlinePlayer = Bukkit.getServer().getOfflinePlayer(playername);
+        }
+
+        if (onlinePlayer == null && offlinePlayer == null) return;
+        UUID rebornUUID = (onlinePlayer != null) ? onlinePlayer.getUniqueId() : null;
+        if (rebornUUID == null) rebornUUID = (offlinePlayer != null) ? offlinePlayer.getUniqueId() : null;
+
+        if (rebornUUID == null) return;
+
+        // Get game from user
+        if (!plugin.getSQL().sqlSelect.playerIsContestant(player.getUniqueId())) return;
+        Game game = plugin.getSQL().sqlSelect.playerGame(player.getUniqueId());
+
+        // Check if game is null
+        if (game == null) return;
+
+        // Check if both players are in same game
+        boolean rebornerIsInGame = false;
+        boolean rebornIsInGame = false;
+        Contestant rebornerContestant = null;
+        Contestant rebornContestant = null;
+
+        for (Contestant singleContestant : game.getContestant()) {
+            if (singleContestant.getPlayer() != null) {
+                if (singleContestant.getPlayer().equals(player.getUniqueId())) {
+                    rebornerIsInGame = true;
+                    rebornerContestant = singleContestant;
+                }
+                if (singleContestant.getPlayer().equals(rebornUUID)) {
+                    rebornIsInGame = true;
+                    rebornContestant = singleContestant;
+                }
+            }
+        }
+
+        // Check
+        if (!rebornerIsInGame || !rebornIsInGame || rebornContestant == null) return;
+
+        // Update
+        try {
+            rebornContestant.setDeath(false);
+            plugin.getSQL().sqlUpdate.updateContestant(rebornContestant, "death");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cEr is iets fout gegaan!"));
+            return;
+        }
+
+        player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);
+
+        // Check if world exists
+        if (game.getMap() != null) {
+            if (Bukkit.getServer().getWorld(game.getMap()) != null) {
+                for (Player worldPlayer : Bukkit.getServer().getWorld(game.getMap()).getPlayers()) {
+                    worldPlayer.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                            plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + rebornerContestant.getChatColor() + rebornerContestant.getPlayername() + " &fheeft " + rebornContestant.getChatColor() + rebornContestant.getPlayername() + " &ftot leven gebracht!"));
+                }
+            }
+        }
+
+        if (Bukkit.getServer().getPlayer(rebornUUID) != null) {
+            Player rebornPlayer = Bukkit.getServer().getPlayer(rebornUUID);
+            if (rebornPlayer.getWorld().getUID().equals(player.getWorld().getUID())) {
+                if (game.getMap().equals(player.getWorld().getUID())) {
+                    rebornPlayer.teleport(player.getLocation());
+                    if (!rebornPlayer.getGameMode().equals(GameMode.ADVENTURE)) {
+                        rebornPlayer.setGameMode(GameMode.ADVENTURE);
+                    }
                 }
             }
         }
