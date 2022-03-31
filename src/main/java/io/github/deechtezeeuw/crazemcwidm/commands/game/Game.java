@@ -59,6 +59,9 @@ public class Game extends Commands {
                     new GameAdd().onCommand(sender, command, args);
                     return;
                 }
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                        plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cBedoel je &4&l/game add <color> <player>"));
+                return;
             }
 
             // Delete color player
@@ -68,10 +71,10 @@ public class Game extends Commands {
                     new GameRemove().onCommand(sender, command, args);
                     return;
                 }
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                        plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cBedoel je &4&l/game remove <color>"));
+                return;
             }
-
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cBedoel je &4&l/game add <color> <player>"));
         }
     }
 
