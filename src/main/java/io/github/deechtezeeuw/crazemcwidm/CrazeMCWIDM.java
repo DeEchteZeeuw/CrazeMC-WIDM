@@ -9,6 +9,7 @@ import io.github.deechtezeeuw.crazemcwidm.mysql.MySQL;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.DisplaySlot;
@@ -61,6 +62,12 @@ public final class CrazeMCWIDM extends JavaPlugin {
         commandManager.setup();
         new EventManager();
 
+        // Load worlds from config
+        for (String world : this.getConfigManager().getMain().getConfig().getConfigurationSection("mappen").getKeys(false)) {
+            String command = "mv load " + this.getConfigManager().getMain().getConfig().getString("mappen." + world + ".world");
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
+        }
+
         // Push all games from database into game
         for (Game game : this.SQL.sqlSelect.gameList()) {
             if (!this.gameManager.getGamesThatStarted().containsKey(game.getUuid())) {
@@ -68,6 +75,10 @@ public final class CrazeMCWIDM extends JavaPlugin {
             }
             this.getGameManager().getGamesThatStarted().put(game.getUuid(), game.getTime());
             game.updateTimer();
+
+            // Load all worlds
+            String command = "mv load " + game.getTheme().substring(0, 1).toUpperCase() + game.getTheme().substring(1) + "-" + game.getUuid();
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
         }
 
         Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',

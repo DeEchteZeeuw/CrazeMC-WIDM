@@ -3,6 +3,8 @@ version: '${project.version}'
 main: io.github.deechtezeeuw.crazemcwidm.CrazeMCWIDM
 authors: [ DeZeeuw ]
 description: Database version of WIDM CMC
+depend:
+  - Multiverse-Core
 commands:
   widm:
     usage: /<command>

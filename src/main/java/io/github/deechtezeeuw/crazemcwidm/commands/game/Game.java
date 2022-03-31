@@ -32,6 +32,47 @@ public class Game extends Commands {
             new GameMenu().open(player);
             return;
         }
+
+        // Greater then
+        if (args.length > 0) {
+            if (!sender.hasPermission("crazemc.tempvuller") && !sender.hasPermission("crazemc.jrgamehost") && !sender.hasPermission("crazemc.gamehost") && !sender.hasPermission("crazemc.srgamehost")) {
+                plugin.getCommandManager().noPermission(null, sender);
+                return;
+            }
+            // Check if player is an host
+            if (!plugin.getSQL().sqlSelect.playerIsHost(player.getUniqueId())) {
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                        plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cJe host geen game!"));
+                return;
+            }
+            io.github.deechtezeeuw.crazemcwidm.classes.Game game = plugin.getSQL().sqlSelect.playerHostGame(player.getUniqueId());
+            // Check if right world
+            if (!player.getWorld().getUID().equals(game.getMap())) {
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                        plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cJe bent niet in de juiste wereld hiervoor!"));
+                return;
+            }
+            // Add player to game
+            if (args[0].equalsIgnoreCase("add")) {
+                // Check enough args
+                if (args.length == 3) {
+                    new GameAdd().onCommand(sender, command, args);
+                    return;
+                }
+            }
+
+            // Delete color player
+            if (args[0].equalsIgnoreCase("remove")) {
+                // Check enough args
+                if (args.length == 2) {
+                    new GameRemove().onCommand(sender, command, args);
+                    return;
+                }
+            }
+
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cBedoel je &4&l/game add <color> <player>"));
+        }
     }
 
     @Override
