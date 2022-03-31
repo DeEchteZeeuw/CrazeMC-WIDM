@@ -52,7 +52,7 @@ public class GameAdd extends Commands {
 
         // Color checks
         for (Contestant singleContestant : game.getContestant()) {
-            if (singleContestant.getChatColor().toLowerCase().equalsIgnoreCase(Color)) {
+            if (singleContestant.getColorName().toLowerCase().equalsIgnoreCase(Color)) {
                 contestant = singleContestant;
             }
         }
