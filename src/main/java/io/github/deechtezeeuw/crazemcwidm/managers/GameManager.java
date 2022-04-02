@@ -47,7 +47,7 @@ public class GameManager {
 
         // TP all users away
         for (Player userInWorld : Bukkit.getServer().getWorld(game.getMap()).getPlayers()) {
-            userInWorld.teleport(Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
+            userInWorld.teleport(Bukkit.getServer().getWorld("WIDM-Lobby").getSpawnLocation());
         }
 
         // Delete world

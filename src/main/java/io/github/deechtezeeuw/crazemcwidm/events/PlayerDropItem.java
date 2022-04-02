@@ -21,7 +21,7 @@ public class PlayerDropItem implements Listener {
         if (item.getItemStack().getItemMeta().getLore() == null) return;
         boolean containsLore = false;
         for (String lore : item.getItemStack().getItemMeta().getLore()) {
-            if (ChatColor.stripColor(lore).replaceAll(">> ", "").toLowerCase().equalsIgnoreCase("undroppable")) containsLore = true;
+            if (ChatColor.stripColor(lore).replaceAll(">> ", "").equalsIgnoreCase("undroppable") || ChatColor.stripColor(lore).replaceAll(">> ", "").equalsIgnoreCase("locked")) containsLore = true;
         }
         if (!containsLore) return;
 

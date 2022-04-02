@@ -9,11 +9,16 @@ import io.github.deechtezeeuw.crazemcwidm.gui.books.Teleport;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.Chest;
+import org.bukkit.block.ShulkerBox;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Shulker;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 
@@ -43,17 +48,21 @@ public class PlayerInteract implements Listener {
     public void onPlayerInterect(PlayerInteractEvent e) {
         Player player = e.getPlayer();
 
-        // Check if player is contestsant
+        // Check if world is a game
         if (!plugin.getSQL().sqlSelect.mapExists(player.getWorld().getUID())) return;
 
-        // Player is in a world thats a game
-        if (!plugin.getSQL().sqlSelect.playerIsContestant(player.getUniqueId())) return;
+        Game game = plugin.getSQL().sqlSelect.worldGame(player.getWorld().getUID());
 
-        Game game = plugin.getSQL().sqlSelect.playerGame(player.getUniqueId());
-        // Check if game is null
-        if (game == null) return;
-        // Check if map is not this world
-        if (!game.getMap().equals(player.getWorld().getUID())) return;
+        Contestant contestant = null;
+        for (Contestant singleContestant : game.getContestant()) {
+            if (singleContestant.getPlayer() == null) continue;
+            if (singleContestant.getPlayer().equals(player.getUniqueId())) {
+                contestant = singleContestant;
+                break;
+            }
+        }
+
+        if (contestant == null) return;
 
         // Right click with item in hand
         if (e.getItem() != null) {
@@ -68,6 +77,9 @@ public class PlayerInteract implements Listener {
         if (e.getClickedBlock() == null) return;
         Block clickedBlock = e.getClickedBlock();
         if (clickedBlock.getType() == null) return;
+
+        // Check if player is interacting with shulker
+        if (shulkers.contains(clickedBlock.getType())) checkIfUserCanOpenShulker(e, game, player, clickedBlock);
 
         // Check if player is interacting with chest while not playing
         if (game.getGameStatus() != 1 && clickedBlock.getType().equals(Material.CHEST) ||
@@ -98,8 +110,6 @@ public class PlayerInteract implements Listener {
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                     plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cJe kan geen chest openen zolang de game nog niet is begonnen!"));
         }
-        // Check if player is interacting with shulker
-        if (shulkers.contains(clickedBlock.getType())) checkIfUserCanOpenShulker(e, game, player, clickedBlock);
     }
 
     // Open shulker
@@ -118,7 +128,6 @@ public class PlayerInteract implements Listener {
             if (singleContestant.getPlayer() == null) continue;
             if (singleContestant.getPlayer().equals(player.getUniqueId())) {
                 contestant = singleContestant;
-                break;
             }
         }
 
@@ -130,6 +139,87 @@ public class PlayerInteract implements Listener {
             e.setCancelled(true);
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                     plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cJe mag alleen je eigen kleur shulker openen!"));
+        }
+
+        ShulkerBox shulker = null;
+        try {
+            shulker = (ShulkerBox) clickedBlock.getState();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return;
+        }
+
+        if (shulker == null) return;
+
+        for (ItemStack item : shulker.getInventory().getContents()) {
+            if (item == null) return;
+            if (item.getItemMeta() == null) return;
+            ItemMeta itemMeta = item.getItemMeta();
+            if (itemMeta.getDisplayName() == null) return;
+            if (item.getType() == null) return;
+
+            String strippedName = ChatColor.stripColor(itemMeta.getDisplayName()).replaceAll(" >>", "");
+
+            // Check if item paper
+            if (item.getType().equals(Material.PAPER)) {
+                // Check title of roles
+                // speler
+                if (strippedName.equalsIgnoreCase("speler")) {
+                    if (contestant.getRole() != 1) {
+                        contestant.setRole(1);
+                        try {
+                            plugin.getSQL().sqlUpdate.updateContestant(contestant, "role");
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cEr is iets fout gegaan!"));
+                            return;
+                        }
+                    }
+                }
+                // Egoïst
+                if (strippedName.equalsIgnoreCase("egoïst")) {
+                    if (contestant.getRole() != 2) {
+                        contestant.setRole(2);
+                        try {
+                            plugin.getSQL().sqlUpdate.updateContestant(contestant, "role");
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cEr is iets fout gegaan!"));
+                            return;
+                        }
+                    }
+                }
+                // Mol
+                if (strippedName.equalsIgnoreCase("mol")) {
+                    if (contestant.getRole() != 2) {
+                        contestant.setRole(3);
+                        try {
+                            plugin.getSQL().sqlUpdate.updateContestant(contestant, "role");
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cEr is iets fout gegaan!"));
+                            return;
+                        }
+                    }
+                }
+                // Peacekeeper
+                if (strippedName.equalsIgnoreCase("peacekeeper")) {
+                    if (!contestant.getPeacekeeper()) {
+                        contestant.setPeacekeeper(true);
+                        try {
+                            plugin.getSQL().sqlUpdate.updateContestant(contestant, "peacekeeper");
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cEr is iets fout gegaan!"));
+                            return;
+                        }
+                    }
+                }
+            }
         }
     }
 

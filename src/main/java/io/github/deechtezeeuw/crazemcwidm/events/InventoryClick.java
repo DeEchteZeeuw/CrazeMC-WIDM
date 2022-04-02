@@ -22,6 +22,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class InventoryClick implements Listener {
@@ -33,31 +34,58 @@ public class InventoryClick implements Listener {
         if (e.getView().getTitle() == null) return;
 
         // Click while having Host Menu open
-        if (e.getView().getTitle().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', new HostMenu().title()))) hostMenuInteraction(e);
+        if (e.getView().getTitle().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', new HostMenu().title()))) {
+            hostMenuInteraction(e);
+            return;
+        }
 
         // Click while having Map Menu open
-        if (e.getView().getTitle().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', new MapMenu().title()))) mapMenuInteraction(e);
+        if (e.getView().getTitle().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', new MapMenu().title()))) {
+            mapMenuInteraction(e);
+            return;
+        }
 
         // Click while having Game Menu open
-        if (e.getView().getTitle().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', new GameMenu().title()))) gameMenuInteraction(e);
+        if (e.getView().getTitle().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', new GameMenu().title()))) {
+            gameMenuInteraction(e);
+            return;
+        }
 
         // Click while having Host Panel open
-        if (e.getView().getTitle().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', new PanelMenu().title()))) hostPanelInteraction(e);
+        if (e.getView().getTitle().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', new PanelMenu().title()))) {
+            hostPanelInteraction(e);
+            return;
+        }
 
         // Click while having Hosts Menu open
-        if (e.getView().getTitle().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', new HostsMenu().title()))) hostsMenuInteraction(e);
+        if (e.getView().getTitle().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', new HostsMenu().title()))) {
+            hostsMenuInteraction(e);
+            return;
+        }
 
         // Click while having Color panel open
-        if (ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new ColorPanel().title())) + "color panel")) colorPanelInteraction(e);
+        if (ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new ColorPanel().title())) + "color panel")) {
+            colorPanelInteraction(e);
+            return;
+        }
 
         // Click while having Queue panel open
-        if (ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new QueuePanel().title())) + "queue panel")) queuePanelInteraction(e);
+        if (ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new QueuePanel().title())) + "queue panel")) {
+            queuePanelInteraction(e);
+            return;
+        }
 
         // Click while having Items menu open
-        if (ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new ItemsMenu().title())))) itemsMenuInteraction(e);
+        if (ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new ItemsMenu().title())))) {
+            itemsMenuInteraction(e);
+            return;
+        }
 
         // Click while having Weapons menu open
-        if (ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new WeaponsMenu().title())))) weaponsMenuInteraction(e);
+        if (ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new WeaponsMenu().title())))) {
+            weaponsMenuInteraction(e);
+            return;
+        }
 
         // Click while having a sub menu items open
         if (ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new GearMenu().title()))) ||
@@ -67,23 +95,94 @@ public class InventoryClick implements Listener {
                 ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new RolesMenu().title()))) ||
                 ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new ToolsMenu().title()))) ||
                 ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new BlocksMenu().title()))) ||
-                ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new BooksMenu().title())))) itemsObjectMenuInteraction(e);
+                ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new BooksMenu().title())))) {
+            itemsObjectMenuInteraction(e);
+            return;
+        }
 
         // Click while having a sub menu of weapons open
         if (ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new SwordsMenu().title()))) ||
                 ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new BowsMenu().title()))) ||
-                ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new OthersMenu().title())))) weaponsObjectMenuInteraction(e);
+                ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new OthersMenu().title())))) {
+            weaponsObjectMenuInteraction(e);
+            return;
+        }
 
         /* BOOKS SECTION */
 
         // Click while having deathnote gui open
-        if (ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new DeathNote().title())))) deathnoteMenuInteraction(e);
+        if (ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new DeathNote().title())))) {
+            deathnoteMenuInteraction(e);
+            return;
+        }
 
         // Click while having reborn gui open
-        if (ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new Reborn().title())))) rebornMenuInteraction(e);
+        if (ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new Reborn().title())))) {
+            rebornMenuInteraction(e);
+            return;
+        }
 
         // Click while having teleport gui open
-        if (ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new Teleport().title())))) teleportMenuInteraction(e);
+        if (ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new Teleport().title())))) {
+            teleportMenuInteraction(e);
+            return;
+        }
+
+        // Check if the world is in a game
+        Player player = (Player) e.getWhoClicked();
+        if (plugin.getSQL().sqlSelect.mapExists(player.getWorld().getUID())) {
+            Game game = plugin.getSQL().sqlSelect.worldGame(player.getUniqueId());
+            // Check if player is not a host
+            if (game.getHosts() != null) {
+                for (UUID host : game.getHosts()) {
+                    if (host.equals(player.getUniqueId())) return;
+                }
+            }
+            // If nothing of above and its in top inventory
+            if (!e.getClickedInventory().getType().equals(InventoryType.PLAYER)) {
+                // Check if clicked on a item
+                if (e.getCurrentItem() != null) {
+                    ItemStack item = e.getCurrentItem();
+                    // Check if that item has lores
+                    if (item.getItemMeta() != null && item.getItemMeta().getLore() != null && item.getItemMeta().getLore().size() > 0) {
+                        boolean containsLock = false;
+                        for (String lore : item.getItemMeta().getLore()) {
+                            String strippedLore = ChatColor.stripColor(lore).replaceAll(">> ", "");
+                            if (strippedLore.equalsIgnoreCase("locked")) containsLock = true;
+                        }
+
+                        if (containsLock) {
+                            e.setCancelled(true);
+                            e.getWhoClicked().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cDit item is gelocked!"));
+                            return;
+                        }
+                    }
+                }
+            } else {
+                if (e.getView().getTopInventory() != null) {
+                    // Check if clicked on a item
+                    if (e.getCurrentItem() != null) {
+                        ItemStack item = e.getCurrentItem();
+                        // Check if that item has lores
+                        if (item.getItemMeta() != null && item.getItemMeta().getLore() != null && item.getItemMeta().getLore().size() > 0) {
+                            boolean containsLock = false;
+                            for (String lore : item.getItemMeta().getLore()) {
+                                String strippedLore = ChatColor.stripColor(lore).replaceAll(">> ", "");
+                                if (strippedLore.equalsIgnoreCase("locked")) containsLock = true;
+                            }
+
+                            if (containsLock) {
+                                e.setCancelled(true);
+                                e.getWhoClicked().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                                        plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cDit item is gelocked!"));
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     // Host menu
@@ -909,9 +1008,26 @@ public class InventoryClick implements Listener {
 
         ItemMeta newItemMeta = clickedItem.getItemMeta();
         newItemMeta.setLore(new ArrayList<>());
-        clickedItem.setItemMeta(newItemMeta);
+        if (clickedItem.getType().equals(Material.PAPER)) {
+            String strippedTitle = ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()).replaceAll(" >>", "");
+            if (strippedTitle.equalsIgnoreCase("speler") || strippedTitle.equalsIgnoreCase("egoïst") || strippedTitle.equalsIgnoreCase("mol") || strippedTitle.equalsIgnoreCase("peacekeeper")) {
+               List<String> lore = newItemMeta.getLore();
+               lore.add(ChatColor.translateAlternateColorCodes('&', "&8>> &c&lLocked"));
+               newItemMeta.setLore(lore);
 
-        player.getInventory().addItem(clickedItem);
+                ItemStack newItem = clickedItem;
+                newItem.setItemMeta(newItemMeta);
+
+                player.getInventory().addItem(newItem);
+                player.closeInventory();
+                new RolesMenu().open(player);
+                return;
+            }
+        }
+        ItemStack newItem = clickedItem;
+        newItem.setItemMeta(newItemMeta);
+
+        player.getInventory().addItem(newItem);
     }
 
     // Weapons menu

@@ -100,7 +100,7 @@ public final class CrazeMCWIDM extends JavaPlugin {
                 this.SQL.sqlUpdate.updateGame(game, "gametime");
             }
         }
-        World world = Bukkit.getServer().getWorlds().get(0);
+        World world = Bukkit.getServer().getWorld("WIDM-Lobby");
         // Teleport all players to lobby
         for (Player player : Bukkit.getServer().getOnlinePlayers()) {
             player.getScoreboard().clearSlot(DisplaySlot.SIDEBAR);
