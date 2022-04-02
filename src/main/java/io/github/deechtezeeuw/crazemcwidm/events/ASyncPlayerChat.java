@@ -19,6 +19,7 @@ public class ASyncPlayerChat implements Listener {
     @EventHandler
     public void onASyncPlayerChat(AsyncPlayerChatEvent e) {
         Player player = e.getPlayer();
+        if (player.hasPermission("crazemc.bypass.chat")) return;
         // Clear everyone from the receiving list
         e.getRecipients().clear();
         // Get your current world

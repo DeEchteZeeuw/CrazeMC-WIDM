@@ -5,6 +5,8 @@ import io.github.deechtezeeuw.crazemcwidm.commands.Commands;
 import io.github.deechtezeeuw.crazemcwidm.commands.color.Color;
 import io.github.deechtezeeuw.crazemcwidm.commands.game.Game;
 import io.github.deechtezeeuw.crazemcwidm.commands.host.Host;
+import io.github.deechtezeeuw.crazemcwidm.commands.itemlock.ItemLock;
+import io.github.deechtezeeuw.crazemcwidm.commands.itemlock.ItemUndroppable;
 import io.github.deechtezeeuw.crazemcwidm.commands.items.Items;
 import io.github.deechtezeeuw.crazemcwidm.commands.panel.Panel;
 import io.github.deechtezeeuw.crazemcwidm.commands.queue.Queue;
@@ -28,6 +30,8 @@ public class CommandManager implements CommandExecutor {
     public String panel = "panel";
     public String queue = "queue";
     public String items = "items";
+    public String itemlock = "itemlock";
+    public String undroppable = "undroppable";
 
     public void setup() {
         plugin.getCommand(main).setExecutor(this);
@@ -36,6 +40,8 @@ public class CommandManager implements CommandExecutor {
         plugin.getCommand(panel).setExecutor(this);
         plugin.getCommand(queue).setExecutor(this);
         plugin.getCommand(items).setExecutor(this);
+        plugin.getCommand(itemlock).setExecutor(this);
+        plugin.getCommand(undroppable).setExecutor(this);
 
         for (String color : plugin.getGameManager().getColors()) {
             plugin.getCommand(color).setExecutor(this);
@@ -79,6 +85,18 @@ public class CommandManager implements CommandExecutor {
         // Items commands
         if (command.getName().equalsIgnoreCase(items)) {
             new Items().onCommand(sender, command, args);
+            return true;
+        }
+
+        // Itemlock
+        if (command.getName().equalsIgnoreCase(itemlock)) {
+            new ItemLock().onCommand(sender, command, args);
+            return true;
+        }
+
+        // Undroppable
+        if (command.getName().equalsIgnoreCase(undroppable)) {
+            new ItemUndroppable().onCommand(sender, command, args);
             return true;
         }
 

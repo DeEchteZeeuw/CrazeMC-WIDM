@@ -57,6 +57,7 @@ public class PlayerChangedWorld implements Listener {
         }
         // If player
         for (Contestant singleContestant : game.getContestant()) {
+            if (singleContestant.getPlayer() == null) continue;
             if (singleContestant.getPlayer().equals(player.getUniqueId())) {
                 player.setGameMode(GameMode.ADVENTURE);
                 new BukkitRunnable() {

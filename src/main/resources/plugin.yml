@@ -68,6 +68,12 @@ commands:
   items:
     usage: /<command>
     description: Does the items command
+  itemlock:
+    usage: /<command>
+    description: Does this itemlock command
+  undroppable:
+    usage: /<command>
+    description: Does the undroppable command
 permissions:
   crazemc.tempvuller:
     description: tempvuller permissions

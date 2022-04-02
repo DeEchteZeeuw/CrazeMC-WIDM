@@ -14,5 +14,6 @@ public class EventManager {
         plugin.getServer().getPluginManager().registerEvents(new PlayerInteract(), plugin);
         plugin.getServer().getPluginManager().registerEvents(new CraftItem(), plugin);
         plugin.getServer().getPluginManager().registerEvents(new ASyncPlayerChat(), plugin);
+        plugin.getServer().getPluginManager().registerEvents(new PlayerDropItem(), plugin);
     }
 }
