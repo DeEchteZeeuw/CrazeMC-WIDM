@@ -2,6 +2,7 @@ package io.github.deechtezeeuw.crazemcwidm.managers;
 
 import io.github.deechtezeeuw.crazemcwidm.CrazeMCWIDM;
 import io.github.deechtezeeuw.crazemcwidm.commands.Commands;
+import io.github.deechtezeeuw.crazemcwidm.commands.WIDM;
 import io.github.deechtezeeuw.crazemcwidm.commands.color.Color;
 import io.github.deechtezeeuw.crazemcwidm.commands.game.Game;
 import io.github.deechtezeeuw.crazemcwidm.commands.host.Host;
@@ -106,6 +107,12 @@ public class CommandManager implements CommandExecutor {
         // Vote
         if (command.getName().equalsIgnoreCase(vote)) {
             new Vote().onCommand(sender, command, args);
+            return true;
+        }
+
+        // Widm
+        if (command.getName().equalsIgnoreCase(main)) {
+            new WIDM().onCommand(sender, command, args);
             return true;
         }
 

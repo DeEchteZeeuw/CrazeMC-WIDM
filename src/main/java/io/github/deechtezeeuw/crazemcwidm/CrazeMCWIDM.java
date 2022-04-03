@@ -1,10 +1,7 @@
 package io.github.deechtezeeuw.crazemcwidm;
 
 import io.github.deechtezeeuw.crazemcwidm.classes.Game;
-import io.github.deechtezeeuw.crazemcwidm.managers.CommandManager;
-import io.github.deechtezeeuw.crazemcwidm.managers.ConfigManager;
-import io.github.deechtezeeuw.crazemcwidm.managers.EventManager;
-import io.github.deechtezeeuw.crazemcwidm.managers.GameManager;
+import io.github.deechtezeeuw.crazemcwidm.managers.*;
 import io.github.deechtezeeuw.crazemcwidm.mysql.MySQL;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -30,6 +27,7 @@ public final class CrazeMCWIDM extends JavaPlugin {
     private ConfigManager configManager;
     private CommandManager commandManager;
     private GameManager gameManager;
+    private GameDataManager gameDataManager;
 
     @Override
     public void onEnable() {
@@ -60,6 +58,7 @@ public final class CrazeMCWIDM extends JavaPlugin {
         gameManager = new GameManager();
         commandManager = new CommandManager();
         commandManager.setup();
+        gameDataManager = new GameDataManager();
         new EventManager();
 
         // Load worlds from config
@@ -134,5 +133,9 @@ public final class CrazeMCWIDM extends JavaPlugin {
 
     public GameManager getGameManager() {
         return gameManager;
+    }
+
+    public GameDataManager getGameDataManager() {
+        return gameDataManager;
     }
 }
