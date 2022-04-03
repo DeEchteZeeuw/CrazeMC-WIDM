@@ -3,10 +3,7 @@ package io.github.deechtezeeuw.crazemcwidm.events;
 import io.github.deechtezeeuw.crazemcwidm.CrazeMCWIDM;
 import io.github.deechtezeeuw.crazemcwidm.classes.Contestant;
 import io.github.deechtezeeuw.crazemcwidm.classes.Game;
-import io.github.deechtezeeuw.crazemcwidm.gui.books.DeathNote;
-import io.github.deechtezeeuw.crazemcwidm.gui.books.PKCheck;
-import io.github.deechtezeeuw.crazemcwidm.gui.books.Reborn;
-import io.github.deechtezeeuw.crazemcwidm.gui.books.Teleport;
+import io.github.deechtezeeuw.crazemcwidm.gui.books.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -237,7 +234,8 @@ public class PlayerInteract implements Listener {
                 !bookTitle.equalsIgnoreCase("reborn") &&
                 !bookTitle.equalsIgnoreCase("teleport") &&
                 !bookTitle.equalsIgnoreCase("speler count") &&
-                !bookTitle.equalsIgnoreCase("pk check")) return;
+                !bookTitle.equalsIgnoreCase("pk check") &&
+                !bookTitle.equalsIgnoreCase("switch")) return;
 
         // Check if world is a game
         if (!plugin.getSQL().sqlSelect.mapExists(player.getWorld().getUID())) {
@@ -283,6 +281,9 @@ public class PlayerInteract implements Listener {
                 break;
             case "pk check":
                 new PKCheck().open(player);
+                break;
+            case "switch":
+                new Switch().open(player);
                 break;
         }
     }
