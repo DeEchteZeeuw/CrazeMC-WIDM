@@ -52,6 +52,7 @@ public class GameManager {
                 return;
             }
 
+            // Add game to GameDataManager
             plugin.getGameDataManager().insertGame(game);
         }
     }
