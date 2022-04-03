@@ -60,4 +60,16 @@ public class GameDataManager {
     public void deleteGame(UUID game) {
         this.gameHashMap.remove(game);
     }
+
+    /*
+    Host functions
+     */
+
+    /*
+    World functions
+     */
+
+    /*
+    Contestant functions
+     */
 }

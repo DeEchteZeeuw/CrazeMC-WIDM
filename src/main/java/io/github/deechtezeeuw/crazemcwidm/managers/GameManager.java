@@ -5,6 +5,7 @@ import io.github.deechtezeeuw.crazemcwidm.classes.Contestant;
 import io.github.deechtezeeuw.crazemcwidm.classes.Game;
 import io.github.deechtezeeuw.crazemcwidm.classes.Vote;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
@@ -41,6 +42,15 @@ public class GameManager {
             }
 
             plugin.getSQL().sqlInsert.insertContestant(contestant);
+
+            // New GameDataManager version
+            if (plugin.getGameDataManager().gameExists(game.getUuid())) {
+                Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                        plugin.getConfigManager().getMain().consolePrefix + plugin.getConfigManager().getMain().serverDivider + "&cEr is zojuist een game aanmaak aanvraag geweigerd omdat het UUID al bestond!"));
+                return;
+            }
+
+            plugin.getGameDataManager().insertGame(game);
         }
     }
 
@@ -48,8 +58,10 @@ public class GameManager {
         if (game == null) return;
 
         // TP all users away
-        for (Player userInWorld : Bukkit.getServer().getWorld(game.getMap()).getPlayers()) {
-            userInWorld.teleport(Bukkit.getServer().getWorld("WIDM-Lobby").getSpawnLocation());
+        if (Bukkit.getServer().getWorld("WIDM-Lobby") != null) {
+            for (Player userInWorld : Bukkit.getServer().getWorld(game.getMap()).getPlayers()) {
+                userInWorld.teleport(Bukkit.getServer().getWorld("WIDM-Lobby").getSpawnLocation());
+            }
         }
 
         // Delete world
@@ -72,6 +84,15 @@ public class GameManager {
 
         // Delete from database
         plugin.getSQL().sqlDelete.deleteGame(game.getUuid());
+
+        // New GameDataManager
+        if (!plugin.getGameDataManager().gameExists(game.getUuid())) {
+            Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    plugin.getConfigManager().getMain().consolePrefix + plugin.getConfigManager().getMain().serverDivider + "&cEr is zojuist een aanvraag om een game te verwijderen geweigerd, omdat hij niet bestaat!"));
+            return;
+        }
+
+        plugin.getGameDataManager().deleteGame(game.getUuid());
     }
 
     public String[] getColors() {

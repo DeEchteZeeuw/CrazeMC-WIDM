@@ -80,6 +80,9 @@ public final class CrazeMCWIDM extends JavaPlugin {
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
         }
 
+        // New GameDataManager
+        this.gameDataManager.setGameHashMap(this.SQL.sqlSelect.gameList());
+
         Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
                 configManager.getMain().consolePrefix + configManager.getMain().serverDivider + configManager.getMessages().consoleOnEnable));
     }
