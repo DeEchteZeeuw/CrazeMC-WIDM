@@ -110,7 +110,7 @@ public class PanelMenu extends GraphicalUserInterface {
                 Location location = contestant.getSpawn();
                 lore.add(ChatColor.translateAlternateColorCodes('&', "&8>> &f&lSpawn: " + location.getBlockX() + ", " + location.getBlockY() + ", " + location.getBlockZ()));
             } else {
-                lore.add(ChatColor.translateAlternateColorCodes('&', "&8>> &f&lSpawn: &c&lNiet geset"));
+                lore.add(ChatColor.translateAlternateColorCodes('&', "&8>> &f&lSpawn: &c&lNiet neergezet"));
             }
             // Click on me to open color menu
             lore.add(ChatColor.translateAlternateColorCodes('&', "&8>> &7&lKlik om " + contestant.getChatColor() + "&l" + contestant.getColorName() + " &7&laan te passen"));

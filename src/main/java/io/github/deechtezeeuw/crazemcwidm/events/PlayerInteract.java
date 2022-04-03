@@ -6,6 +6,7 @@ import io.github.deechtezeeuw.crazemcwidm.classes.Game;
 import io.github.deechtezeeuw.crazemcwidm.gui.books.DeathNote;
 import io.github.deechtezeeuw.crazemcwidm.gui.books.Reborn;
 import io.github.deechtezeeuw.crazemcwidm.gui.books.Teleport;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -240,6 +241,38 @@ public class PlayerInteract implements Listener {
                 break;
             case "teleport":
                 new Teleport().open(player);
+                break;
+            case "speler count":
+                // Check if world is a game
+                if (!plugin.getSQL().sqlSelect.mapExists(player.getWorld().getUID())) {
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                            plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cHet boekje kan alleen gebruikt worden in een game!"));
+                    return;
+                }
+                Game game = plugin.getSQL().sqlSelect.worldGame(player.getWorld().getUID());
+                if (game == null) return;
+
+                // Check if game is playing
+                if (game.getGameStatus() != 1) {
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                            plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cJe kan dit boekje alleen gebruiken als de game bezig is!"));
+                    return;
+                }
+
+                int alive = 0;
+
+                for (Contestant singleContestant : game.getContestant()) {
+                    if (singleContestant.getPlayer() == null) continue;
+                    if (singleContestant.getDeath()) continue;
+                    alive++;
+                }
+
+                for (Player singlePlayer : Bukkit.getServer().getWorld(game.getMap()).getPlayers()) {
+                    singlePlayer.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                            plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&fEr zijn op het moment &7&l(&f&l" + alive + "&7&l) &fspelers levend!"));
+                }
+
+                player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);
                 break;
         }
     }
