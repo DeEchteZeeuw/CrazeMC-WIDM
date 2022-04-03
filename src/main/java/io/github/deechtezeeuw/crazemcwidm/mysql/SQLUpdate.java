@@ -101,7 +101,7 @@ public class SQLUpdate {
                     break;
                 case "all":
                     ps = plugin.getSQL().getConnection().prepareStatement("UPDATE widm_games SET Hosts = ?, GameStatus = ?, GameTime = ? WHERE UUID = ?");
-                    if (game.getHosts().size() > 1) {
+                    if (game.getHosts().size() > 0) {
                         ps.setString(1, game.getHosts().toString());
                     } else {
                         ps.setString(1, null);

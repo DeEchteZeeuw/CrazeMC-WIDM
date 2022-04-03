@@ -2,6 +2,10 @@ package io.github.deechtezeeuw.crazemcwidm.managers;
 
 import io.github.deechtezeeuw.crazemcwidm.CrazeMCWIDM;
 import io.github.deechtezeeuw.crazemcwidm.classes.Game;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.World;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -61,6 +65,10 @@ public class GameDataManager {
         this.gameHashMap.remove(game);
     }
 
+    public Game selectGame(UUID game) {
+        return this.gameHashMap.get(game);
+    }
+
     /*
     Host functions
      */
@@ -72,6 +80,29 @@ public class GameDataManager {
         }
 
         return false;
+    }
+
+    public void unclaimHostingGame(UUID player) {
+        Game game = null;
+        for (Game singleGame : this.getGamesArrayList()) {
+            if (singleGame.getHosts() == null) continue;
+            if (singleGame.getHosts().contains(player)) {
+                game = singleGame;
+                break;
+            }
+        }
+
+        if (game != null) {
+            this.deleteGame(game.getUuid());
+        }
+
+        if (game.getMap() == null || Bukkit.getServer().getWorld(game.getMap()) == null) return;
+        World world = Bukkit.getServer().getWorld(game.getMap());
+        for (Player singlePlayer : world.getPlayers()) {
+            singlePlayer.teleport(Bukkit.getServer().getWorld("WIDM-Lobby").getSpawnLocation());
+            singlePlayer.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&aDe game waarin je zat is geunclaimed! Je wordt naar de lobby geteleporteerd."));
+        }
     }
 
     /*

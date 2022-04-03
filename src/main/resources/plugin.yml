@@ -74,6 +74,9 @@ commands:
   undroppable:
     usage: /<command>
     description: Does the undroppable command
+  unclaim:
+    usage: /<command>
+    description: Does the unclaim command
   vote:
     usage: /<command>
     description: Does the vote command
