@@ -1,6 +1,7 @@
 package io.github.deechtezeeuw.crazemcwidm.events;
 
 import io.github.deechtezeeuw.crazemcwidm.CrazeMCWIDM;
+import io.github.deechtezeeuw.crazemcwidm.classes.Contestant;
 import io.github.deechtezeeuw.crazemcwidm.classes.Game;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -18,13 +19,16 @@ public class PlayerMove implements Listener {
         if (!plugin.getSQL().sqlSelect.mapExists(player.getWorld().getUID())) return;
 
         // Player is in a world thats a game
-        if (!plugin.getSQL().sqlSelect.playerIsContestant(player.getUniqueId())) return;
-
-        Game game = plugin.getSQL().sqlSelect.playerGame(player.getUniqueId());
+        Game game = plugin.getSQL().sqlSelect.worldGame(player.getWorld().getUID());
         // Check if game is null
         if (game == null) return;
         // Check if map is not this world
-        if (!game.getMap().equals(player.getWorld().getUID())) return;
+        boolean iscontestant = false;
+        for (Contestant singleContestant : game.getContestant()) {
+            if (singleContestant.getPlayer() == null) continue;
+            if (singleContestant.getPlayer().equals(player.getUniqueId())) iscontestant = true;
+        }
+        if (!iscontestant) return;
 
         // Game is not playing so freeze users on position
         if (game.getGameStatus() != 1) {
