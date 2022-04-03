@@ -4,6 +4,7 @@ import io.github.deechtezeeuw.crazemcwidm.CrazeMCWIDM;
 import io.github.deechtezeeuw.crazemcwidm.classes.Contestant;
 import io.github.deechtezeeuw.crazemcwidm.classes.Game;
 import io.github.deechtezeeuw.crazemcwidm.gui.books.DeathNote;
+import io.github.deechtezeeuw.crazemcwidm.gui.books.PKCheck;
 import io.github.deechtezeeuw.crazemcwidm.gui.books.Reborn;
 import io.github.deechtezeeuw.crazemcwidm.gui.books.Teleport;
 import org.bukkit.Bukkit;
@@ -232,6 +233,28 @@ public class PlayerInteract implements Listener {
 
         String bookTitle = ChatColor.stripColor(book.getItemMeta().getDisplayName()).replaceAll(" >>", "").toLowerCase();
 
+        if (!bookTitle.equalsIgnoreCase("deathnote") &&
+                !bookTitle.equalsIgnoreCase("reborn") &&
+                !bookTitle.equalsIgnoreCase("teleport") &&
+                !bookTitle.equalsIgnoreCase("speler count") &&
+                !bookTitle.equalsIgnoreCase("pk check")) return;
+
+        // Check if world is a game
+        if (!plugin.getSQL().sqlSelect.mapExists(player.getWorld().getUID())) {
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cHet boekje kan alleen gebruikt worden in een game!"));
+            return;
+        }
+        Game game = plugin.getSQL().sqlSelect.worldGame(player.getWorld().getUID());
+        if (game == null) return;
+
+        // Check if game is playing
+        if (game.getGameStatus() != 1) {
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cJe kan dit boekje alleen gebruiken als de game bezig is!"));
+            return;
+        }
+
         switch (bookTitle) {
             case "deathnote":
                 new DeathNote().open(player);
@@ -243,22 +266,6 @@ public class PlayerInteract implements Listener {
                 new Teleport().open(player);
                 break;
             case "speler count":
-                // Check if world is a game
-                if (!plugin.getSQL().sqlSelect.mapExists(player.getWorld().getUID())) {
-                    player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                            plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cHet boekje kan alleen gebruikt worden in een game!"));
-                    return;
-                }
-                Game game = plugin.getSQL().sqlSelect.worldGame(player.getWorld().getUID());
-                if (game == null) return;
-
-                // Check if game is playing
-                if (game.getGameStatus() != 1) {
-                    player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                            plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cJe kan dit boekje alleen gebruiken als de game bezig is!"));
-                    return;
-                }
-
                 int alive = 0;
 
                 for (Contestant singleContestant : game.getContestant()) {
@@ -273,6 +280,9 @@ public class PlayerInteract implements Listener {
                 }
 
                 player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);
+                break;
+            case "pk check":
+                new PKCheck().open(player);
                 break;
         }
     }

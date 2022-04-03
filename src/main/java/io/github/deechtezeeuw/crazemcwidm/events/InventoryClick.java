@@ -5,6 +5,7 @@ import io.github.deechtezeeuw.crazemcwidm.classes.Contestant;
 import io.github.deechtezeeuw.crazemcwidm.classes.Game;
 import io.github.deechtezeeuw.crazemcwidm.gui.*;
 import io.github.deechtezeeuw.crazemcwidm.gui.books.DeathNote;
+import io.github.deechtezeeuw.crazemcwidm.gui.books.PKCheck;
 import io.github.deechtezeeuw.crazemcwidm.gui.books.Reborn;
 import io.github.deechtezeeuw.crazemcwidm.gui.books.Teleport;
 import io.github.deechtezeeuw.crazemcwidm.gui.itemsSubs.*;
@@ -125,6 +126,12 @@ public class InventoryClick implements Listener {
         // Click while having teleport gui open
         if (ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new Teleport().title())))) {
             teleportMenuInteraction(e);
+            return;
+        }
+
+        // Click while having pk check gui open
+        if (ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new PKCheck().title())))) {
+            pkcheckMenuInteraction(e);
             return;
         }
 
@@ -1425,5 +1432,47 @@ public class InventoryClick implements Listener {
             player.closeInventory();
             new Teleport().open(player);
         }
+    }
+
+    // PK Check
+    protected void pkcheckMenuInteraction(InventoryClickEvent e) {
+        e.setCancelled(true);
+
+        if (e.getClickedInventory() == null) return;
+        if (e.getClickedInventory().getType() == null) return;
+
+        if (!(e.getClickedInventory().getType().equals(InventoryType.CHEST))) return;
+        Player player = (Player) e.getWhoClicked();
+
+        // Check if you are in a game
+        if (!plugin.getSQL().sqlSelect.playerIsInAGame(player.getUniqueId())) return;
+        Game game = plugin.getSQL().sqlSelect.playerGame(player.getUniqueId());
+
+        if (e.getInventory().getItem(e.getSlot()) == null) return;
+        ItemStack clickedItem = e.getInventory().getItem(e.getSlot());
+        // Stained glass or barrier
+        if (clickedItem.getType().equals(Material.STAINED_GLASS_PANE)) return;
+
+        // Check if its an head
+        if (!clickedItem.getType().equals(Material.SKULL_ITEM)) return;
+        String clickedHead = ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()).replaceAll(" >>", "");
+
+        // Get UUID
+        UUID clickHeadUUID = (Bukkit.getServer().getPlayer(clickedHead) != null) ? Bukkit.getServer().getPlayer(clickedHead).getUniqueId() : Bukkit.getServer().getOfflinePlayer(clickedHead).getUniqueId();
+        if (clickHeadUUID == null) return;
+
+        Contestant contestant = null;
+
+        for (Contestant singleContestant : game.getContestant()) {
+            if (singleContestant.getPlayer() == null) continue;
+            if (singleContestant.getPlayer().equals(clickHeadUUID)) contestant = singleContestant;
+        }
+
+        if (contestant == null) return;
+
+        String text = (contestant.getPeacekeeper()) ? "&2&lwel" : "&4&lniet";
+        player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + contestant.getChatColor() + contestant.getPlayername() + " &fis " + text + " &fde &bPeacekeeper" ));
+        player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);
     }
 }
