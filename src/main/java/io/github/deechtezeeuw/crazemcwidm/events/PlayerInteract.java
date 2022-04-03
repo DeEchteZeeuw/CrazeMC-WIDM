@@ -174,6 +174,7 @@ public class PlayerInteract implements Listener {
                                     plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cEr is iets fout gegaan!"));
                             return;
                         }
+                        return;
                     }
                 }
                 // Egoïst
@@ -188,11 +189,12 @@ public class PlayerInteract implements Listener {
                                     plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cEr is iets fout gegaan!"));
                             return;
                         }
+                        return;
                     }
                 }
                 // Mol
                 if (strippedName.equalsIgnoreCase("mol")) {
-                    if (contestant.getRole() != 2) {
+                    if (contestant.getRole() != 3) {
                         contestant.setRole(3);
                         try {
                             plugin.getSQL().sqlUpdate.updateContestant(contestant, "role");
@@ -202,6 +204,7 @@ public class PlayerInteract implements Listener {
                                     plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cEr is iets fout gegaan!"));
                             return;
                         }
+                        return;
                     }
                 }
                 // Peacekeeper
