@@ -25,12 +25,15 @@ public class PlayerDropItem implements Listener {
         }
         if (!containsLore) return;
 
-        // Check if user is not an contestant
-        if (!plugin.getSQL().sqlSelect.playerIsContestant(player.getUniqueId())) return;
-        Game game = plugin.getSQL().sqlSelect.playerGame(player.getUniqueId());
+        // Check if world is a game
+        if (!plugin.getSQL().sqlSelect.mapExists(player.getWorld().getUID())) return;
+        Game game = plugin.getSQL().sqlSelect.worldGame(player.getWorld().getUID());
 
         // Check if its not in the game world
-        if (!player.getWorld().getUID().equals(game.getMap())) return;
+       if (game == null) return;
+
+       // Check if not host
+        if (game.isHost(player.getUniqueId())) return;
 
         e.setCancelled(true);
         player.sendMessage(ChatColor.translateAlternateColorCodes('&',
