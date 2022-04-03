@@ -40,7 +40,7 @@ public class GameSC {
         obj.getScore("§e§lKleur:").setScore(3);
         obj.getScore("§e§lSpelers:").setScore(2);
         obj.getScore("§e§lBezig:").setScore(1);
-        obj.getScore(ChatColor.translateAlternateColorCodes('&', "&7play.crazemc.com")).setScore(0);
+        obj.getScore(ChatColor.translateAlternateColorCodes('&', "&7play.crazemc.nl")).setScore(0);
 
         // Default values
         String role = "Spectator";
