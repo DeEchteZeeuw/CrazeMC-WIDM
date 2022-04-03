@@ -44,6 +44,8 @@ public class GameManager {
             plugin.getSQL().sqlInsert.insertContestant(contestant);
 
             // New GameDataManager version
+
+            // Check if game exists
             if (plugin.getGameDataManager().gameExists(game.getUuid())) {
                 Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
                         plugin.getConfigManager().getMain().consolePrefix + plugin.getConfigManager().getMain().serverDivider + "&cEr is zojuist een game aanmaak aanvraag geweigerd omdat het UUID al bestond!"));
@@ -85,13 +87,16 @@ public class GameManager {
         // Delete from database
         plugin.getSQL().sqlDelete.deleteGame(game.getUuid());
 
-        // New GameDataManager
+        // New GameDataManager functions
+
+        // Check if game exists
         if (!plugin.getGameDataManager().gameExists(game.getUuid())) {
             Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
                     plugin.getConfigManager().getMain().consolePrefix + plugin.getConfigManager().getMain().serverDivider + "&cEr is zojuist een aanvraag om een game te verwijderen geweigerd, omdat hij niet bestaat!"));
             return;
         }
 
+        // Delete from GameDataManager
         plugin.getGameDataManager().deleteGame(game.getUuid());
     }
 
