@@ -65,6 +65,15 @@ public class GameDataManager {
     Host functions
      */
 
+    public boolean alreadyHosting(UUID player) {
+        for (Game game : this.getGamesArrayList()) {
+            if (game.getHosts() == null) continue;
+            if (game.getHosts().contains(player)) return true;
+        }
+
+        return false;
+    }
+
     /*
     World functions
      */
