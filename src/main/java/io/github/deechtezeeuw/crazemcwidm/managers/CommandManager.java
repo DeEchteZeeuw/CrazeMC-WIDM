@@ -10,6 +10,7 @@ import io.github.deechtezeeuw.crazemcwidm.commands.itemlock.ItemUndroppable;
 import io.github.deechtezeeuw.crazemcwidm.commands.items.Items;
 import io.github.deechtezeeuw.crazemcwidm.commands.panel.Panel;
 import io.github.deechtezeeuw.crazemcwidm.commands.queue.Queue;
+import io.github.deechtezeeuw.crazemcwidm.commands.vote.Vote;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -32,6 +33,7 @@ public class CommandManager implements CommandExecutor {
     public String items = "items";
     public String itemlock = "itemlock";
     public String undroppable = "undroppable";
+    public String vote = "vote";
 
     public void setup() {
         plugin.getCommand(main).setExecutor(this);
@@ -42,6 +44,7 @@ public class CommandManager implements CommandExecutor {
         plugin.getCommand(items).setExecutor(this);
         plugin.getCommand(itemlock).setExecutor(this);
         plugin.getCommand(undroppable).setExecutor(this);
+        plugin.getCommand(vote).setExecutor(this);
 
         for (String color : plugin.getGameManager().getColors()) {
             plugin.getCommand(color).setExecutor(this);
@@ -97,6 +100,12 @@ public class CommandManager implements CommandExecutor {
         // Undroppable
         if (command.getName().equalsIgnoreCase(undroppable)) {
             new ItemUndroppable().onCommand(sender, command, args);
+            return true;
+        }
+
+        // Vote
+        if (command.getName().equalsIgnoreCase(vote)) {
+            new Vote().onCommand(sender, command, args);
             return true;
         }
 

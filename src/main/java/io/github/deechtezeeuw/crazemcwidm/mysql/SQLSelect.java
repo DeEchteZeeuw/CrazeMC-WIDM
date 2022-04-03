@@ -71,10 +71,12 @@ public class SQLSelect {
     public Game playerContestantGame(UUID player) {
         if (player == null) return null;
         Game game = null;
+        Contestant contestant = this.getPlayerContestant(player);
+        if (contestant == null) return null;
 
         try {
-            PreparedStatement ps = plugin.getSQL().getConnection().prepareStatement("SELECT * FROM widm_games WHERE Player=?");
-            ps.setString(1, player.toString());
+            PreparedStatement ps = plugin.getSQL().getConnection().prepareStatement("SELECT * FROM widm_games WHERE UUID=?");
+            ps.setString(1, contestant.getGame().toString());
             ResultSet resultSet = ps.executeQuery();
 
             if(resultSet.next()) {

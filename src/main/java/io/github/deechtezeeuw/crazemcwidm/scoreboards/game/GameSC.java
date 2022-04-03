@@ -146,7 +146,7 @@ public class GameSC {
                 // Time
                 switch (game.getGameStatus()) {
                     case 1:
-                        int total = plugin.getGameManager().getGamesThatStarted().get(game.getUuid());
+                        int total = (plugin.getGameManager().getGamesThatStarted().get(game.getUuid()) == null) ? 0 : plugin.getGameManager().getGamesThatStarted().get(game.getUuid());
                         int minutes = 0;
                         int seconds = 0;
 

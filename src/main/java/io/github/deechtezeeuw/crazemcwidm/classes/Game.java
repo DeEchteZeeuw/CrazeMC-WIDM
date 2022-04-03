@@ -65,6 +65,11 @@ public class Game {
         return hosts;
     }
 
+    public boolean isHost(UUID player) {
+        if (this.hosts.contains(player)) return true;
+        return false;
+    }
+
     // Get theme
     public String getTheme() {
         return theme;
@@ -132,7 +137,7 @@ public class Game {
                 }
 
                 if (game.getGameStatus() == 1) {
-                    plugin.getGameManager().getGamesThatStarted().put(uuid, plugin.getGameManager().getGamesThatStarted().get(uuid) + 1);
+                    plugin.getGameManager().getGamesThatStarted().put(uuid, (plugin.getGameManager().getGamesThatStarted().get(uuid) == null) ? 0 : plugin.getGameManager().getGamesThatStarted().get(uuid) + 1);
                 }
             }
         }.runTaskTimer(plugin, 1, 1 * 20L);

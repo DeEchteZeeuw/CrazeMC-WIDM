@@ -3,6 +3,7 @@ package io.github.deechtezeeuw.crazemcwidm.managers;
 import io.github.deechtezeeuw.crazemcwidm.CrazeMCWIDM;
 import io.github.deechtezeeuw.crazemcwidm.classes.Contestant;
 import io.github.deechtezeeuw.crazemcwidm.classes.Game;
+import io.github.deechtezeeuw.crazemcwidm.classes.Vote;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.ConsoleCommandSender;
@@ -16,6 +17,7 @@ public class GameManager {
     private final String[] colors = {"black", "blue", "cyan", "gray", "green", "lightblue", "lightgray", "lime", "magenta", "orange", "pink", "purple", "red", "white", "yellow"};
     private final HashMap<UUID, Integer> gamesThatStarted = new HashMap<>();
     private final HashMap<UUID, UUID> teleportChoice = new HashMap<>();
+    private final HashMap<UUID, Vote> gameVotes = new HashMap<UUID, Vote>();
 
     public void createGame(Game game) {
         // Add game to database
@@ -107,6 +109,67 @@ public class GameManager {
             teleportChoice.remove(player);
         } else {
             teleportChoice.put(player, choice);
+        }
+    }
+
+    // Get all votes from your game
+    public ArrayList<Vote> getGameVotes(UUID Game) {
+        ArrayList<Vote> gameVotes = new ArrayList<>();
+
+        for(Map.Entry<UUID, Vote> entry : this.gameVotes.entrySet()) {
+            UUID key = entry.getKey();
+            Vote vote = entry.getValue();
+
+            if (vote.getGame() != null) {
+                if (!vote.getGame().equals(Game)) continue;
+            }
+
+            gameVotes.add(vote);
+        }
+
+        return gameVotes;
+    }
+
+    public boolean hasVoted(UUID game, UUID contestant) {
+        ArrayList<Vote> gameVotes = this.getGameVotes(game);
+
+        for(Vote vote : gameVotes) {
+            if (vote.getContestant() != null) {
+                if (vote.getContestant().equals(contestant)) return true;
+            }
+        }
+
+        return false;
+    }
+
+    public void setGameVote(Vote vote) {
+        if (this.hasVoted(vote.getGame(), vote.getContestant())) return;
+
+        this.gameVotes.put(UUID.randomUUID(), vote);
+    }
+
+    public int getVotesOnPlayer(UUID game, UUID contestant) {
+        int numberOfVotes = 0;
+
+        ArrayList<Vote> gameVotes = this.getGameVotes(game);
+
+        for(Vote vote : gameVotes) {
+            if (vote.getContestant() != null) {
+                if (vote.getContestant().equals(contestant)) numberOfVotes++;
+            }
+        }
+
+        return numberOfVotes;
+    }
+
+    public void resetGameVotes(UUID game) {
+        for(Map.Entry<UUID, Vote> entry : this.gameVotes.entrySet()) {
+            UUID key = entry.getKey();
+            Vote vote = entry.getValue();
+
+            if (vote.getGame() != null) {
+                if (vote.getGame().equals(game)) this.gameVotes.remove(key);
+            }
         }
     }
 }

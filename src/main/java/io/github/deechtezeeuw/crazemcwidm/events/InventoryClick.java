@@ -132,14 +132,12 @@ public class InventoryClick implements Listener {
         Player player = (Player) e.getWhoClicked();
         if (plugin.getSQL().sqlSelect.mapExists(player.getWorld().getUID())) {
             Game game = plugin.getSQL().sqlSelect.worldGame(player.getUniqueId());
+            if (game == null) return;
             // Check if player is not a host
-            if (game.getHosts() != null) {
-                for (UUID host : game.getHosts()) {
-                    if (host.equals(player.getUniqueId())) return;
-                }
-            }
+            if (game.isHost(player.getUniqueId())) return;
+
             // If nothing of above and its in top inventory
-            if (!e.getClickedInventory().getType().equals(InventoryType.PLAYER)) {
+            if (!e.getClickedInventory().getType().equals(InventoryType.PLAYER) && !e.getClickedInventory().getType().equals(InventoryType.CREATIVE)) {
                 // Check if clicked on a item
                 if (e.getCurrentItem() != null) {
                     ItemStack item = e.getCurrentItem();
@@ -443,6 +441,11 @@ public class InventoryClick implements Listener {
             new PanelMenu().open(player);
             plugin.getGameManager().setGamesThatStarted(game.getUuid());
             game.updateTimer();
+
+            for (Player singlePlayer : Bukkit.getWorld(game.getMap()).getPlayers()) {
+                singlePlayer.sendTitle(ChatColor.translateAlternateColorCodes('&', plugin.getConfigManager().getMain().serverPrefix),
+                        ChatColor.translateAlternateColorCodes('&', "&aHet spel is gestart!"), 1, 60 ,1);
+            }
             return;
         }
 
@@ -459,6 +462,11 @@ public class InventoryClick implements Listener {
 
             player.closeInventory();
             new PanelMenu().open(player);
+
+            for (Player singlePlayer : Bukkit.getWorld(game.getMap()).getPlayers()) {
+                singlePlayer.sendTitle(ChatColor.translateAlternateColorCodes('&', plugin.getConfigManager().getMain().serverPrefix),
+                        ChatColor.translateAlternateColorCodes('&', "&5Het spel is gepauzeerd!"), 1, 60 ,1);
+            }
             return;
         }
 
@@ -475,6 +483,11 @@ public class InventoryClick implements Listener {
 
             player.closeInventory();
             new PanelMenu().open(player);
+
+            for (Player singlePlayer : Bukkit.getWorld(game.getMap()).getPlayers()) {
+                singlePlayer.sendTitle(ChatColor.translateAlternateColorCodes('&', plugin.getConfigManager().getMain().serverPrefix),
+                        ChatColor.translateAlternateColorCodes('&', "&aHet spel is hervat!"), 1, 60 ,1);
+            }
             return;
         }
 
@@ -489,6 +502,22 @@ public class InventoryClick implements Listener {
         if (strippedTitle.equalsIgnoreCase("items menu") && clickedItem.getType().equals(Material.WORKBENCH)) {
             player.closeInventory();
             new ItemsMenu().open(player);
+            return;
+        }
+
+        // Reset votes
+        if (strippedTitle.equalsIgnoreCase("reset votes") && clickedItem.getType().equals(Material.NOTE_BLOCK)) {
+            try {
+                plugin.getGameManager().resetGameVotes(game.getUuid());
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                        plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cEr is iets fout gegaan!"));
+                return;
+            }
+
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&aSuccesvol de votes gereset!"));
             return;
         }
 
