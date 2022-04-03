@@ -21,13 +21,13 @@ public class GameManager {
     private final HashMap<UUID, Vote> gameVotes = new HashMap<UUID, Vote>();
 
     public void createGame(Game game) {
-        // Add game to database
-        plugin.getSQL().sqlInsert.insertGame(game);
-
         ArrayList<Integer> colorCodes = new ArrayList<>();
         for (int x = 0;x < 15;x++) {
             colorCodes.add(x);
         }
+
+        ArrayList<Contestant> contestants = new ArrayList<>();
+
         // Add contestants to the database
         for (int i = 0; i < plugin.getConfigManager().getMain().getConfig().getInt("mappen."+game.getTheme()+".max-contestants"); i++) {
             Contestant contestant = new Contestant();
@@ -41,20 +41,22 @@ public class GameManager {
                 colorCodes.remove(0);
             }
 
-            plugin.getSQL().sqlInsert.insertContestant(contestant);
-
-            // New GameDataManager version
-
-            // Check if game exists
-            if (plugin.getGameDataManager().gameExists(game.getUuid())) {
-                Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        plugin.getConfigManager().getMain().consolePrefix + plugin.getConfigManager().getMain().serverDivider + "&cEr is zojuist een game aanmaak aanvraag geweigerd omdat het UUID al bestond!"));
-                return;
-            }
-
-            // Add game to GameDataManager
-            plugin.getGameDataManager().insertGame(game);
+            contestants.add(contestant);
         }
+
+        game.setContestantsList(contestants);
+
+        // New GameDataManager version
+
+        // Check if game exists
+        if (plugin.getGameDataManager().gameExists(game.getUuid())) {
+            Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    plugin.getConfigManager().getMain().consolePrefix + plugin.getConfigManager().getMain().serverDivider + "&cEr is zojuist een game aanmaak aanvraag geweigerd omdat het UUID al bestond!"));
+            return;
+        }
+
+        // Add game to GameDataManager
+        plugin.getGameDataManager().insertGame(game);
     }
 
     public void deleteGame(Game game) {
@@ -78,15 +80,6 @@ public class GameManager {
                 Bukkit.dispatchCommand(console, "mv confirm");
             }
         }
-
-        // Delete contestants
-        for (Contestant contestant : game.getContestant()) {
-            if (contestant.getPlayer() != null)  this.getTeleportChoice().remove(contestant.getPlayer());
-            plugin.getSQL().sqlDelete.deleteContestant(contestant.getUuid());
-        }
-
-        // Delete from database
-        plugin.getSQL().sqlDelete.deleteGame(game.getUuid());
 
         // New GameDataManager functions
 

@@ -99,6 +99,17 @@ public class SQLUpdate {
                     ps.setInt(1, game.getTime());
                     ps.setString(2, game.getUuid().toString());
                     break;
+                case "all":
+                    ps = plugin.getSQL().getConnection().prepareStatement("UPDATE widm_games SET Hosts = ?, GameStatus = ?, GameTime = ? WHERE UUID = ?");
+                    if (game.getHosts().size() > 1) {
+                        ps.setString(1, game.getHosts().toString());
+                    } else {
+                        ps.setString(1, null);
+                    }
+                    ps.setInt(2, game.getGameStatus());
+                    ps.setInt(3, game.getTime());
+                    ps.setString(4, game.getUuid().toString());
+                    break;
             }
 
             if (ps == null) return;

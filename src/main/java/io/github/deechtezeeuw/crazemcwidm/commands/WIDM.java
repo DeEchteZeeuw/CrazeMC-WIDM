@@ -10,7 +10,9 @@ public class WIDM extends Commands {
     @Override
     public void onCommand(CommandSender sender, Command command, String[] args) {
         Player player = (Player) sender;
+
         sender.sendMessage("je bent: " + (plugin.getGameDataManager().alreadyHosting(player.getUniqueId()) ? "wel" : "geen") + " host");
+        sender.sendMessage("er zijn: " + plugin.getGameDataManager().getGameHashMap().size() + " games");
     }
 
     @Override

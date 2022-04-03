@@ -301,7 +301,7 @@ public class InventoryClick implements Listener {
         }
 
         // Check if user is already an host
-        if (plugin.getSQL().sqlSelect.playerIsHost(player.getUniqueId())) {
+        if (plugin.getGameDataManager().alreadyHosting(player.getUniqueId())) {
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                     plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cJe kan geen game hosten, aangezien je er al 1 host. Unclaim deze eerst."));
             return;
@@ -335,7 +335,7 @@ public class InventoryClick implements Listener {
         game.setGameStatus(0);
 
         try {
-            plugin.getGameManager().createGame(game);
+            plugin.getGameDataManager().insertGame(game);
         } catch (Exception ex) {
             ex.printStackTrace();
             return;

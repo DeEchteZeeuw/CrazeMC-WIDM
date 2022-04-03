@@ -102,7 +102,7 @@ public final class CrazeMCWIDM extends JavaPlugin {
                 this.SQL.sqlUpdate.updateGame(game, "gametime");
             }
         }
-        World world = Bukkit.getServer().getWorld("WIDM-Lobby");
+        World world = (Bukkit.getServer().getWorld("WIDM-Lobby") == null) ? Bukkit.getServer().getWorlds().get(0) : Bukkit.getServer().getWorld("WIDM-Lobby");
         // Teleport all players to lobby
         for (Player player : Bukkit.getServer().getOnlinePlayers()) {
             player.getScoreboard().clearSlot(DisplaySlot.SIDEBAR);
@@ -110,6 +110,17 @@ public final class CrazeMCWIDM extends JavaPlugin {
             player.teleport(world.getSpawnLocation());
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                     this.getConfigManager().getMain().serverPrefix + this.getConfigManager().getMain().serverDivider + "&cIn verband met een plugin reload ben je naar de lobby getelporteerd!"));
+        }
+
+        // New GameDataManger functions
+        for (Game game : this.gameDataManager.getGamesArrayList()) {
+            if (this.getSQL().sqlSelect.gameExists(game.getUuid())) {
+                // Game exists so update
+                this.getSQL().sqlUpdate.updateGame(game, "all");
+            } else {
+                // Game not exists so insert
+                this.getSQL().sqlInsert.insertGame(game);
+            }
         }
 
         Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
