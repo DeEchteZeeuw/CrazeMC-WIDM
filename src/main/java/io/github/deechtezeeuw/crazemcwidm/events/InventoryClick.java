@@ -19,10 +19,7 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.UUID;
+import java.util.*;
 
 public class InventoryClick implements Listener {
     private final CrazeMCWIDM plugin = CrazeMCWIDM.getInstance();
@@ -330,6 +327,31 @@ public class InventoryClick implements Listener {
         game.setHost(player.getUniqueId());
         game.setTheme(strippedTitle.toLowerCase().replaceAll("\\s*", ""));
         game.setGameStatus(0);
+
+        ArrayList<Integer> colorCodes = new ArrayList<>();
+        for (int x = 0;x < 15;x++) {
+            colorCodes.add(x);
+        }
+
+        ArrayList<Contestant> contestants = new ArrayList<>();
+
+        // Add contestants to the database
+        for (int i = 0; i < plugin.getConfigManager().getMain().getConfig().getInt("mappen."+game.getTheme()+".max-contestants"); i++) {
+            Contestant contestant = new Contestant();
+            contestant.setUuid(UUID.randomUUID());
+            contestant.setGame(game.getUuid());
+
+            // Get random color
+            if (colorCodes.size() > 0) {
+                Collections.shuffle(colorCodes);
+                contestant.setColor(colorCodes.get(0));
+                colorCodes.remove(0);
+            }
+
+            contestants.add(contestant);
+        }
+
+        game.setContestantsList(contestants);
 
         try {
             plugin.getGameDataManager().insertGame(game);

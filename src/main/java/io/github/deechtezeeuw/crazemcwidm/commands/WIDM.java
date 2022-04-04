@@ -13,6 +13,9 @@ public class WIDM extends Commands {
 
         sender.sendMessage("je bent: " + (plugin.getGameDataManager().alreadyHosting(player.getUniqueId()) ? "wel" : "geen") + " host");
         sender.sendMessage("er zijn: " + plugin.getGameDataManager().getGameHashMap().size() + " games");
+        if (plugin.getGameDataManager().alreadyHosting(player.getUniqueId())) {
+            sender.sendMessage("er zijn : " + plugin.getGameDataManager().getHostingGame(player.getUniqueId()).getContestant().size() + " contestants in je potje");
+        }
     }
 
     @Override

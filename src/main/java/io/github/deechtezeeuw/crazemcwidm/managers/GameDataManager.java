@@ -1,6 +1,7 @@
 package io.github.deechtezeeuw.crazemcwidm.managers;
 
 import io.github.deechtezeeuw.crazemcwidm.CrazeMCWIDM;
+import io.github.deechtezeeuw.crazemcwidm.classes.Contestant;
 import io.github.deechtezeeuw.crazemcwidm.classes.Game;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -74,6 +75,7 @@ public class GameDataManager {
     Host functions
      */
 
+    // Check if player is hosting an game
     public boolean alreadyHosting(UUID player) {
         for (Game game : this.getGamesArrayList()) {
             if (game.getHosts() == null) continue;
@@ -83,6 +85,7 @@ public class GameDataManager {
         return false;
     }
 
+    // Unclaim current hosting game
     public void unclaimHostingGame(UUID player) {
         Game game = null;
         for (Game singleGame : this.getGamesArrayList()) {
@@ -112,6 +115,12 @@ public class GameDataManager {
             // Delete in database
             try {
                 plugin.getSQL().sqlDelete.deleteGame(game.getUuid());
+                for (Contestant contestant : game.getContestant()) {
+                    if (contestant == null) continue;
+                    if (plugin.getSQL().sqlSelect.contestantExists(contestant.getUuid())) {
+                        plugin.getSQL().sqlDelete.deleteContestant(contestant.getUuid());
+                    }
+                }
             } catch (Exception ex) {
                 ex.printStackTrace();
                 // Check if game exists
@@ -150,6 +159,19 @@ public class GameDataManager {
         }
     }
 
+    public Game getHostingGame(UUID player) {
+        Game game = null;
+        for (Game singleGame : this.getGamesArrayList()) {
+            if (singleGame.getHosts() == null) continue;
+            if (singleGame.getHosts().contains(player)) {
+                game = singleGame;
+                break;
+            }
+        }
+
+        return game;
+    }
+
     /*
     World functions
      */
@@ -157,4 +179,17 @@ public class GameDataManager {
     /*
     Contestant functions
      */
+
+    // Check if player is an contestant somewhere
+    public boolean alreadyContestant(UUID player) {
+        for (Game game : this.getGamesArrayList()) {
+            if (game.getContestant() == null) continue;
+            for (Contestant contestant : game.getContestant()) {
+                if (contestant.getPlayer() == null) continue;
+                if (contestant.getPlayer().equals(player)) return true;
+            }
+        }
+
+        return false;
+    }
 }

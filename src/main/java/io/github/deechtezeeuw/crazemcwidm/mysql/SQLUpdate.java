@@ -57,6 +57,25 @@ public class SQLUpdate {
                     ps.setString(1, contestant.getSpawn().getWorld().getName() + "#" + contestant.getSpawn().getBlockX() + "#" + contestant.getSpawn().getBlockY() + "#" + contestant.getSpawn().getBlockZ() + "#" + contestant.getSpawn().getPitch() + "#" + contestant.getSpawn().getYaw() );
                     ps.setString(2, contestant.getUuid().toString());
                     break;
+                case "all":
+                    ps = plugin.getSQL().getConnection().prepareStatement("UPDATE widm_contestants SET Player = ?, Role = ?, Kills = ?, Death = ?, Peacekeeper = ?, PKKills = ?, Spawn = ? WHERE UUID = ?");
+                    if (contestant.getPlayer() == null) {
+                        ps.setString(1, null);
+                    } else {
+                        ps.setString(1, contestant.getPlayer().toString());
+                    }
+                    ps.setInt(2, contestant.getRole());
+                    ps.setInt(3, contestant.getKills());
+                    ps.setBoolean(4, contestant.getDeath());
+                    ps.setBoolean(5, contestant.getPeacekeeper());
+                    ps.setInt(6, contestant.getPeacekeeperKills());
+                    if (contestant.getSpawn() == null) {
+                        ps.setString(7, null);
+                    } else {
+                        ps.setString(7, contestant.getSpawn().getWorld().getName() + "#" + contestant.getSpawn().getBlockX() + "#" + contestant.getSpawn().getBlockY() + "#" + contestant.getSpawn().getBlockZ() + "#" + contestant.getSpawn().getPitch() + "#" + contestant.getSpawn().getYaw() );
+                    }
+                    ps.setString(8, contestant.getUuid().toString());
+                    break;
             }
 
             if (ps == null) return;

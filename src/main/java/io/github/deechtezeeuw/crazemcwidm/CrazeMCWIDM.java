@@ -1,5 +1,6 @@
 package io.github.deechtezeeuw.crazemcwidm;
 
+import io.github.deechtezeeuw.crazemcwidm.classes.Contestant;
 import io.github.deechtezeeuw.crazemcwidm.classes.Game;
 import io.github.deechtezeeuw.crazemcwidm.managers.*;
 import io.github.deechtezeeuw.crazemcwidm.mysql.MySQL;
@@ -120,6 +121,14 @@ public final class CrazeMCWIDM extends JavaPlugin {
             } else {
                 // Game not exists so insert
                 this.getSQL().sqlInsert.insertGame(game);
+            }
+            // Loop through the contestant
+            for (Contestant contestant : game.getContestant()) {
+                if (!this.getSQL().sqlSelect.contestantExists(contestant.getUuid())) {
+                    this.getSQL().sqlInsert.insertContestant(contestant);
+                } else {
+                    this.getSQL().sqlUpdate.updateContestant(contestant, "all");
+                }
             }
         }
 
