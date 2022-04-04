@@ -4,6 +4,7 @@ import io.github.deechtezeeuw.crazemcwidm.CrazeMCWIDM;
 import io.github.deechtezeeuw.crazemcwidm.classes.Contestant;
 import io.github.deechtezeeuw.crazemcwidm.classes.Game;
 import io.github.deechtezeeuw.crazemcwidm.commands.Commands;
+import io.github.deechtezeeuw.crazemcwidm.gui.PanelMenu;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -26,24 +27,21 @@ public class Vote extends Commands {
 
         Player player = (Player) sender;
 
-        if (!plugin.getSQL().sqlSelect.mapExists(player.getWorld().getUID())) {
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cJe zit niet in een game wereld!"));
-            return;
-        }
-
-        Game game = plugin.getSQL().sqlSelect.worldGame(player.getWorld().getUID());
+        Game game = (plugin.getGameDataManager().alreadyHosting(player.getUniqueId())) ? plugin.getGameDataManager().getHostingGame(player.getUniqueId()) :  (plugin.getGameDataManager().alreadyContestant(player.getUniqueId())) ? plugin.getGameDataManager().getContestingGame(player.getUniqueId()) : null;
 
         if (game == null) {
+            player.closeInventory();
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cJe moet in een game zitten hiervoor!"));
+                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cJe moet in een spel zitten om gebruik te maken van vote!"));
+            new PanelMenu().open(player);
             return;
         }
 
-        // Check if its the good world
         if (!game.getMap().equals(player.getWorld().getUID())) {
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cJe bent niet in de juiste wereld!"));
+                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cJe bent niet in de correcte wereld!"));
+            player.closeInventory();
+            new PanelMenu().open(player);
             return;
         }
 
@@ -103,7 +101,7 @@ public class Vote extends Commands {
             return;
         }
 
-        Contestant contestant = plugin.getSQL().sqlSelect.getPlayerContestant(player.getUniqueId());
+        Contestant contestant = (plugin.getGameDataManager().alreadyContestant(player.getUniqueId())) ? plugin.getGameDataManager().getContestingContest(game.getUuid(), player.getUniqueId()) : null;
         if (contestant == null) {
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                     plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cJe moet hiervoor speler zijn in dit spel!"));
@@ -155,7 +153,7 @@ public class Vote extends Commands {
 
         for (Player singlePlayer : Bukkit.getServer().getWorld(game.getMap()).getPlayers()) {
             singlePlayer.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + contestant.getChatColor() + contestant.getPlayername() + " &fheeft op " + votedOn.getChatColor() + votedOn.getPlayername() + " &fgevote &7&l(&f&l" + plugin.getGameManager().getVotesOnPlayer(game.getUuid(), votedOn.getUuid()) + "&7&l)"));
+                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + contestant.getChatColor() + contestant.getPlayername() + " &fheeft op " + votedOn.getChatColor() + votedOn.getPlayername() + " &fgevote &7&l(&f&l" + plugin.getGameManager().getVotesOnPlayer(game.getUuid(), votedOn.getPlayer()) + "&7&l)"));
         }
     }
 

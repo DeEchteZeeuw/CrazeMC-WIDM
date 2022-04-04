@@ -203,4 +203,12 @@ public class GameDataManager {
         }
         return null;
     }
+
+    public Contestant getContestingContest(UUID game, UUID player) {
+        for (Contestant contestant : this.gameHashMap.get(game).getContestant()) {
+            if (contestant.getPlayer() == null) continue;
+            if (contestant.getPlayer().equals(player)) return contestant;
+        }
+        return null;
+    }
 }
