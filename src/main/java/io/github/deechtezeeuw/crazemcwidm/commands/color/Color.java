@@ -4,6 +4,7 @@ import io.github.deechtezeeuw.crazemcwidm.CrazeMCWIDM;
 import io.github.deechtezeeuw.crazemcwidm.classes.Contestant;
 import io.github.deechtezeeuw.crazemcwidm.classes.Game;
 import io.github.deechtezeeuw.crazemcwidm.commands.Commands;
+import io.github.deechtezeeuw.crazemcwidm.gui.PanelMenu;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -28,13 +29,29 @@ public class Color extends Commands {
         Player player = (Player) sender;
 
         // Check if host
-        if (!plugin.getSQL().sqlSelect.playerIsHost(player.getUniqueId())) {
+        if (!plugin.getGameDataManager().alreadyHosting(player.getUniqueId())) {
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                     plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cJe host geen game!"));
             return;
         }
 
-        Game game = plugin.getSQL().sqlSelect.playerHostGame(player.getUniqueId());
+        Game game = (plugin.getGameDataManager().alreadyHosting(player.getUniqueId())) ? plugin.getGameDataManager().getHostingGame(player.getUniqueId()) :  null;
+
+        if (game == null) {
+            player.closeInventory();
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cEr is geen game vonden die jij host, het menu sluit!"));
+            new PanelMenu().open(player);
+            return;
+        }
+
+        if (!game.getMap().equals(player.getWorld().getUID())) {
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cJe bent niet in de correcte wereld, het menu sluit!"));
+            player.closeInventory();
+            new PanelMenu().open(player);
+            return;
+        }
 
         Contestant contestant = null;
         for (Contestant singleContestant : game.getContestant()) {
@@ -50,13 +67,18 @@ public class Color extends Commands {
             return;
         }
 
-        contestant.setSpawn(player.getLocation());
-
         try {
-            plugin.getSQL().sqlUpdate.updateContestant(contestant, "spawn");
+            contestant.setSpawn(player.getLocation());
+            game.updateContestant(contestant);
         } catch (Exception e) {
             e.printStackTrace();
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cEr is een fout opgetreden!"));
+            return;
         }
+
+        player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&aSuccesvol de spawn neergezet voor " + contestant.getChatColor() + contestant.getColorName()));
     }
 
     @Override
