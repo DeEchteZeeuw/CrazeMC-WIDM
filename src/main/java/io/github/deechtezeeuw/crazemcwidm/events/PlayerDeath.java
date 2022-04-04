@@ -24,8 +24,8 @@ public class PlayerDeath implements Listener {
         World world = deadPlayer.getWorld();
 
         // Check if world is a game
-        if (plugin.getSQL().sqlSelect.mapExists(world.getUID())) {
-            Game game = plugin.getSQL().sqlSelect.worldGame(world.getUID());
+        if (plugin.getGameDataManager().worldIsPartOfGame(world.getUID())) {
+            Game game = plugin.getGameDataManager().getWorldGame(world.getUID());
             // Check if game is busy
             if (game.getGameStatus() == 1) {
                 deadPlayer.teleport(deathLocation);
@@ -60,12 +60,13 @@ public class PlayerDeath implements Listener {
 
                     try {
                         if ((killerWasContestant.getPeacekeeper())) {
-                            plugin.getSQL().sqlUpdate.updateContestant(killerWasContestant, "pkkills");
+
+                            game.updateContestant(killerWasContestant);
                             if (killerWasContestant.getPeacekeeperKills() >= 2) {
-                                plugin.getSQL().sqlUpdate.updateContestant(killerWasContestant, "death");
+                                game.updateContestant(killerWasContestant);
                             }
                         } else {
-                            plugin.getSQL().sqlUpdate.updateContestant(killerWasContestant, "kills");
+                            game.updateContestant(killerWasContestant);
                         }
                     } catch (Exception ex) {
                         ex.printStackTrace();
@@ -80,10 +81,9 @@ public class PlayerDeath implements Listener {
 
                 // if deadplayer was contestant
                 if (deadPlayerWasContestant != null) {
-                    deadPlayerWasContestant.setDeath(true);
-
                     try {
-                        plugin.getSQL().sqlUpdate.updateContestant(deadPlayerWasContestant, "death" );
+                        deadPlayerWasContestant.setDeath(true);
+                        game.updateContestant(deadPlayerWasContestant);
                     } catch (Exception ex) {
                         ex.printStackTrace();
                         return;

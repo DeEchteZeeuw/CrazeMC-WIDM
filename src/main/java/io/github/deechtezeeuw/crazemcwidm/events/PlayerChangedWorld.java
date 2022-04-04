@@ -22,15 +22,7 @@ public class PlayerChangedWorld implements Listener {
     public void onPlayerChangedWorld(PlayerChangedWorldEvent e) {
         Player player = e.getPlayer();
 
-        World world = player.getWorld();
-        Game game = null;
-        // Check if world is part of an game
-        for (Game singleGame : plugin.getSQL().sqlSelect.gameList()) {
-            if (singleGame.getMap().equals(world.getUID())) {
-                game = singleGame;
-                break;
-            }
-        }
+        Game game = (plugin.getGameDataManager().worldIsPartOfGame(player.getWorld().getUID())) ? plugin.getGameDataManager().getWorldGame(player.getWorld().getUID()) : null;
         // Not a part of an game
         if (game == null) {
             player.getScoreboard().clearSlot(DisplaySlot.SIDEBAR);
