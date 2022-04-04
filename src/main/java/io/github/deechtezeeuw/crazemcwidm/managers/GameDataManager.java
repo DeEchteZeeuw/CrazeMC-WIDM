@@ -192,4 +192,15 @@ public class GameDataManager {
 
         return false;
     }
+
+    public Game getContestingGame(UUID player) {
+        for (Game game : this.getGamesArrayList()) {
+            if (game.getContestant() == null) continue;
+            for (Contestant contestant : game.getContestant()) {
+                if (contestant.getPlayer() == null) continue;
+                if (contestant.getPlayer().equals(player)) return game;
+            }
+        }
+        return null;
+    }
 }

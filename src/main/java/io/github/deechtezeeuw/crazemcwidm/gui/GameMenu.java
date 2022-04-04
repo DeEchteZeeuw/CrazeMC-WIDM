@@ -31,7 +31,7 @@ public class GameMenu extends GraphicalUserInterface {
             gui.setItem(i, this.background());
         }
 
-        Game game = plugin.getSQL().sqlSelect.playerGame(player.getUniqueId());
+        Game game = (plugin.getGameDataManager().alreadyHosting(player.getUniqueId())) ? plugin.getGameDataManager().getHostingGame(player.getUniqueId()) : plugin.getGameDataManager().getContestingGame(player.getUniqueId());
 
         if (game == null) {
             player.closeInventory();
