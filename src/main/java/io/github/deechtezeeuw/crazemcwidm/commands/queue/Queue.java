@@ -48,7 +48,7 @@ public class Queue extends Commands {
                 return;
             }
 
-            if (plugin.getSQL().sqlSelect.playerIsInAGame(player.getUniqueId())) {
+            if (plugin.getGameDataManager().alreadyHosting(player.getUniqueId()) || plugin.getGameDataManager().alreadyContestant(player.getUniqueId())) {
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                         plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cJe kan de queue niet joinen, terwijl je in een game zit!"));
                 return;
@@ -89,7 +89,7 @@ public class Queue extends Commands {
                 return;
             }
 
-            if (!plugin.getSQL().sqlSelect.playerIsHost(player.getUniqueId())) {
+            if (!plugin.getGameDataManager().alreadyHosting(player.getUniqueId())) {
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                         plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cJe moet een game hosten om de queue te bekijken!"));
                 return;

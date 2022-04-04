@@ -365,6 +365,11 @@ public class InventoryClick implements Listener {
             ex.printStackTrace();
             return;
         }
+
+        if (plugin.getGameManager().getQueue().contains(player.getUniqueId())) {
+            plugin.getGameManager().getQueue().remove(player.getUniqueId());
+        }
+
         player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                 plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&aSuccesvol je game aangemaakt! Je wordt erheen geteleporteerd!"));
         // Tp host to the world
