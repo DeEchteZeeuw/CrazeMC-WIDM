@@ -461,14 +461,28 @@ public class InventoryClick implements Listener {
         // Strip title
         String strippedTitle = ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()).replace(" >>", "");
 
-        Game game = plugin.getSQL().sqlSelect.playerHostGame(player.getUniqueId());
+        Game game = (plugin.getGameDataManager().alreadyHosting(player.getUniqueId())) ? plugin.getGameDataManager().getHostingGame(player.getUniqueId()) : null;
+        // Check if there is an game
+        if (game == null) {
+            player.closeInventory();
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cDe game die je wilde aanpassen bestaat niet, je menu sluit!"));
+            return;
+        }
+
+        // Check if you are in the right world
+        if (!game.getMap().equals(player.getWorld().getUID())) {
+            player.closeInventory();
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cJe bent niet in de correcte wereld om dit te doen, je menu sluit!"));
+            return;
+        }
 
         // Start game
         if (strippedTitle.equalsIgnoreCase("start game") && clickedItem.getData().getData() == 5) {
 
             try {
                 game.setGameStatus(1);
-                plugin.getSQL().sqlUpdate.updateGame(game, "gamestatus");
             } catch (Exception ex) {
                 ex.printStackTrace();
                 return;
@@ -491,7 +505,6 @@ public class InventoryClick implements Listener {
 
             try {
                 game.setGameStatus(2);
-                plugin.getSQL().sqlUpdate.updateGame(game, "gamestatus");
             } catch (Exception ex) {
                 ex.printStackTrace();
                 return;
@@ -512,7 +525,6 @@ public class InventoryClick implements Listener {
 
             try {
                 game.setGameStatus(1);
-                plugin.getSQL().sqlUpdate.updateGame(game, "gamestatus");
             } catch (Exception ex) {
                 ex.printStackTrace();
                 return;
