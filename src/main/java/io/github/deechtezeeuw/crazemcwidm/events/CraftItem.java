@@ -17,12 +17,9 @@ public class CraftItem implements Listener {
         for (HumanEntity singlePlayer : e.getViewers()) {
             Player player = (Player) singlePlayer;
 
-            if (!plugin.getSQL().sqlSelect.mapExists(player.getWorld().getUID())) return;
+            if (!plugin.getGameDataManager().worldIsPartOfGame(player.getWorld().getUID())) return;
 
-            // Player is in a world thats a game
-            if (!plugin.getSQL().sqlSelect.playerIsContestant(player.getUniqueId())) return;
-
-            Game game = plugin.getSQL().sqlSelect.playerGame(player.getUniqueId());
+            Game game = (plugin.getGameDataManager().worldIsPartOfGame(player.getWorld().getUID())) ? plugin.getGameDataManager().getWorldGame(player.getWorld().getUID()) : null;
             // Check if game is null
             if (game == null) return;
             // Check if map is not this world
