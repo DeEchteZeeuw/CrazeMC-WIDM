@@ -16,11 +16,7 @@ public class GameSC {
     private final CrazeMCWIDM plugin = CrazeMCWIDM.getInstance();
 
     public void give(Player player) {
-        Game game = null;
-
-        if (plugin.getSQL().sqlSelect.mapExists(player.getWorld().getUID())) {
-            game = plugin.getSQL().sqlSelect.worldGame(player.getWorld().getUID());
-        }
+        Game game = (plugin.getGameDataManager().worldIsPartOfGame(player.getWorld().getUID())) ? plugin.getGameDataManager().getWorldGame(player.getWorld().getUID()) : null;
 
         if (game == null) return;
 
@@ -110,12 +106,7 @@ public class GameSC {
                 if (player.getScoreboard().getObjective(DisplaySlot.SIDEBAR).getScoreboard() == null) { cancel(); return; }
 
                 // Check if world were user is now is an game map
-                if (!plugin.getSQL().sqlSelect.mapExists(player.getWorld().getUID())) {
-                    cancel();
-                }
-
-                // Get game
-                Game game = (plugin.getSQL().sqlSelect.worldGame(player.getWorld().getUID()) != null ?  plugin.getSQL().sqlSelect.worldGame(player.getWorld().getUID()): null);
+                Game game = (plugin.getGameDataManager().worldIsPartOfGame(player.getWorld().getUID())) ? plugin.getGameDataManager().getWorldGame(player.getWorld().getUID()) : null;
                 if (game == null) cancel();
 
                 Scoreboard board = player.getScoreboard();
