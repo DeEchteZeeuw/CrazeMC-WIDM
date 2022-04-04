@@ -115,6 +115,7 @@ public final class CrazeMCWIDM extends JavaPlugin {
 
         // New GameDataManger functions
         for (Game game : this.gameDataManager.getGamesArrayList()) {
+            game.setGameStatus(2);
             if (this.getSQL().sqlSelect.gameExists(game.getUuid())) {
                 // Game exists so update
                 this.getSQL().sqlUpdate.updateGame(game, "all");
