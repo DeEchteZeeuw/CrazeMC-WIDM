@@ -143,25 +143,12 @@ public class Game {
 
     // Other commands
     public void updateTimer() {
-        if (!plugin.getGameManager().getGamesThatStarted().containsKey(this.uuid)) return;
-        final UUID uuid = this.getUuid();
+        final Game game = this;
 
         new BukkitRunnable() {
             @Override
             public void run() {
-                if (!plugin.getSQL().sqlSelect.gameExists(uuid)) {
-                    cancel();
-                    return;
-                }
-                Game game = plugin.getSQL().sqlSelect.uuidGame(uuid);
-                if (game == null) {
-                    cancel();
-                    return;
-                }
-
-                if (game.getGameStatus() == 1) {
-                    plugin.getGameManager().getGamesThatStarted().put(uuid, (plugin.getGameManager().getGamesThatStarted().get(uuid) == null) ? 0 : plugin.getGameManager().getGamesThatStarted().get(uuid) + 1);
-                }
+                game.setTime(game.getTime() + 1);
             }
         }.runTaskTimer(plugin, 1, 1 * 20L);
     }
