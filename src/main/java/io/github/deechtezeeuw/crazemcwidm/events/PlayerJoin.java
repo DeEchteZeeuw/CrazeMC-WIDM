@@ -14,7 +14,7 @@ public class PlayerJoin implements Listener {
     public void onJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
 
-        if (plugin.getSQL().sqlSelect.playerIsHost(player.getUniqueId())) {
+        if (plugin.getGameDataManager().alreadyHosting(player.getUniqueId()) || plugin.getGameDataManager().alreadyContestant(player.getUniqueId())) {
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                     plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&fJe hebt een game open staan! Join deze via het /game menu!"));
         }
