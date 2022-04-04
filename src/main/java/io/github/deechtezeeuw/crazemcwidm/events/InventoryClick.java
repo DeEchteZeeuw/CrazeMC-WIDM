@@ -138,8 +138,8 @@ public class InventoryClick implements Listener {
 
         // Check if the world is in a game
         Player player = (Player) e.getWhoClicked();
-        if (plugin.getSQL().sqlSelect.mapExists(player.getWorld().getUID())) {
-            Game game = plugin.getSQL().sqlSelect.worldGame(player.getUniqueId());
+        if (plugin.getGameDataManager().worldIsPartOfGame(player.getWorld().getUID())) {
+            Game game = (plugin.getGameDataManager().worldIsPartOfGame(player.getWorld().getUID())) ? plugin.getGameDataManager().getWorldGame(player.getWorld().getUID()) : null;
             if (game == null) return;
             // Check if player is not a host
             if (game.isHost(player.getUniqueId())) return;
@@ -1258,9 +1258,15 @@ public class InventoryClick implements Listener {
         if (playerUUID == null) playerUUID = (offlinePlayer != null) ? offlinePlayer.getUniqueId() : null;
 
         if (playerUUID == null) return;
-        Game game = null;
 
-        game = plugin.getSQL().sqlSelect.playerGame(playerUUID);
+        Game game = (plugin.getGameDataManager().alreadyContestant(playerUUID)) ? plugin.getGameDataManager().getContestingGame(playerUUID) : null;
+
+        if (game == null) {
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cEr is geen game gevonden, je menu wordt gesloten!"));
+            player.closeInventory();
+            return;
+        }
 
         boolean killerInGame = false;
         boolean toKilledInGame = false;
@@ -1285,11 +1291,11 @@ public class InventoryClick implements Listener {
             return;
         }
 
-        if (!plugin.getSQL().sqlSelect.playerIsContestant(playerUUID)) return;
-        Contestant deathcontestant = plugin.getSQL().sqlSelect.getPlayerContestant(playerUUID);
+        if (!plugin.getGameDataManager().alreadyContestant(playerUUID)) return;
+        Contestant deathcontestant = plugin.getGameDataManager().getContestingContest(game.getUuid(), playerUUID);
         try {
             deathcontestant.setDeath(true);
-            plugin.getSQL().sqlUpdate.updateContestant(deathcontestant, "death");
+            game.updateContestant(deathcontestant);
         } catch (Exception ex) {
             ex.printStackTrace();
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
@@ -1355,8 +1361,8 @@ public class InventoryClick implements Listener {
         if (rebornUUID == null) return;
 
         // Get game from user
-        if (!plugin.getSQL().sqlSelect.playerIsContestant(player.getUniqueId())) return;
-        Game game = plugin.getSQL().sqlSelect.playerGame(player.getUniqueId());
+        if (!plugin.getGameDataManager().alreadyContestant(player.getUniqueId())) return;
+        Game game = (plugin.getGameDataManager().alreadyContestant(player.getUniqueId())) ? plugin.getGameDataManager().getContestingGame(player.getUniqueId()) : null;
 
         // Check if game is null
         if (game == null) return;
@@ -1386,7 +1392,7 @@ public class InventoryClick implements Listener {
         // Update
         try {
             rebornContestant.setDeath(false);
-            plugin.getSQL().sqlUpdate.updateContestant(rebornContestant, "death");
+            game.updateContestant(rebornContestant);
         } catch (Exception ex) {
             ex.printStackTrace();
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
@@ -1430,8 +1436,8 @@ public class InventoryClick implements Listener {
         Player player = (Player) e.getWhoClicked();
 
         // Check if you are in a game
-        if (!plugin.getSQL().sqlSelect.playerIsInAGame(player.getUniqueId())) return;
-        Game game = plugin.getSQL().sqlSelect.playerGame(player.getUniqueId());
+        if (!plugin.getGameDataManager().alreadyContestant(player.getUniqueId())) return;
+        Game game = (plugin.getGameDataManager().alreadyContestant(player.getUniqueId())) ? plugin.getGameDataManager().getContestingGame(player.getUniqueId()) : null;
 
         if (e.getInventory().getItem(e.getSlot()) == null) return;
         ItemStack clickedItem = e.getInventory().getItem(e.getSlot());
@@ -1520,8 +1526,8 @@ public class InventoryClick implements Listener {
         Player player = (Player) e.getWhoClicked();
 
         // Check if you are in a game
-        if (!plugin.getSQL().sqlSelect.playerIsInAGame(player.getUniqueId())) return;
-        Game game = plugin.getSQL().sqlSelect.playerGame(player.getUniqueId());
+        if (!plugin.getGameDataManager().alreadyContestant(player.getUniqueId())) return;
+        Game game = (plugin.getGameDataManager().alreadyContestant(player.getUniqueId())) ? plugin.getGameDataManager().getContestingGame(player.getUniqueId()) : null;
 
         if (e.getInventory().getItem(e.getSlot()) == null) return;
         ItemStack clickedItem = e.getInventory().getItem(e.getSlot());
@@ -1562,8 +1568,8 @@ public class InventoryClick implements Listener {
         Player player = (Player) e.getWhoClicked();
 
         // Check if you are in a game
-        if (!plugin.getSQL().sqlSelect.playerIsInAGame(player.getUniqueId())) return;
-        Game game = plugin.getSQL().sqlSelect.playerGame(player.getUniqueId());
+        if (!plugin.getGameDataManager().alreadyContestant(player.getUniqueId())) return;
+        Game game = (plugin.getGameDataManager().alreadyContestant(player.getUniqueId())) ? plugin.getGameDataManager().getContestingGame(player.getUniqueId()) : null;
 
         if (e.getInventory().getItem(e.getSlot()) == null) return;
         ItemStack clickedItem = e.getInventory().getItem(e.getSlot());
