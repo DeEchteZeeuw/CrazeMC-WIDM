@@ -21,18 +21,25 @@ public class HostsMenu extends GraphicalUserInterface {
 
     @Override
     public void open(Player player) {
-        Game game = plugin.getSQL().sqlSelect.playerGame(player.getUniqueId());
+        Game game = (plugin.getGameDataManager().alreadyHosting(player.getUniqueId())) ? plugin.getGameDataManager().getHostingGame(player.getUniqueId()) : null;
 
         if (game == null) {
             player.closeInventory();
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cEr is iets fout gegaan!"));
+                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cEr is geen game vonden die jij host, het menu sluit!"));
+            return;
+        }
+
+        if (!game.getMap().equals(player.getWorld().getUID())) {
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cJe bent niet in de correcte wereld, het menu sluit!"));
+            player.closeInventory();
             return;
         }
 
         ArrayList<Player> possibleHostLists = new ArrayList<>();
         ArrayList<UUID> hostsFromGame = game.getHosts();
-        hostsFromGame.remove(0);
+//        hostsFromGame.remove(0);
 
         int guisize = 9;
         if (possibleHostLists.size()+hostsFromGame.size() > 9) guisize = 18;
@@ -44,7 +51,7 @@ public class HostsMenu extends GraphicalUserInterface {
         for (Player singlePlayer : Bukkit.getServer().getOnlinePlayers()) {
             // Check if player has any host permission
             if (singlePlayer.hasPermission("crazemc.tempvuller") || singlePlayer.hasPermission("crazemc.jrgamehost") || singlePlayer.hasPermission("crazemc.gamehost") || singlePlayer.hasPermission("crazemc.srgamehost")) {
-                if (!plugin.getSQL().sqlSelect.playerIsInAGame(singlePlayer.getUniqueId())) possibleHostLists.add(singlePlayer);
+                if (!plugin.getGameDataManager().alreadyHosting(singlePlayer.getUniqueId()) && !plugin.getGameDataManager().alreadyContestant(singlePlayer.getUniqueId())) possibleHostLists.add(singlePlayer);
             }
         }
 
