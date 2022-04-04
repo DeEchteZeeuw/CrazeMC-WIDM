@@ -340,6 +340,12 @@ public class InventoryClick implements Listener {
             Contestant contestant = new Contestant();
             contestant.setUuid(UUID.randomUUID());
             contestant.setGame(game.getUuid());
+            contestant.setRole(0);
+            contestant.setKills(0);
+            contestant.setDeath(false);
+            contestant.setPeacekeeper(false);
+            contestant.setPeacekeeperKills(0);
+            contestant.setSpawn(null);
 
             // Get random color
             if (colorCodes.size() > 0) {

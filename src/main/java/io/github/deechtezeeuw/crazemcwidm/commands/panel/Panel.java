@@ -28,13 +28,13 @@ public class Panel extends Commands {
 
         Player player = (Player) sender;
 
-        if (!plugin.getSQL().sqlSelect.playerIsHost(player.getUniqueId())) {
+        if (!plugin.getGameDataManager().alreadyHosting(player.getUniqueId())) {
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                     plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cJe host geen game!"));
             return;
         }
 
-        Game game = plugin.getSQL().sqlSelect.playerHostGame(player.getUniqueId());
+        Game game = plugin.getGameDataManager().getHostingGame(player.getUniqueId());
 
         if (!player.getWorld().getUID().equals(game.getMap())) {
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
