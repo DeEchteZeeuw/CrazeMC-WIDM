@@ -934,20 +934,29 @@ public class InventoryClick implements Listener {
         if (!(e.getClickedInventory().getType().equals(InventoryType.CHEST))) return;
         Player player = (Player) e.getWhoClicked();
 
+        Game game = (plugin.getGameDataManager().alreadyHosting(player.getUniqueId())) ? plugin.getGameDataManager().getHostingGame(player.getUniqueId()) : null;
+        // Check if there is an game
+        if (game == null) {
+            player.closeInventory();
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cDe game die je wilde aanpassen bestaat niet, je menu sluit!"));
+            return;
+        }
+
+        // Check if you are in the right world
+        if (!game.getMap().equals(player.getWorld().getUID())) {
+            player.closeInventory();
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cJe bent niet in de correcte wereld om dit te doen, je menu sluit!"));
+            return;
+        }
+
         if (e.getCurrentItem() == null) return;
         ItemStack clickedItem = e.getCurrentItem();
         if (clickedItem.getItemMeta() == null) return;
         if (clickedItem.getItemMeta().getDisplayName() == null) return;
         if (clickedItem.getItemMeta().getLore() == null) return;
 
-        if (!plugin.getSQL().sqlSelect.playerIsHost(player.getUniqueId())) {
-            player.closeInventory();
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverPrefix + "&cJe bent geen host"));
-            return;
-        }
-
-        Game game = plugin.getSQL().sqlSelect.playerHostGame(player.getUniqueId());
         Contestant contestant = null;
         Player wantAsColor = null;
 
@@ -964,10 +973,9 @@ public class InventoryClick implements Listener {
 
         if (Bukkit.getServer().getPlayer(ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()).replaceAll(" >>", "")) != null) wantAsColor = Bukkit.getServer().getPlayer(ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()).replaceAll(" >>", ""));
 
-        contestant.setPlayer(wantAsColor.getUniqueId());
-
         try {
-            plugin.getSQL().sqlUpdate.updateContestant(contestant, "player");
+            contestant.setPlayer(wantAsColor.getUniqueId());
+            game.updateContestant(contestant);
         } catch (Exception ex) {
             ex.printStackTrace();
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
