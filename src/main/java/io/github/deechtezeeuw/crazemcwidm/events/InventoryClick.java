@@ -374,18 +374,19 @@ public class InventoryClick implements Listener {
         Player player = (Player) e.getWhoClicked();
 
         // Get game of the player
-        Game game = null;
-        boolean host = false;
-        if (plugin.getSQL().sqlSelect.playerIsHost(player.getUniqueId())) {
-            game = plugin.getSQL().sqlSelect.playerHostGame(player.getUniqueId());
-            host = true;
+        if (!plugin.getGameDataManager().alreadyHosting(player.getUniqueId()) && !plugin.getGameDataManager().alreadyContestant(player.getUniqueId())) {
+            player.closeInventory();
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cJe moet in een game zitten om /game te openen!"));
+            return;
         }
-        if (plugin.getSQL().sqlSelect.playerIsContestant(player.getUniqueId())) {
-            game = plugin.getSQL().sqlSelect.playerGame(player.getUniqueId());
-        }
-        // If there is no game found then close it
+
+        Game game = (plugin.getGameDataManager().alreadyHosting(player.getUniqueId())) ? plugin.getGameDataManager().getHostingGame(player.getUniqueId()) : plugin.getGameDataManager().getContestingGame(player.getUniqueId());
+
         if (game == null) {
             player.closeInventory();
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cEr is geen juist spel gevonden, het menu is gesloten!"));
             return;
         }
 
@@ -404,7 +405,7 @@ public class InventoryClick implements Listener {
                 return;
             }
 
-            if (host) {
+            if (game.isHost(player.getUniqueId())) {
                 if (Bukkit.getServer().getWorld(game.getMap()) != null) {
                     player.teleport(Bukkit.getServer().getWorld(game.getMap()).getSpawnLocation());
                     player.sendMessage(ChatColor.translateAlternateColorCodes('&',
