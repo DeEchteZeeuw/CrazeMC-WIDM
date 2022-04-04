@@ -48,9 +48,8 @@ public class PlayerInteract implements Listener {
         Player player = e.getPlayer();
 
         // Check if world is a game
-        if (!plugin.getSQL().sqlSelect.mapExists(player.getWorld().getUID())) return;
-
-        Game game = plugin.getSQL().sqlSelect.worldGame(player.getWorld().getUID());
+        Game game = (plugin.getGameDataManager().worldIsPartOfGame(player.getWorld().getUID())) ? plugin.getGameDataManager().getWorldGame(player.getWorld().getUID()) : null;
+        if (game == null) return;
 
         Contestant contestant = null;
         for (Contestant singleContestant : game.getContestant()) {
@@ -165,9 +164,9 @@ public class PlayerInteract implements Listener {
                 // speler
                 if (strippedName.equalsIgnoreCase("speler")) {
                     if (contestant.getRole() != 1) {
-                        contestant.setRole(1);
                         try {
-                            plugin.getSQL().sqlUpdate.updateContestant(contestant, "role");
+                            contestant.setRole(1);
+                            game.updateContestant(contestant);
                         } catch (Exception ex) {
                             ex.printStackTrace();
                             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
@@ -176,13 +175,14 @@ public class PlayerInteract implements Listener {
                         }
                         return;
                     }
+                    return;
                 }
                 // Egoïst
                 if (strippedName.equalsIgnoreCase("egoïst")) {
                     if (contestant.getRole() != 2) {
-                        contestant.setRole(2);
                         try {
-                            plugin.getSQL().sqlUpdate.updateContestant(contestant, "role");
+                            contestant.setRole(2);
+                            game.updateContestant(contestant);
                         } catch (Exception ex) {
                             ex.printStackTrace();
                             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
@@ -191,13 +191,14 @@ public class PlayerInteract implements Listener {
                         }
                         return;
                     }
+                    return;
                 }
                 // Mol
                 if (strippedName.equalsIgnoreCase("mol")) {
                     if (contestant.getRole() != 3) {
-                        contestant.setRole(3);
                         try {
-                            plugin.getSQL().sqlUpdate.updateContestant(contestant, "role");
+                            contestant.setRole(3);
+                            game.updateContestant(contestant);
                         } catch (Exception ex) {
                             ex.printStackTrace();
                             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
@@ -206,20 +207,23 @@ public class PlayerInteract implements Listener {
                         }
                         return;
                     }
+                    return;
                 }
                 // Peacekeeper
                 if (strippedName.equalsIgnoreCase("peacekeeper")) {
                     if (!contestant.getPeacekeeper()) {
-                        contestant.setPeacekeeper(true);
                         try {
-                            plugin.getSQL().sqlUpdate.updateContestant(contestant, "peacekeeper");
+                            contestant.setPeacekeeper(true);
+                            game.updateContestant(contestant);
                         } catch (Exception ex) {
                             ex.printStackTrace();
                             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                                     plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cEr is iets fout gegaan!"));
                             return;
                         }
+                        return;
                     }
+                    return;
                 }
             }
         }
@@ -241,13 +245,12 @@ public class PlayerInteract implements Listener {
                 !bookTitle.equalsIgnoreCase("switch")) return;
 
         // Check if world is a game
-        if (!plugin.getSQL().sqlSelect.mapExists(player.getWorld().getUID())) {
+        Game game = (plugin.getGameDataManager().worldIsPartOfGame(player.getWorld().getUID())) ? plugin.getGameDataManager().getWorldGame(player.getWorld().getUID()) : null;
+        if (game == null) {
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                     plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cHet boekje kan alleen gebruikt worden in een game!"));
             return;
         }
-        Game game = plugin.getSQL().sqlSelect.worldGame(player.getWorld().getUID());
-        if (game == null) return;
 
         // Check if game is playing
         if (game.getGameStatus() != 1) {
