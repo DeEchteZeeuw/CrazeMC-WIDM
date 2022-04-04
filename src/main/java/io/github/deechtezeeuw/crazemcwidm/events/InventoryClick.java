@@ -21,6 +21,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 public class InventoryClick implements Listener {
@@ -283,19 +284,15 @@ public class InventoryClick implements Listener {
         }
 
         // Check if its the unclaim wool and player is hosting an game
-        if (strippedTitle.equalsIgnoreCase("unclaim") && plugin.getSQL().sqlSelect.playerIsHost(player.getUniqueId())) {
-            Game game = plugin.getSQL().sqlSelect.playerHostGame(player.getUniqueId());
-
+        if (strippedTitle.equalsIgnoreCase("unclaim") && plugin.getGameDataManager().alreadyHosting(player.getUniqueId())) {
             try {
-                plugin.getGameManager().deleteGame(game);
+                plugin.getGameDataManager().unclaimHostingGame(player.getUniqueId());
             } catch (Exception ex) {
                 ex.printStackTrace();
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                         plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cEr is een fout opgetreden!"));
                 return;
             }
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&aSuccesvol de game geunclaimed!"));
             player.closeInventory();
             return;
         }
@@ -340,7 +337,8 @@ public class InventoryClick implements Listener {
             ex.printStackTrace();
             return;
         }
-
+        player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&aSuccesvol je game aangemaakt! Je wordt erheen geteleporteerd!"));
         // Tp host to the world
         player.teleport(world.getSpawnLocation());
     }

@@ -62,34 +62,6 @@ public class GameManager {
     public void deleteGame(Game game) {
         if (game == null) return;
 
-        // TP all users away
-        if (Bukkit.getServer().getWorld("WIDM-Lobby") != null) {
-            for (Player userInWorld : Bukkit.getServer().getWorld(game.getMap()).getPlayers()) {
-                userInWorld.teleport(Bukkit.getServer().getWorld("WIDM-Lobby").getSpawnLocation());
-            }
-        }
-
-        // Delete world
-        if (game.getMap() != null) {
-            if (Bukkit.getServer().getWorld(game.getMap()) != null) {
-                World world = Bukkit.getServer().getWorld(game.getMap());
-
-                ConsoleCommandSender console = Bukkit.getConsoleSender();
-                String command = "mv delete "+world.getName();
-                Bukkit.dispatchCommand(console, command);
-                Bukkit.dispatchCommand(console, "mv confirm");
-            }
-        }
-
-        // New GameDataManager functions
-
-        // Check if game exists
-        if (!plugin.getGameDataManager().gameExists(game.getUuid())) {
-            Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    plugin.getConfigManager().getMain().consolePrefix + plugin.getConfigManager().getMain().serverDivider + "&cEr is zojuist een aanvraag om een game te verwijderen geweigerd, omdat hij niet bestaat!"));
-            return;
-        }
-
         // Delete from GameDataManager
         plugin.getGameDataManager().deleteGame(game.getUuid());
     }

@@ -21,7 +21,7 @@ public class Game extends Commands {
 
         Player player = (Player) sender;
 
-        if (!plugin.getSQL().sqlSelect.playerIsHost(player.getUniqueId()) && !plugin.getSQL().sqlSelect.playerIsContestant(player.getUniqueId())) {
+        if (!plugin.getGameDataManager().alreadyHosting(player.getUniqueId()) && !plugin.getSQL().sqlSelect.playerIsContestant(player.getUniqueId())) {
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                     plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cJe zit niet in een game!"));
             return;

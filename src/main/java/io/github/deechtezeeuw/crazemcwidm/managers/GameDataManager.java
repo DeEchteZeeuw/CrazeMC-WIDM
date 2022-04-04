@@ -5,6 +5,7 @@ import io.github.deechtezeeuw.crazemcwidm.classes.Game;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -92,16 +93,60 @@ public class GameDataManager {
             }
         }
 
+        if (game == null) return;
+
         if (game != null) {
-            this.deleteGame(game.getUuid());
+            // Delete local
+            try {
+                this.deleteGame(game.getUuid());
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                // Check if game exists
+                if (!plugin.getGameDataManager().gameExists(game.getUuid())) {
+                    Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                            plugin.getConfigManager().getMain().consolePrefix + plugin.getConfigManager().getMain().serverDivider + "&cEr is zojuist een aanvraag om een game te verwijderen geweigerd, omdat hij niet lokaal bestaat!"));
+                    return;
+                }
+            }
+
+            // Delete in database
+            try {
+                plugin.getSQL().sqlDelete.deleteGame(game.getUuid());
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                // Check if game exists
+                if (!plugin.getGameDataManager().gameExists(game.getUuid())) {
+                    Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                            plugin.getConfigManager().getMain().consolePrefix + plugin.getConfigManager().getMain().serverDivider + "&cEr is zojuist een aanvraag om een game te verwijderen geweigerd, omdat hij niet bestaat in de database!"));
+                    return;
+                }
+            }
+        }
+
+        // Delete map
+        if (game.getMap() != null) {
+            if (Bukkit.getServer().getWorld(game.getMap()) != null) {
+                World world = Bukkit.getServer().getWorld(game.getMap());
+
+                ConsoleCommandSender console = Bukkit.getConsoleSender();
+                String command = "mv delete "+world.getName();
+                Bukkit.dispatchCommand(console, command);
+                Bukkit.dispatchCommand(console, "mv confirm");
+            }
         }
 
         if (game.getMap() == null || Bukkit.getServer().getWorld(game.getMap()) == null) return;
         World world = Bukkit.getServer().getWorld(game.getMap());
+        World lobbyWorld = (Bukkit.getServer().getWorld("WIDM-Lobby") == null) ? Bukkit.getServer().getWorlds().get(0) : Bukkit.getServer().getWorld("WIDM-Lobby");
         for (Player singlePlayer : world.getPlayers()) {
-            singlePlayer.teleport(Bukkit.getServer().getWorld("WIDM-Lobby").getSpawnLocation());
+            singlePlayer.teleport(lobbyWorld.getSpawnLocation());
             singlePlayer.sendMessage(ChatColor.translateAlternateColorCodes('&',
                     plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&aDe game waarin je zat is geunclaimed! Je wordt naar de lobby geteleporteerd."));
+        }
+
+        if (!Bukkit.getServer().getPlayer(player).getWorld().getUID().equals(game.getMap())) {
+            Bukkit.getServer().getPlayer(player).sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&aSuccesvol de game geunclaimed!"));
         }
     }
 
