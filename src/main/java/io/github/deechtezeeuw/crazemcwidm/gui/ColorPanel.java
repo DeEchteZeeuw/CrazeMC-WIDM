@@ -2,6 +2,7 @@ package io.github.deechtezeeuw.crazemcwidm.gui;
 
 import io.github.deechtezeeuw.crazemcwidm.CrazeMCWIDM;
 import io.github.deechtezeeuw.crazemcwidm.classes.Contestant;
+import io.github.deechtezeeuw.crazemcwidm.classes.Game;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -16,6 +17,32 @@ public class ColorPanel extends GraphicalUserInterface {
     private final CrazeMCWIDM plugin = CrazeMCWIDM.getInstance();
 
     public void openColor(Contestant contestant, Player host) {
+        if (contestant == null) {
+            host.closeInventory();
+            host.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cEr is geen speler gevonden met deze vereiste, het menu sluit"));
+            new PanelMenu().open(host);
+            return;
+        }
+
+        Game game = (plugin.getGameDataManager().alreadyHosting(host.getUniqueId())) ? plugin.getGameDataManager().getHostingGame(host.getUniqueId()) : null;
+
+        if (game == null) {
+            host.closeInventory();
+            host.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cEr is geen game vonden die jij host, het menu sluit!"));
+            new PanelMenu().open(host);
+            return;
+        }
+
+        if (!game.getMap().equals(host.getWorld().getUID())) {
+            host.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cJe bent niet in de correcte wereld, het menu sluit!"));
+            host.closeInventory();
+            new PanelMenu().open(host);
+            return;
+        }
+
         Inventory gui = Bukkit.getServer().createInventory(
                 host,
                 this.size(),
