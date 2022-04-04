@@ -16,10 +16,8 @@ public class PlayerMove implements Listener {
     public void onPlayerMovement(PlayerMoveEvent e) {
         Player player = e.getPlayer();
 
-        if (!plugin.getSQL().sqlSelect.mapExists(player.getWorld().getUID())) return;
-
         // Player is in a world thats a game
-        Game game = plugin.getSQL().sqlSelect.worldGame(player.getWorld().getUID());
+        Game game = (plugin.getGameDataManager().worldIsPartOfGame(player.getWorld().getUID())) ? plugin.getGameDataManager().getWorldGame(player.getWorld().getUID()) : null;
         // Check if game is null
         if (game == null) return;
         // Check if map is not this world
