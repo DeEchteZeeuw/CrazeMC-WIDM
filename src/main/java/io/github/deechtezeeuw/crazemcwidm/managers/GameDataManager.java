@@ -176,6 +176,26 @@ public class GameDataManager {
     World functions
      */
 
+    // Check if the world is from a game
+    public boolean worldIsPartOfGame(UUID world) {
+        for (Game game : this.getGamesArrayList()) {
+            if (game.getMap() == null) continue;
+            if (game.getMap().equals(world)) return true;
+        }
+
+        return false;
+    }
+
+    // Get game
+    public Game getWorldGame(UUID world) {
+        for (Game game : this.getGamesArrayList()) {
+            if (game.getMap() == null) continue;
+            if (game.getMap().equals(world)) return game;
+        }
+
+        return null;
+    }
+
     /*
     Contestant functions
      */
