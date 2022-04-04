@@ -4,6 +4,7 @@ import io.github.deechtezeeuw.crazemcwidm.CrazeMCWIDM;
 import io.github.deechtezeeuw.crazemcwidm.classes.Contestant;
 import io.github.deechtezeeuw.crazemcwidm.classes.Game;
 import io.github.deechtezeeuw.crazemcwidm.commands.Commands;
+import io.github.deechtezeeuw.crazemcwidm.gui.PanelMenu;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -22,7 +23,30 @@ public class GameRemove extends Commands {
             plugin.getCommandManager().noPermission(null ,sender);
         }
         Player player = (Player)sender;
-        Game game = plugin.getSQL().sqlSelect.playerHostGame(player.getUniqueId());
+        // Check if host
+        if (!plugin.getGameDataManager().alreadyHosting(player.getUniqueId())) {
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cJe host geen game!"));
+            return;
+        }
+
+        Game game = (plugin.getGameDataManager().alreadyHosting(player.getUniqueId())) ? plugin.getGameDataManager().getHostingGame(player.getUniqueId()) :  null;
+
+        if (game == null) {
+            player.closeInventory();
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cEr is geen game vonden die jij host, het menu sluit!"));
+            new PanelMenu().open(player);
+            return;
+        }
+
+        if (!game.getMap().equals(player.getWorld().getUID())) {
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cJe bent niet in de correcte wereld, het menu sluit!"));
+            player.closeInventory();
+            new PanelMenu().open(player);
+            return;
+        }
 
         String Color = args[1].toLowerCase();
         Contestant contestant = null;
@@ -52,7 +76,7 @@ public class GameRemove extends Commands {
             // Remove player in color
             contestant.setPlayer(null);
             // Update in database
-            plugin.getSQL().sqlUpdate.updateContestant(contestant, "player");
+            game.updateContestant(contestant);
         } catch (Exception e) {
             e.printStackTrace();
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',

@@ -4,6 +4,7 @@ import io.github.deechtezeeuw.crazemcwidm.CrazeMCWIDM;
 import io.github.deechtezeeuw.crazemcwidm.classes.Contestant;
 import io.github.deechtezeeuw.crazemcwidm.classes.Game;
 import io.github.deechtezeeuw.crazemcwidm.commands.Commands;
+import io.github.deechtezeeuw.crazemcwidm.gui.PanelMenu;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -22,7 +23,30 @@ public class GameAdd extends Commands {
             plugin.getCommandManager().noPermission(null ,sender);
         }
         Player player = (Player)sender;
-        Game game = plugin.getSQL().sqlSelect.playerHostGame(player.getUniqueId());
+        // Check if host
+        if (!plugin.getGameDataManager().alreadyHosting(player.getUniqueId())) {
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cJe host geen game!"));
+            return;
+        }
+
+        Game game = (plugin.getGameDataManager().alreadyHosting(player.getUniqueId())) ? plugin.getGameDataManager().getHostingGame(player.getUniqueId()) :  null;
+
+        if (game == null) {
+            player.closeInventory();
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cEr is geen game vonden die jij host, het menu sluit!"));
+            new PanelMenu().open(player);
+            return;
+        }
+
+        if (!game.getMap().equals(player.getWorld().getUID())) {
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cJe bent niet in de correcte wereld, het menu sluit!"));
+            player.closeInventory();
+            new PanelMenu().open(player);
+            return;
+        }
 
         String Color = args[1].toLowerCase();
         String Playername = args[2];
@@ -44,7 +68,7 @@ public class GameAdd extends Commands {
         }
 
         // Check if player is not in a game
-        if (plugin.getSQL().sqlSelect.playerIsInAGame(arg2Player.getUniqueId())) {
+        if (plugin.getGameDataManager().alreadyHosting(arg2Player.getUniqueId()) || plugin.getGameDataManager().alreadyContestant(arg2Player.getUniqueId())) {
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                     plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cSpeler zit in een game!"));
             return;
@@ -74,8 +98,8 @@ public class GameAdd extends Commands {
             plugin.getGameManager().getQueue().remove(arg2Player.getUniqueId());
             // Set player in color
             contestant.setPlayer(arg2Player.getUniqueId());
-            // Update in database
-            plugin.getSQL().sqlUpdate.updateContestant(contestant, "player");
+            // Update
+            game.updateContestant(contestant);
         } catch (Exception e) {
             e.printStackTrace();
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
