@@ -26,8 +26,7 @@ public class PlayerDropItem implements Listener {
         if (!containsLore) return;
 
         // Check if world is a game
-        if (!plugin.getSQL().sqlSelect.mapExists(player.getWorld().getUID())) return;
-        Game game = plugin.getSQL().sqlSelect.worldGame(player.getWorld().getUID());
+        Game game = (plugin.getGameDataManager().worldIsPartOfGame(player.getWorld().getUID())) ? plugin.getGameDataManager().getWorldGame(player.getWorld().getUID()) : null;
 
         // Check if its not in the game world
        if (game == null) return;
