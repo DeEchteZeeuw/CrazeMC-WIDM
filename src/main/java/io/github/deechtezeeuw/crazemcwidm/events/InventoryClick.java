@@ -572,7 +572,6 @@ public class InventoryClick implements Listener {
 
         // Unclaim game
         if (strippedTitle.equalsIgnoreCase("unclaim") && clickedItem.getData().getData() == 4) {
-
             try {
                 plugin.getGameManager().deleteGame(game);
             } catch (Exception ex) {
