@@ -39,7 +39,7 @@ public class HostsMenu extends GraphicalUserInterface {
 
         ArrayList<Player> possibleHostLists = new ArrayList<>();
         ArrayList<UUID> hostsFromGame = game.getHosts();
-//        hostsFromGame.remove(0);
+        hostsFromGame.remove(0);
 
         int guisize = 9;
         if (possibleHostLists.size()+hostsFromGame.size() > 9) guisize = 18;

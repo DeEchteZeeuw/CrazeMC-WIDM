@@ -606,6 +606,23 @@ public class InventoryClick implements Listener {
         if (!(e.getClickedInventory().getType().equals(InventoryType.CHEST))) return;
         Player player = (Player) e.getWhoClicked();
 
+        Game game = (plugin.getGameDataManager().alreadyHosting(player.getUniqueId())) ? plugin.getGameDataManager().getHostingGame(player.getUniqueId()) : null;
+        // Check if there is an game
+        if (game == null) {
+            player.closeInventory();
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cDe game die je wilde aanpassen bestaat niet, je menu sluit!"));
+            return;
+        }
+
+        // Check if you are in the right world
+        if (!game.getMap().equals(player.getWorld().getUID())) {
+            player.closeInventory();
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cJe bent niet in de correcte wereld om dit te doen, je menu sluit!"));
+            return;
+        }
+
         if (e.getCurrentItem() == null) return;
         ItemStack clickedItem = e.getCurrentItem();
         if (clickedItem.getItemMeta() == null) return;
@@ -619,14 +636,12 @@ public class InventoryClick implements Listener {
 
             // Delete as host
             if (strippedLore.equalsIgnoreCase("klik hier om hem/haar te verwijderen als host")) {
-                Game game = plugin.getSQL().sqlSelect.playerHostGame(player.getUniqueId());
 
                 String playername = ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()).replace(" >>", "");
 
                 UUID uuid =(Bukkit.getServer().getPlayer(playername) != null ? Bukkit.getServer().getPlayer(playername).getUniqueId() : Bukkit.getServer().getOfflinePlayer(playername).getUniqueId() );
                 game.setHost(uuid);
 
-                plugin.getSQL().sqlUpdate.updateGame(game, "hosts");
                 player.closeInventory();
                 if (Bukkit.getServer().getPlayer(uuid) != null) Bukkit.getServer().getPlayer(uuid).teleport(Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',
