@@ -102,11 +102,34 @@ public class Game {
 
     // Get contestant
     public ArrayList<Contestant> getContestant() {
-        return this.contestants;
+        ArrayList<Contestant> alphArray = new ArrayList<>();
+
+        for (Contestant contestant : this.contestants) {
+            if (alphArray.size() != 0) {
+                if (alphArray.get(alphArray.size() - 1).getColor() > contestant.getColor()) {
+                    alphArray.add(0, contestant);
+                } else {
+                    alphArray.add(contestant);
+                }
+            } else {
+                alphArray.add(contestant);
+            }
+        }
+        return alphArray;
     }
 
     public void setContestantsList(ArrayList<Contestant> contestants) {
         this.contestants = contestants;
+    }
+
+    public void updateContestant(Contestant contestant) {
+        for (int i = 0; i < this.getContestant().size(); i++) {
+            if (this.getContestant().get(i).getUuid().equals(contestant.getUuid())) {
+                this.getContestant().remove(i);
+                this.getContestant().add(contestant);
+                break;
+            }
+        }
     }
 
     // Time

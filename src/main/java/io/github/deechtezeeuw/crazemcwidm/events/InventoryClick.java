@@ -665,20 +665,29 @@ public class InventoryClick implements Listener {
         if (!(e.getClickedInventory().getType().equals(InventoryType.CHEST))) return;
         Player player = (Player) e.getWhoClicked();
 
+        Game game = (plugin.getGameDataManager().alreadyHosting(player.getUniqueId())) ? plugin.getGameDataManager().getHostingGame(player.getUniqueId()) : null;
+        // Check if there is an game
+        if (game == null) {
+            player.closeInventory();
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cDe game die je wilde aanpassen bestaat niet, je menu sluit!"));
+            return;
+        }
+
+        // Check if you are in the right world
+        if (!game.getMap().equals(player.getWorld().getUID())) {
+            player.closeInventory();
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cJe bent niet in de correcte wereld om dit te doen, je menu sluit!"));
+            return;
+        }
+
         if (e.getCurrentItem() == null) return;
         ItemStack clickedItem = e.getCurrentItem();
         if (clickedItem.getItemMeta() == null) return;
         if (clickedItem.getItemMeta().getDisplayName() == null) return;
         if (clickedItem.getItemMeta().getLore() == null) return;
 
-        if (!plugin.getSQL().sqlSelect.playerIsHost(player.getUniqueId())) {
-            player.closeInventory();
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverPrefix + "&cJe bent geen host"));
-            return;
-        }
-
-        Game game = plugin.getSQL().sqlSelect.playerHostGame(player.getUniqueId());
         Contestant contestant = null;
 
         for (ItemStack items : e.getClickedInventory().getStorageContents()) {
@@ -691,7 +700,13 @@ public class InventoryClick implements Listener {
             }
         }
 
-        if (contestant == null) return;
+        if (contestant == null) {
+            player.closeInventory();
+            new PanelMenu().open(player);
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cDe speler is niet gevonden, je wordt terug naar het paneel gestuurd!"));
+            return;
+        }
 
         // Player
         if (clickedItem.getType().equals(Material.SKULL_ITEM) && ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()).equalsIgnoreCase("Speler >>")) {
@@ -702,10 +717,9 @@ public class InventoryClick implements Listener {
         }
         if (contestant.getPlayer() != null && clickedItem.getType().equals(Material.SKULL_ITEM) && ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()).equalsIgnoreCase(contestant.getPlayername() + " >>")) {
             UUID oldColor = contestant.getPlayer();
-            contestant.setPlayer(null);
-            contestant.getPlayer();
             try {
-                plugin.getSQL().sqlUpdate.updateContestant(contestant, "player");
+                contestant.setPlayer(null);
+                game.updateContestant(contestant);
             } catch (Exception ex) {
                 ex.printStackTrace();
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',
@@ -721,27 +735,26 @@ public class InventoryClick implements Listener {
             if (Bukkit.getServer().getPlayer(oldColor) != null) {
                 Bukkit.getServer().getPlayer(oldColor).teleport(Bukkit.getServer().getWorlds().get(0).getSpawnLocation());
             }
-
+            return;
         }
 
         // Role
         if (clickedItem.getType().equals(Material.COMPASS) && ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()).equalsIgnoreCase("Role >>")) {
-            switch (contestant.getRole()) {
-                case 0:
-                    contestant.setRole(1);
-                    break;
-                case 1:
-                    contestant.setRole(2);
-                    break;
-                case 2:
-                    contestant.setRole(3);
-                    break;
-                default:
-                    contestant.setRole(0);
-            }
-
             try {
-                plugin.getSQL().sqlUpdate.updateContestant(contestant, "role");
+                switch (contestant.getRole()) {
+                    case 0:
+                        contestant.setRole(1);
+                        break;
+                    case 1:
+                        contestant.setRole(2);
+                        break;
+                    case 2:
+                        contestant.setRole(3);
+                        break;
+                    default:
+                        contestant.setRole(0);
+                }
+                game.updateContestant(contestant);
             } catch (Exception ex) {
                 ex.printStackTrace();
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',
@@ -760,10 +773,9 @@ public class InventoryClick implements Listener {
         if (clickedItem.getType().equals(Material.IRON_SWORD) && ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()).equalsIgnoreCase("Kill(s) >>")) {
             // Kill toevoegen
             if (e.isLeftClick()) {
-                contestant.setKills(contestant.getKills() + 1);
-
                 try {
-                    plugin.getSQL().sqlUpdate.updateContestant(contestant, "kills");
+                    contestant.setKills(contestant.getKills() + 1);
+                    game.updateContestant(contestant);
                 } catch (Exception ex) {
                     ex.printStackTrace();
                     player.sendMessage(ChatColor.translateAlternateColorCodes('&',
@@ -779,10 +791,9 @@ public class InventoryClick implements Listener {
             // Kill verwijderen
             if (contestant.getKills() >= 1) {
                 if (e.isRightClick()) {
-                    contestant.setKills(contestant.getKills() - 1);
-
                     try {
-                        plugin.getSQL().sqlUpdate.updateContestant(contestant, "kills");
+                        contestant.setKills(contestant.getKills() - 1);
+                        game.updateContestant(contestant);
                     } catch (Exception ex) {
                         ex.printStackTrace();
                         player.sendMessage(ChatColor.translateAlternateColorCodes('&',
@@ -804,14 +815,13 @@ public class InventoryClick implements Listener {
 
         // Set death
         if (clickedItem.getType().equals(Material.POTION) && ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()).equalsIgnoreCase("dood >>")) {
-            if (contestant.getDeath()) {
-                contestant.setDeath(false);
-            } else {
-                contestant.setDeath(true);
-            }
-
             try {
-                plugin.getSQL().sqlUpdate.updateContestant(contestant, "death");
+                if (contestant.getDeath()) {
+                    contestant.setDeath(false);
+                } else {
+                    contestant.setDeath(true);
+                }
+                game.updateContestant(contestant);
             } catch (Exception ex) {
                 ex.printStackTrace();
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',
@@ -831,14 +841,13 @@ public class InventoryClick implements Listener {
 
         // Set peacekeeper
         if (clickedItem.getType().equals(Material.DIAMOND_HELMET) && ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()).equalsIgnoreCase("Peacekeeper >>")) {
-            if (contestant.getPeacekeeper()) {
-                contestant.setPeacekeeper(false);
-            } else {
-                contestant.setPeacekeeper(true);
-            }
-
             try {
-                plugin.getSQL().sqlUpdate.updateContestant(contestant, "peacekeeper");
+                if (contestant.getPeacekeeper()) {
+                    contestant.setPeacekeeper(false);
+                } else {
+                    contestant.setPeacekeeper(true);
+                }
+                game.updateContestant(contestant);
             } catch (Exception ex) {
                 ex.printStackTrace();
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',
@@ -856,10 +865,9 @@ public class InventoryClick implements Listener {
         if (clickedItem.getType().equals(Material.DIAMOND_SWORD) && ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()).equalsIgnoreCase("PK Kill(s) >>")) {
             // Kill toevoegen
             if (e.isLeftClick()) {
-                contestant.setPeacekeeperKills(contestant.getPeacekeeperKills() + 1);
-
                 try {
-                    plugin.getSQL().sqlUpdate.updateContestant(contestant, "pkkills");
+                    contestant.setPeacekeeperKills(contestant.getPeacekeeperKills() + 1);
+                    game.updateContestant(contestant);
                 } catch (Exception ex) {
                     ex.printStackTrace();
                     player.sendMessage(ChatColor.translateAlternateColorCodes('&',
@@ -875,10 +883,9 @@ public class InventoryClick implements Listener {
             // Kill verwijderen
             if (contestant.getPeacekeeperKills() >= 1) {
                 if (e.isRightClick()) {
-                    contestant.setPeacekeeperKills(contestant.getPeacekeeperKills() - 1);
-
                     try {
-                        plugin.getSQL().sqlUpdate.updateContestant(contestant, "pkkills");
+                        contestant.setPeacekeeperKills(contestant.getPeacekeeperKills() - 1);
+                        game.updateContestant(contestant);
                     } catch (Exception ex) {
                         ex.printStackTrace();
                         player.sendMessage(ChatColor.translateAlternateColorCodes('&',
@@ -900,10 +907,9 @@ public class InventoryClick implements Listener {
 
         // Set color spawn
         if (clickedItem.getType().equals(contestant.getShulkerMaterial())) {
-            contestant.setSpawn(player.getLocation());
-
             try {
-                plugin.getSQL().sqlUpdate.updateContestant(contestant, "spawn");
+                contestant.setSpawn(player.getLocation());
+                game.updateContestant(contestant);
             } catch (Exception ex) {
                 ex.printStackTrace();
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',
