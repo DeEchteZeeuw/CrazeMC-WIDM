@@ -291,6 +291,9 @@ public class PlayerInteract implements Listener {
             case "switch":
                 new Switch().open(player);
                 break;
+            case "invsee":
+                new Invsee().open(player);
+                break;
         }
     }
 }
