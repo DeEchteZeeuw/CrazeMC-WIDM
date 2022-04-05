@@ -94,7 +94,7 @@ public final class CrazeMCWIDM extends JavaPlugin {
         new BukkitRunnable() {
             @Override
             public void run() {
-                gameDataManager.updateDatabase();
+                gameDataManager.updateDatabase(false);
             }
         }.runTaskTimer(this, 1, 300*20L);
     }
@@ -125,7 +125,7 @@ public final class CrazeMCWIDM extends JavaPlugin {
         }
 
         // New GameDataManger functions
-        this.gameDataManager.updateDatabase();
+        this.gameDataManager.updateDatabase(true);
 
         Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
                 configManager.getMain().consolePrefix + configManager.getMain().serverDivider + configManager.getMessages().consoleOnDisable));

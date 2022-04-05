@@ -40,10 +40,9 @@ public class VoteManager {
     }
 
     public void deleteGameVotes(UUID game) {
-        for (int i = 0; i < this.votes.size(); i++) {
-            Vote vote = this.votes.get(i);
+        for (Vote vote : this.gameVotes(game)) {
             if (vote.getGame() == null) continue;
-            if (vote.getGame().equals(game)) this.votes.remove(i);
+            if (vote.getGame().equals(game)) votes.remove(vote);
         }
     }
 

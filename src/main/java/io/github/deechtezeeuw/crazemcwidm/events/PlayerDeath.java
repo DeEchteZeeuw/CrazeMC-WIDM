@@ -3,10 +3,7 @@ package io.github.deechtezeeuw.crazemcwidm.events;
 import io.github.deechtezeeuw.crazemcwidm.CrazeMCWIDM;
 import io.github.deechtezeeuw.crazemcwidm.classes.Contestant;
 import io.github.deechtezeeuw.crazemcwidm.classes.Game;
-import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -28,8 +25,10 @@ public class PlayerDeath implements Listener {
             Game game = plugin.getGameDataManager().getWorldGame(world.getUID());
             // Check if game is busy
             if (game.getGameStatus() == 1) {
-                deadPlayer.teleport(deathLocation);
                 deadPlayer.setGameMode(GameMode.SPECTATOR);
+
+                deadPlayer.spigot().respawn();
+                deadPlayer.teleport(deathLocation);
 
                 Contestant deadPlayerWasContestant = null;
                 Contestant killerWasContestant = null;
@@ -96,6 +95,9 @@ public class PlayerDeath implements Listener {
                     return;
                 }
             }
+
+            deadPlayer.spigot().respawn();
+            deadPlayer.teleport(deathLocation);
         }
     }
 }

@@ -28,6 +28,15 @@ public class PlayerMove implements Listener {
         }
         if (!iscontestant) return;
 
+        if (game.getGameStatus() == 3) {
+            if (e.getFrom().getZ() != e.getTo().getZ() && e.getFrom().getX() != e.getTo().getX()) {
+                e.setCancelled(true);
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                        plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cHet spel is afgelopen, je wordt zo snel mogelijk geteleporteerd naar de lobby!"));
+                return;
+            }
+        }
+
         // Game is not playing so freeze users on position
         if (game.getGameStatus() != 1) {
             if (e.getFrom().getZ() != e.getTo().getZ() && e.getFrom().getX() != e.getTo().getX()) {

@@ -36,24 +36,14 @@ public class ASyncPlayerChat implements Listener {
         if (game == null) return;
         if (player.hasPermission("crazemc.bypass.chat") || game.isHost(player.getUniqueId())) return;
 
-        Contestant contestant = null;
-
-        for (Contestant singleContestant : game.getContestant()) {
-            if (contestant.getPlayer() == null) continue;
-            if (contestant.getPlayer().equals(player.getUniqueId())) {
-                contestant = singleContestant;
-                break;
-            }
-        }
-
-        if (contestant == null) {
+        if (!game.isContestant(player.getUniqueId())) {
             e.setCancelled(true);
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                     plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cJe mag alleen praten als host of als speler!"));
             return;
         }
 
-        if (contestant.getDeath()) {
+        if (game.getContestant(player.getUniqueId()).getDeath()) {
             e.setCancelled(true);
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                     plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cJe mag niet praten als je dood bent!"));

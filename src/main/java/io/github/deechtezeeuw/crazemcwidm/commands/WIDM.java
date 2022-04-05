@@ -9,7 +9,10 @@ public class WIDM extends Commands {
     private final CrazeMCWIDM plugin = CrazeMCWIDM.getInstance();
     @Override
     public void onCommand(CommandSender sender, Command command, String[] args) {
+        if (!(sender instanceof Player)) return;
         Player player = (Player) sender;
+
+        if (!player.isOp()) return;
 
         sender.sendMessage("je bent: " + (plugin.getGameDataManager().alreadyHosting(player.getUniqueId()) ? "wel" : "geen") + " host");
         sender.sendMessage("er zijn: " + plugin.getGameDataManager().getGameHashMap().size() + " games");

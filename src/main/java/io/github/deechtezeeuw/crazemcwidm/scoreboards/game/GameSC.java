@@ -31,24 +31,24 @@ public class GameSC {
         Team gamespelers = board.registerNewTeam("gamespelers");
         Team gametime = board.registerNewTeam("gametime");
 
-        obj.getScore("§e§lMap:").setScore(5);
-        obj.getScore("§e§lRol:").setScore(4);
-        obj.getScore("§e§lKleur:").setScore(3);
-        obj.getScore("§e§lSpelers:").setScore(2);
-        obj.getScore("§e§lBezig:").setScore(1);
-        obj.getScore(ChatColor.translateAlternateColorCodes('&', "&7play.crazemc.nl")).setScore(0);
+        obj.getScore("§5§lMap:").setScore(5);
+        obj.getScore("§5§lRol:").setScore(4);
+        obj.getScore("§5§lKleur:").setScore(3);
+        obj.getScore("§5§lSpelers:").setScore(2);
+        obj.getScore("§5§lBezig:").setScore(1);
+        obj.getScore(ChatColor.translateAlternateColorCodes('&', "&fplay.crazemc.nl")).setScore(0);
 
         // Default values
         String role = "Spectator";
-        String kleur = " &7Nvt";
+        String kleur = " &fNvt";
         String players = "0";
         String started = "Niet gestart";
 
-        gamemap.addEntry("§e§lMap:");
-        String line = ChatColor.translateAlternateColorCodes('&', "&7" + game.getTheme().substring(0, 1).toUpperCase() + game.getTheme().substring(1));
+        gamemap.addEntry("§5§lMap:");
+        String line = ChatColor.translateAlternateColorCodes('&', "&f" + game.getTheme().substring(0, 1).toUpperCase() + game.getTheme().substring(1));
         gamemap.setSuffix(" " + line);
 
-        gamerole.addEntry("§e§lRol:");
+        gamerole.addEntry("§5§lRol:");
         for (Contestant singleConstestant : game.getContestant()) {
             if (singleConstestant.getPlayer() == null) continue;
             if (singleConstestant.getPlayer().equals(player.getUniqueId())) {
@@ -64,13 +64,13 @@ public class GameSC {
         if (game.getHosts().contains(player.getUniqueId())) role = "Host";
         gamerole.setSuffix(ChatColor.translateAlternateColorCodes('&', " &b"+role));
 
-        gamekleur.addEntry("§e§lKleur:");
+        gamekleur.addEntry("§5§lKleur:");
         gamekleur.setSuffix(ChatColor.translateAlternateColorCodes('&', kleur));
 
-        gamespelers.addEntry("§e§lSpelers:");
-        gamespelers.setSuffix(ChatColor.translateAlternateColorCodes('&', " &7"+players));
+        gamespelers.addEntry("§5§lSpelers:");
+        gamespelers.setSuffix(ChatColor.translateAlternateColorCodes('&', " &f"+players));
 
-        gametime.addEntry("§e§lBezig:");
+        gametime.addEntry("§5§lBezig:");
         switch (game.getGameStatus()) {
             case 1:
                 started = "00:00";
@@ -84,7 +84,7 @@ public class GameSC {
             default:
                 started = "Niet gestart";
         }
-        gametime.setSuffix(ChatColor.translateAlternateColorCodes('&'," &7" + started));
+        gametime.setSuffix(ChatColor.translateAlternateColorCodes('&'," &f" + started));
 
         player.setScoreboard(board);
 
@@ -97,7 +97,7 @@ public class GameSC {
             public void run() {
                 // Default values
                 String role = "Spectator";
-                String kleur = " &7Nvt";
+                String kleur = " &fNvt";
                 String players = "0";
                 String started = "Niet gestart";
                 //methods
@@ -132,7 +132,7 @@ public class GameSC {
                 if (game.getHosts().contains(player.getUniqueId())) role = "Host";
                 gamerole.setSuffix(ChatColor.translateAlternateColorCodes('&', " &b"+role));
                 gamekleur.setSuffix(ChatColor.translateAlternateColorCodes('&', kleur)); // Player color
-                gamespelers.setSuffix(ChatColor.translateAlternateColorCodes('&', " &7"+players)); // Player size
+                gamespelers.setSuffix(ChatColor.translateAlternateColorCodes('&', " &f"+players)); // Player size
 
                 // Time
                 switch (game.getGameStatus()) {
@@ -162,7 +162,7 @@ public class GameSC {
                     default:
                         started = "Niet gestart";
                 }
-                gametime.setSuffix(ChatColor.translateAlternateColorCodes('&'," &7" + started));
+                gametime.setSuffix(ChatColor.translateAlternateColorCodes('&'," &f" + started));
             }
         }.runTaskTimer(plugin, 1, 1 * 20L);
     }

@@ -64,8 +64,9 @@ public class Vote extends Commands {
             ArrayList<io.github.deechtezeeuw.crazemcwidm.classes.Vote> votes = plugin.getVoteManager().gameVotes(game.getUuid());
             if (votes.size() > 0) {
                 for (io.github.deechtezeeuw.crazemcwidm.classes.Vote vote : votes) {
-                    Contestant voter = game.getContestant(vote.getContestant());
-                    Contestant votedOn = game.getContestant(vote.getVotedOn());
+                    Contestant voter = game.getContestantByID(vote.getContestant());
+                    Contestant votedOn = game.getContestantByID(vote.getVotedOn());
+                    if (voter == null || votedOn == null) continue;
                     message.add(ChatColor.translateAlternateColorCodes('&',
                             voter.getChatColor() + voter.getPlayername() + " &fheeft gestemd op " + votedOn.getChatColor() + votedOn.getPlayername() + " &7&l(&f&l" + vote.getVotes() + "&7&l)"));
                 }
@@ -130,6 +131,13 @@ public class Vote extends Commands {
         if (argumentPlayer == null) {
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                     plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cSpeler is niet bekend op de server!"));
+            return;
+        }
+
+        // Check if its you
+        if (player.getUniqueId().equals(argumentPlayer)) {
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cOp jezelf stemmen is niet toegestaan!"));
             return;
         }
 

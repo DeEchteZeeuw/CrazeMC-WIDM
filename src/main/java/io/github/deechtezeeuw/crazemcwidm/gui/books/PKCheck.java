@@ -22,12 +22,12 @@ public class PKCheck extends GraphicalUserInterface {
         int size = 27;
 
         // check if user is in a game
-        if (!plugin.getSQL().sqlSelect.playerIsInAGame(player.getUniqueId())) {
+        Game game = (plugin.getGameDataManager().alreadyContestant(player.getUniqueId())) ? plugin.getGameDataManager().getContestingGame(player.getUniqueId()) : null;
+
+        if (game == null) {
             player.closeInventory();
             return;
         }
-
-        Game game = plugin.getSQL().sqlSelect.playerGame(player.getUniqueId());
 
         ArrayList<Contestant> alivePlayers = new ArrayList<>();
         for (Contestant contestant : game.getContestant()) {

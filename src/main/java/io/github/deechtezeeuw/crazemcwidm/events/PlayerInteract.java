@@ -150,11 +150,11 @@ public class PlayerInteract implements Listener {
         if (shulker == null) return;
 
         for (ItemStack item : shulker.getInventory().getContents()) {
-            if (item == null) return;
-            if (item.getItemMeta() == null) return;
+            if (item == null) continue;
+            if (item.getItemMeta() == null) continue;
             ItemMeta itemMeta = item.getItemMeta();
-            if (itemMeta.getDisplayName() == null) return;
-            if (item.getType() == null) return;
+            if (itemMeta.getDisplayName() == null) continue;
+            if (item.getType() == null) continue;
 
             String strippedName = ChatColor.stripColor(itemMeta.getDisplayName()).replaceAll(" >>", "");
 
@@ -274,7 +274,7 @@ public class PlayerInteract implements Listener {
 
                 for (Contestant singleContestant : game.getContestant()) {
                     if (singleContestant.getPlayer() == null) continue;
-                    if (singleContestant.getDeath()) continue;
+                    if (singleContestant.getRole() != 1) continue;
                     alive++;
                 }
 

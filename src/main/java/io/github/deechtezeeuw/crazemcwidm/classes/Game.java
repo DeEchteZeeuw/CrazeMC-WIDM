@@ -120,6 +120,15 @@ public class Game {
         return null;
     }
 
+    public Contestant getContestantByID(UUID contestantID) {
+        for (Contestant contestant : this.getContestant()) {
+            if (contestant.getPlayer() == null) continue;
+            if (contestant.getUuid().equals(contestantID)) return contestant;
+        }
+
+        return null;
+    }
+
     public boolean isContestant(UUID player) {
         for (Contestant contestant : this.getContestant()) {
             if (contestant.getPlayer() == null) continue;

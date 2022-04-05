@@ -225,10 +225,10 @@ public class GameDataManager {
     Backup functions
      */
 
-    public void updateDatabase() {
+    public void updateDatabase(boolean legend) {
         try {
             for (Game game : this.getGamesArrayList()) {
-                game.setGameStatus(2);
+                if (legend && game.getGameStatus() != 3) game.setGameStatus(2);
                 if (plugin.getSQL().sqlSelect.gameExists(game.getUuid())) {
                     // Game exists so update
                     plugin.getSQL().sqlUpdate.updateGame(game, "all");
@@ -248,11 +248,11 @@ public class GameDataManager {
         } catch (Exception ex) {
             ex.printStackTrace();
             Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    plugin.getConfigManager().getMain().consolePrefix + plugin.getConfigManager().getMain().serverDivider + "&cEr is iets fout gegaan tijdens het updaten van de games naar de database!"));
+                    plugin.getConfigManager().getMain().consolePrefix + plugin.getConfigManager().getMain().serverDivider + "&cEr is iets fout gegaan tijdens het updaten van de game(s) naar de database!"));
             return;
         }
 
         Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
-                plugin.getConfigManager().getMain().consolePrefix + plugin.getConfigManager().getMain().serverDivider + "&aSuccesvol de game geupdate naar de database!"));
+                plugin.getConfigManager().getMain().consolePrefix + plugin.getConfigManager().getMain().serverDivider + "&aSuccesvol de game(s) geupdate naar de database!"));
     }
 }

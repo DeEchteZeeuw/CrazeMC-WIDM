@@ -143,6 +143,7 @@ public class InventoryClick implements Listener {
             if (game == null) return;
             // Check if player is not a host
             if (game.isHost(player.getUniqueId())) return;
+            if (e.getClickedInventory() == null || e.getClickedInventory().getType() == null) return;
 
             // If nothing of above and its in top inventory
             if (!e.getClickedInventory().getType().equals(InventoryType.PLAYER) && !e.getClickedInventory().getType().equals(InventoryType.CREATIVE)) {

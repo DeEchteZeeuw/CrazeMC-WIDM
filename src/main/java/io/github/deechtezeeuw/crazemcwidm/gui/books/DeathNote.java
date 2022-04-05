@@ -22,13 +22,12 @@ public class DeathNote extends GraphicalUserInterface {
     public void open(Player player) {
         int size = 27;
 
+        Game game = (plugin.getGameDataManager().alreadyContestant(player.getUniqueId())) ? plugin.getGameDataManager().getContestingGame(player.getUniqueId()) : null;
         // check if user is in a game
-        if (!plugin.getSQL().sqlSelect.playerIsInAGame(player.getUniqueId())) {
+        if (game == null) {
             player.closeInventory();
             return;
         }
-
-        Game game = plugin.getSQL().sqlSelect.playerGame(player.getUniqueId());
 
         ArrayList<Contestant> alivePlayers = new ArrayList<>();
         for (Contestant contestant : game.getContestant()) {
