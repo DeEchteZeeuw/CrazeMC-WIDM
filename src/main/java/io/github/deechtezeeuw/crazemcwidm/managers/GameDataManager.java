@@ -41,11 +41,6 @@ public class GameDataManager {
     }
 
     // Import all games from database for example
-    public void setGameHashMap(HashMap<UUID, Game> games) {
-        this.gameHashMap = games;
-    }
-
-    // Import all games from database for example
     public void setGameHashMap(ArrayList<Game> games) {
         for (Game game : games) {
             this.gameHashMap.put(game.getUuid(), game);
@@ -65,10 +60,6 @@ public class GameDataManager {
     // Delete an game
     public void deleteGame(UUID game) {
         this.gameHashMap.remove(game);
-    }
-
-    public Game selectGame(UUID game) {
-        return this.gameHashMap.get(game);
     }
 
     /*
@@ -98,37 +89,35 @@ public class GameDataManager {
 
         if (game == null) return;
 
-        if (game != null) {
-            // Delete local
-            try {
-                this.deleteGame(game.getUuid());
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                // Check if game exists
-                if (!plugin.getGameDataManager().gameExists(game.getUuid())) {
-                    Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
-                            plugin.getConfigManager().getMain().consolePrefix + plugin.getConfigManager().getMain().serverDivider + "&cEr is zojuist een aanvraag om een game te verwijderen geweigerd, omdat hij niet lokaal bestaat!"));
-                    return;
+        // Delete local
+        try {
+            this.deleteGame(game.getUuid());
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            // Check if game exists
+            if (!plugin.getGameDataManager().gameExists(game.getUuid())) {
+                Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                        plugin.getConfigManager().getMain().consolePrefix + plugin.getConfigManager().getMain().serverDivider + "&cEr is zojuist een aanvraag om een game te verwijderen geweigerd, omdat hij niet lokaal bestaat!"));
+                return;
+            }
+        }
+
+        // Delete in database
+        try {
+            plugin.getSQL().sqlDelete.deleteGame(game.getUuid());
+            for (Contestant contestant : game.getContestant()) {
+                if (contestant == null) continue;
+                if (plugin.getSQL().sqlSelect.contestantExists(contestant.getUuid())) {
+                    plugin.getSQL().sqlDelete.deleteContestant(contestant.getUuid());
                 }
             }
-
-            // Delete in database
-            try {
-                plugin.getSQL().sqlDelete.deleteGame(game.getUuid());
-                for (Contestant contestant : game.getContestant()) {
-                    if (contestant == null) continue;
-                    if (plugin.getSQL().sqlSelect.contestantExists(contestant.getUuid())) {
-                        plugin.getSQL().sqlDelete.deleteContestant(contestant.getUuid());
-                    }
-                }
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                // Check if game exists
-                if (!plugin.getGameDataManager().gameExists(game.getUuid())) {
-                    Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
-                            plugin.getConfigManager().getMain().consolePrefix + plugin.getConfigManager().getMain().serverDivider + "&cEr is zojuist een aanvraag om een game te verwijderen geweigerd, omdat hij niet bestaat in de database!"));
-                    return;
-                }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            // Check if game exists
+            if (!plugin.getGameDataManager().gameExists(game.getUuid())) {
+                Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                        plugin.getConfigManager().getMain().consolePrefix + plugin.getConfigManager().getMain().serverDivider + "&cEr is zojuist een aanvraag om een game te verwijderen geweigerd, omdat hij niet bestaat in de database!"));
+                return;
             }
         }
 
@@ -230,5 +219,40 @@ public class GameDataManager {
             if (contestant.getPlayer().equals(player)) return contestant;
         }
         return null;
+    }
+
+    /*
+    Backup functions
+     */
+
+    public void updateDatabase() {
+        try {
+            for (Game game : this.getGamesArrayList()) {
+                game.setGameStatus(2);
+                if (plugin.getSQL().sqlSelect.gameExists(game.getUuid())) {
+                    // Game exists so update
+                    plugin.getSQL().sqlUpdate.updateGame(game, "all");
+                } else {
+                    // Game not exists so insert
+                    plugin.getSQL().sqlInsert.insertGame(game);
+                }
+                // Loop through the contestant
+                for (Contestant contestant : game.getContestant()) {
+                    if (!plugin.getSQL().sqlSelect.contestantExists(contestant.getUuid())) {
+                        plugin.getSQL().sqlInsert.insertContestant(contestant);
+                    } else {
+                        plugin.getSQL().sqlUpdate.updateContestant(contestant, "all");
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    plugin.getConfigManager().getMain().consolePrefix + plugin.getConfigManager().getMain().serverDivider + "&cEr is iets fout gegaan tijdens het updaten van de games naar de database!"));
+            return;
+        }
+
+        Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                plugin.getConfigManager().getMain().consolePrefix + plugin.getConfigManager().getMain().serverDivider + "&aSuccesvol de game geupdate naar de database!"));
     }
 }

@@ -10,6 +10,7 @@ import org.bukkit.World;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.DisplaySlot;
 
 import java.sql.SQLException;
@@ -88,6 +89,14 @@ public final class CrazeMCWIDM extends JavaPlugin {
 
         Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
                 configManager.getMain().consolePrefix + configManager.getMain().serverDivider + configManager.getMessages().consoleOnEnable));
+
+        // Update database every 5 minutes
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                gameDataManager.updateDatabase();
+            }
+        }.runTaskTimer(this, 1, 300*20L);
     }
 
     @Override
@@ -116,24 +125,7 @@ public final class CrazeMCWIDM extends JavaPlugin {
         }
 
         // New GameDataManger functions
-        for (Game game : this.gameDataManager.getGamesArrayList()) {
-            game.setGameStatus(2);
-            if (this.getSQL().sqlSelect.gameExists(game.getUuid())) {
-                // Game exists so update
-                this.getSQL().sqlUpdate.updateGame(game, "all");
-            } else {
-                // Game not exists so insert
-                this.getSQL().sqlInsert.insertGame(game);
-            }
-            // Loop through the contestant
-            for (Contestant contestant : game.getContestant()) {
-                if (!this.getSQL().sqlSelect.contestantExists(contestant.getUuid())) {
-                    this.getSQL().sqlInsert.insertContestant(contestant);
-                } else {
-                    this.getSQL().sqlUpdate.updateContestant(contestant, "all");
-                }
-            }
-        }
+        this.gameDataManager.updateDatabase();
 
         Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
                 configManager.getMain().consolePrefix + configManager.getMain().serverDivider + configManager.getMessages().consoleOnDisable));
