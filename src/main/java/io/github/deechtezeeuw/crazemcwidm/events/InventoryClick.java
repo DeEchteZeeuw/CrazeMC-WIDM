@@ -495,7 +495,6 @@ public class InventoryClick implements Listener {
 
             player.closeInventory();
             new PanelMenu().open(player);
-            plugin.getGameManager().setGamesThatStarted(game.getUuid());
             game.updateTimer();
 
             for (Player singlePlayer : Bukkit.getWorld(game.getMap()).getPlayers()) {
@@ -537,6 +536,8 @@ public class InventoryClick implements Listener {
 
             player.closeInventory();
             new PanelMenu().open(player);
+
+            game.updateTimer();
 
             for (Player singlePlayer : Bukkit.getWorld(game.getMap()).getPlayers()) {
                 singlePlayer.sendTitle(ChatColor.translateAlternateColorCodes('&', plugin.getConfigManager().getMain().serverPrefix),

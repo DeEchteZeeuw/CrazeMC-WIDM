@@ -1,18 +1,9 @@
 package io.github.deechtezeeuw.crazemcwidm.classes;
 
 import io.github.deechtezeeuw.crazemcwidm.CrazeMCWIDM;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemFlag;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.UUID;
 
 public class Game {
@@ -66,8 +57,7 @@ public class Game {
     }
 
     public boolean isHost(UUID player) {
-        if (this.hosts.contains(player)) return true;
-        return false;
+        return this.hosts.contains(player);
     }
 
     // Get theme
@@ -87,17 +77,6 @@ public class Game {
 
     public void setGameStatus(Integer gameStatus) {
         this.gameStatus = gameStatus;
-    }
-
-    protected ItemStack Item(String title, String material, Integer amount, Integer itemShort, ArrayList<String> lore) {
-        ItemStack item = new ItemStack(Material.valueOf(material), amount, itemShort.shortValue());
-        ItemMeta MetaItem = item.getItemMeta();
-        MetaItem.setLore(lore);
-        MetaItem.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
-        item.setItemMeta(MetaItem);
-        MetaItem.setDisplayName(ChatColor.translateAlternateColorCodes('&', title));
-        item.setItemMeta(MetaItem);
-        return item;
     }
 
     // Get contestant
@@ -166,18 +145,18 @@ public class Game {
         new BukkitRunnable() {
             @Override
             public void run() {
-                game.setTime(game.getTime() + 1);
+                if (game.getGameStatus() != 1) {
+                    cancel();
+                } else {
+                    game.setTime(game.getTime() + 1);
+                }
             }
-        }.runTaskTimer(plugin, 1, 1 * 20L);
+        }.runTaskTimer(plugin, 1, 20L);
     }
 
     // All players
     public ArrayList<UUID> AllPlayersInsideGame() {
-        ArrayList<UUID> uuidArrayList = new ArrayList<>();
-        for (UUID singleHost : hosts) {
-            uuidArrayList.add(singleHost);
-        }
 
-        return uuidArrayList;
+        return new ArrayList<>(hosts);
     }
 }
