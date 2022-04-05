@@ -80,6 +80,9 @@ commands:
   vote:
     usage: /<command>
     description: Does the vote command
+  kleuren:
+    usage: /<command>
+    description: Does the kleuren command
 permissions:
   crazemc.tempvuller:
     description: tempvuller permissions
