@@ -50,6 +50,8 @@ public class Kleuren extends Commands {
 
         message.add(ChatColor.translateAlternateColorCodes('&',
                 "&7&m&l----------------[ " + plugin.getConfigManager().getMain().serverPrefix + " &a&lKleuren &7&m&l]----------------"));
+
+        player.sendMessage(message.toArray(new String[0]));
     }
 
     @Override
