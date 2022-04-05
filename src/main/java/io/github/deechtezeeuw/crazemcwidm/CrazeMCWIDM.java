@@ -29,6 +29,7 @@ public final class CrazeMCWIDM extends JavaPlugin {
     private CommandManager commandManager;
     private GameManager gameManager;
     private GameDataManager gameDataManager;
+    private VoteManager voteManager;
 
     @Override
     public void onEnable() {
@@ -60,6 +61,7 @@ public final class CrazeMCWIDM extends JavaPlugin {
         commandManager = new CommandManager();
         commandManager.setup();
         gameDataManager = new GameDataManager();
+        voteManager = new VoteManager();
         new EventManager();
 
         // Load worlds from config
@@ -161,5 +163,9 @@ public final class CrazeMCWIDM extends JavaPlugin {
 
     public GameDataManager getGameDataManager() {
         return gameDataManager;
+    }
+
+    public VoteManager getVoteManager() {
+        return voteManager;
     }
 }

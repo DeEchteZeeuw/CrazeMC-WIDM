@@ -132,6 +132,24 @@ public class Game {
         }
     }
 
+    public Contestant getContestant(UUID player) {
+        for (Contestant contestant : this.getContestant()) {
+            if (contestant.getPlayer() == null) continue;
+            if (contestant.getPlayer().equals(player)) return contestant;
+        }
+
+        return null;
+    }
+
+    public boolean isContestant(UUID player) {
+        for (Contestant contestant : this.getContestant()) {
+            if (contestant.getPlayer() == null) continue;
+            if (contestant.getPlayer().equals(player)) return true;
+        }
+
+        return false;
+    }
+
     // Time
     public int getTime() {
         return this.time;

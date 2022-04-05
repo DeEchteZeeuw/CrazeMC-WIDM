@@ -12,6 +12,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class Vote extends Commands {
@@ -52,108 +53,114 @@ public class Vote extends Commands {
             return;
         }
 
+        // Check if args == 0
         if (args.length == 0) {
-            ArrayList<io.github.deechtezeeuw.crazemcwidm.classes.Vote> votes = plugin.getGameManager().getGameVotes(game.getUuid());
+            // Show current game votes
+            List<String> message = new ArrayList<>();
+            message.add(ChatColor.translateAlternateColorCodes('&',
+                    "&7&m&l----------------[ " + plugin.getConfigManager().getMain().serverPrefix + " &a&lVotes &7&m&l]----------------"));
 
-            ArrayList<String> sendMessages = new ArrayList<>();
-            sendMessages.add(ChatColor.translateAlternateColorCodes('&',
-                    "&7&m&l----------[" + plugin.getConfigManager().getMain().serverPrefix + " &a&lVotes &7&m&l]----------"));
-
-            for (io.github.deechtezeeuw.crazemcwidm.classes.Vote vote : votes) {
-                if (vote.getGame() == null || vote.getContestant() == null || vote.getVotedOn() == null) continue;
-                Contestant voter = null;
-                Contestant votedOn = null;
-
-                for (Contestant singleContestant : game.getContestant()) {
-                    if (vote.getContestant().equals(singleContestant.getUuid())) voter = singleContestant;
-                    if (vote.getVotedOn().equals(singleContestant.getUuid())) votedOn = singleContestant;
+            // Check if there are votes registrate
+            ArrayList<io.github.deechtezeeuw.crazemcwidm.classes.Vote> votes = plugin.getVoteManager().gameVotes(game.getUuid());
+            if (votes.size() > 0) {
+                for (io.github.deechtezeeuw.crazemcwidm.classes.Vote vote : votes) {
+                    Contestant voter = game.getContestant(vote.getContestant());
+                    Contestant votedOn = game.getContestant(vote.getVotedOn());
+                    message.add(ChatColor.translateAlternateColorCodes('&',
+                            voter.getChatColor() + voter.getPlayername() + " &fheeft gestemd op " + votedOn.getChatColor() + votedOn.getPlayername() + " &7&l(&f&l" + vote.getVotes() + "&7&l)"));
                 }
-
-                if (voter == null || votedOn == null) return;
-                sendMessages.add(ChatColor.translateAlternateColorCodes('&',
-                        voter.getChatColor() + voter.getPlayername() + " &fheeft gevote op " + votedOn.getChatColor() + votedOn.getPlayername() + " &7&l(&f&l" + plugin.getGameManager().getVotesOnPlayer(game.getUuid(), votedOn.getUuid()) + "&7&l)"));
+            } else {
+                // No votes
+                message.add(ChatColor.translateAlternateColorCodes('&',
+                        "&l                       &c&lGeen votes geregistreerd!"));
             }
 
-            if (sendMessages.size() == 1) {
-                sendMessages.add(ChatColor.translateAlternateColorCodes('&',
-                        "&c&lGeen votes geregistreerd!"));
-            }
+            message.add(ChatColor.translateAlternateColorCodes('&',
+                    "&7&m&l----------------[ " + plugin.getConfigManager().getMain().serverPrefix + " &a&lVotes &7&m&l]----------------"));
 
-            sendMessages.add(ChatColor.translateAlternateColorCodes('&',
-                    "&7&m&l----------[" + plugin.getConfigManager().getMain().serverPrefix + " &a&lVotes &7&m&l]----------"));
-
-            player.sendMessage(sendMessages.toArray(new String[0]));
+            player.sendMessage(message.toArray(new String[0]));
             return;
         }
 
-        // if vote reset and is host
-        if (args[0].equalsIgnoreCase("reset") && game.isHost(player.getUniqueId())) {
+        // Check if reset
+        if (args[0].equalsIgnoreCase("reset")) {
+            if (!game.isHost(player.getUniqueId())) {
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                        plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cAlleen een host mag votes resetten!"));
+                return;
+            }
+
             try {
-                plugin.getGameManager().resetGameVotes(game.getUuid());
+                plugin.getVoteManager().deleteGameVotes(game.getUuid());
             } catch (Exception ex) {
                 ex.printStackTrace();
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                         plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cEr is iets fout gegaan!"));
                 return;
             }
+
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                     plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&aSuccesvol de votes gereset!"));
+
+            for (Contestant contestant : game.getContestant()) {
+                if (contestant.getPlayer() == null) continue;
+                if (Bukkit.getServer().getPlayer(contestant.getPlayer()) == null) continue;
+                if (!Bukkit.getServer().getPlayer(contestant.getPlayer()).getWorld().getUID().equals(game.getMap())) continue;
+                Bukkit.getServer().getPlayer(contestant.getPlayer()).sendMessage(ChatColor.translateAlternateColorCodes('&',
+                        plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&aDe votes zijn weggepoetst! Je kan weer voten!"));
+            }
             return;
         }
 
-        Contestant contestant = (plugin.getGameDataManager().alreadyContestant(player.getUniqueId())) ? plugin.getGameDataManager().getContestingContest(game.getUuid(), player.getUniqueId()) : null;
-        if (contestant == null) {
+        if (!game.isContestant(player.getUniqueId())) {
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cJe moet hiervoor speler zijn in dit spel!"));
+                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cJe mag alleen voten als speler in de game!"));
             return;
         }
-
-        // Check if player has voted already
-        if (plugin.getGameManager().hasVoted(game.getUuid(), contestant.getUuid())) {
+        Contestant playerContestant = game.getContestant(player.getUniqueId());
+        // Check if player already voted
+        if (plugin.getVoteManager().hasVoted(game.getUuid(), playerContestant.getUuid())) {
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                     plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cJe hebt al gevote, wacht tot de host de votes reset!"));
             return;
         }
 
-        // Check if player exists
-        String playername = args[0];
-
-        if (player.getName().equalsIgnoreCase(playername)) {
+        // Check if argument player exists
+        UUID argumentPlayer = (Bukkit.getServer().getPlayer(args[0]) != null) ? Bukkit.getServer().getPlayer(args[0]).getUniqueId() : (Bukkit.getServer().getOfflinePlayer(args[0]) != null) ? Bukkit.getServer().getOfflinePlayer(args[0]).getUniqueId() : null;
+        if (argumentPlayer == null) {
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cJe kan niet op jezelf stemmen!"));
+                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cSpeler is niet bekend op de server!"));
             return;
         }
 
-        Contestant votedOn = null;
-        for (Contestant singleContestant : game.getContestant()) {
-            if (singleContestant.getPlayer() == null || singleContestant.getDeath()) continue;
-            if (singleContestant.getPlayername().equalsIgnoreCase(playername)) votedOn = singleContestant;
-        }
-
-        if (votedOn == null) {
+        // Check if argument player is player in game
+        if (!game.isContestant(argumentPlayer)) {
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cDe speler die jij koos bestaat niet in dit spel of is dood op het moment!"));
+                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cSpeler is geen deelnemer in dit spel!"));
             return;
         }
+
+        Contestant argumentContestant = game.getContestant(argumentPlayer);
+
+        io.github.deechtezeeuw.crazemcwidm.classes.Vote vote = new io.github.deechtezeeuw.crazemcwidm.classes.Vote();
+        vote.setVoteID(UUID.randomUUID());
+        vote.setGame(game.getUuid());
+        vote.setContestant(playerContestant.getUuid());
+        vote.setVotedOn(argumentContestant.getUuid());
+        vote.setVotes(plugin.getVoteManager().onPlayerVotes(argumentContestant.getUuid()) + 1);
 
         try {
-            io.github.deechtezeeuw.crazemcwidm.classes.Vote vote = new io.github.deechtezeeuw.crazemcwidm.classes.Vote();
-            vote.setVoteID(UUID.randomUUID());
-            vote.setGame(game.getUuid());
-            vote.setContestant(contestant.getUuid());
-            vote.setVotedOn(votedOn.getUuid());
-
-            plugin.getGameManager().setGameVote(vote);
+            plugin.getVoteManager().addVote(vote);
         } catch (Exception ex) {
             ex.printStackTrace();
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cEr ging iets mis, neem contact op met de host!"));
+                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cEr is iets mis gegaan tijdens het stemmen!"));
             return;
         }
 
-        for (Player singlePlayer : Bukkit.getServer().getWorld(game.getMap()).getPlayers()) {
-            singlePlayer.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + contestant.getChatColor() + contestant.getPlayername() + " &fheeft op " + votedOn.getChatColor() + votedOn.getPlayername() + " &fgevote &7&l(&f&l" + plugin.getGameManager().getVotesOnPlayer(game.getUuid(), votedOn.getPlayer()) + "&7&l)"));
+        for (Player worldPlayer : Bukkit.getServer().getWorld(game.getMap()).getPlayers()) {
+            worldPlayer.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + playerContestant.getChatColor() + playerContestant.getPlayername() + " &fheeft gestemd op " + argumentContestant.getChatColor() + argumentContestant.getPlayername() + " &7&l(&f&l" + plugin.getVoteManager().onPlayerVotes(argumentContestant.getUuid()) + "&7&l)"));
         }
     }
 

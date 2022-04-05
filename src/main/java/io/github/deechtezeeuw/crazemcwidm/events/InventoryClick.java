@@ -561,8 +561,14 @@ public class InventoryClick implements Listener {
 
         // Reset votes
         if (strippedTitle.equalsIgnoreCase("reset votes") && clickedItem.getType().equals(Material.NOTE_BLOCK)) {
+            if (!game.isHost(player.getUniqueId())) {
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                        plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cAlleen een host mag votes resetten!"));
+                return;
+            }
+
             try {
-                plugin.getGameManager().resetGameVotes(game.getUuid());
+                plugin.getVoteManager().deleteGameVotes(game.getUuid());
             } catch (Exception ex) {
                 ex.printStackTrace();
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',
@@ -572,6 +578,14 @@ public class InventoryClick implements Listener {
 
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                     plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&aSuccesvol de votes gereset!"));
+
+            for (Contestant contestant : game.getContestant()) {
+                if (contestant.getPlayer() == null) continue;
+                if (Bukkit.getServer().getPlayer(contestant.getPlayer()) == null) continue;
+                if (!Bukkit.getServer().getPlayer(contestant.getPlayer()).getWorld().getUID().equals(game.getMap())) continue;
+                Bukkit.getServer().getPlayer(contestant.getPlayer()).sendMessage(ChatColor.translateAlternateColorCodes('&',
+                        plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&aDe votes zijn weggepoetst! Je kan weer voten!"));
+            }
             return;
         }
 

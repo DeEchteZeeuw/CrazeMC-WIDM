@@ -7,6 +7,7 @@ public class Vote {
     protected UUID game;
     protected UUID contestant;
     protected UUID votedOn;
+    protected int votes;
 
     public void setVoteID(UUID voteID) {
         this.voteID = voteID;
@@ -38,5 +39,13 @@ public class Vote {
 
     public UUID getVotedOn() {
         return votedOn;
+    }
+
+    public void setVotes(int i) {
+        this.votes = i;
+    }
+
+    public int getVotes() {
+        return votes;
     }
 }
