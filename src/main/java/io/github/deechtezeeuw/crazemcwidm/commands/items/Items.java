@@ -34,7 +34,6 @@ public class Items extends Commands {
             player.closeInventory();
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                     plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cEr is geen game vonden die jij host, het menu sluit!"));
-            new PanelMenu().open(player);
             return;
         }
 
@@ -42,7 +41,6 @@ public class Items extends Commands {
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                     plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cJe bent niet in de correcte wereld, het menu sluit!"));
             player.closeInventory();
-            new PanelMenu().open(player);
             return;
         }
 

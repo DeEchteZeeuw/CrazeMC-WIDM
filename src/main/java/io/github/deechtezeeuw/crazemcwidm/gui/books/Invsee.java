@@ -22,12 +22,12 @@ public class Invsee extends GraphicalUserInterface {
         int size = 27;
 
         // check if user is in a game
-        if (!plugin.getSQL().sqlSelect.playerIsInAGame(player.getUniqueId())) {
+        if (!plugin.getGameDataManager().alreadyContestant(player.getUniqueId())) {
             player.closeInventory();
             return;
         }
 
-        Game game = plugin.getSQL().sqlSelect.playerGame(player.getUniqueId());
+        Game game = plugin.getGameDataManager().getContestingGame(player.getUniqueId());
 
         ArrayList<Contestant> alivePlayers = new ArrayList<>();
         for (Contestant contestant : game.getContestant()) {

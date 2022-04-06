@@ -242,7 +242,8 @@ public class PlayerInteract implements Listener {
                 !bookTitle.equalsIgnoreCase("teleport") &&
                 !bookTitle.equalsIgnoreCase("speler count") &&
                 !bookTitle.equalsIgnoreCase("pk check") &&
-                !bookTitle.equalsIgnoreCase("switch")) return;
+                !bookTitle.equalsIgnoreCase("switch") &&
+                !bookTitle.equalsIgnoreCase("invsee")) return;
 
         // Check if world is a game
         Game game = (plugin.getGameDataManager().worldIsPartOfGame(player.getWorld().getUID())) ? plugin.getGameDataManager().getWorldGame(player.getWorld().getUID()) : null;
