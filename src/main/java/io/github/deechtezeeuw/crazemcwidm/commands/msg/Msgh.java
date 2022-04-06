@@ -1,4 +1,4 @@
-package io.github.deechtezeeuw.crazemcwidm.commands.msgh;
+package io.github.deechtezeeuw.crazemcwidm.commands.msg;
 
 import io.github.deechtezeeuw.crazemcwidm.CrazeMCWIDM;
 import io.github.deechtezeeuw.crazemcwidm.classes.Contestant;
@@ -58,7 +58,11 @@ public class Msgh extends Commands {
                 Bukkit.getServer().getPlayer(singlePlayer).sendMessage(ChatColor.translateAlternateColorCodes('&',
                         "&a&lMSGH &8>> " + contestant.getChatColor() + contestant.getPlayername() + "&8: &f" + Arrays.toString(args)));
             }
+            return;
         }
+
+        player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&c/msgh <bericht>"));
     }
 
     @Override

@@ -86,6 +86,9 @@ commands:
   msgh:
     usage: /<command>
     description: Does the msgh command
+  msgc:
+    usage: /<command>
+    description: Does the msgc comand
 permissions:
   crazemc.tempvuller:
     description: tempvuller permissions
