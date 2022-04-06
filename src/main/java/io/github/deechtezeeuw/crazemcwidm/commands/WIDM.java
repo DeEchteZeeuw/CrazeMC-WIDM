@@ -23,7 +23,7 @@ public class WIDM extends Commands {
 
     @Override
     public String name() {
-        return null;
+        return "widm";
     }
 
     @Override

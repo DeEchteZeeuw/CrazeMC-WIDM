@@ -83,6 +83,9 @@ commands:
   kleuren:
     usage: /<command>
     description: Does the kleuren command
+  msgh:
+    usage: /<command>
+    description: Does the msgh command
 permissions:
   crazemc.tempvuller:
     description: tempvuller permissions

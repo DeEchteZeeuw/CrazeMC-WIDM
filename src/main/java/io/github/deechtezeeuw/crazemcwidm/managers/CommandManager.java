@@ -10,6 +10,7 @@ import io.github.deechtezeeuw.crazemcwidm.commands.itemlock.ItemLock;
 import io.github.deechtezeeuw.crazemcwidm.commands.itemlock.ItemUndroppable;
 import io.github.deechtezeeuw.crazemcwidm.commands.items.Items;
 import io.github.deechtezeeuw.crazemcwidm.commands.kleuren.Kleuren;
+import io.github.deechtezeeuw.crazemcwidm.commands.msgh.Msgh;
 import io.github.deechtezeeuw.crazemcwidm.commands.panel.Panel;
 import io.github.deechtezeeuw.crazemcwidm.commands.queue.Queue;
 import io.github.deechtezeeuw.crazemcwidm.commands.unclaim.Unclaim;
@@ -39,6 +40,7 @@ public class CommandManager implements CommandExecutor {
     public String unclaim = "unclaim";
     public String vote = "vote";
     public String kleuren = "kleuren";
+    public String msgh = "msgh";
 
     public void setup() {
         plugin.getCommand(main).setExecutor(this);
@@ -52,6 +54,7 @@ public class CommandManager implements CommandExecutor {
         plugin.getCommand(unclaim).setExecutor(this);
         plugin.getCommand(vote).setExecutor(this);
         plugin.getCommand(kleuren).setExecutor(this);
+        plugin.getCommand(msgh).setExecutor(this);
 
         for (String color : plugin.getGameManager().getColors()) {
             plugin.getCommand(color).setExecutor(this);
@@ -131,6 +134,12 @@ public class CommandManager implements CommandExecutor {
         // Widm
         if (command.getName().equalsIgnoreCase(main)) {
             new WIDM().onCommand(sender, command, args);
+            return true;
+        }
+
+        // Msgh
+        if (command.getName().equalsIgnoreCase(msgh)) {
+            new Msgh().onCommand(sender, command, args);
             return true;
         }
 

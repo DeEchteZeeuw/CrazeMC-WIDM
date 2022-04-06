@@ -34,7 +34,6 @@ public class Vote extends Commands {
             player.closeInventory();
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                     plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cJe moet in een spel zitten om gebruik te maken van vote!"));
-            new PanelMenu().open(player);
             return;
         }
 
@@ -174,7 +173,7 @@ public class Vote extends Commands {
 
     @Override
     public String name() {
-        return null;
+        return "vote";
     }
 
     @Override

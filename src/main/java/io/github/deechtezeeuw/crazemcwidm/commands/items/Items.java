@@ -28,17 +28,21 @@ public class Items extends Commands {
 
         Player player = (Player) sender;
 
-        if (!plugin.getSQL().sqlSelect.playerIsHost(player.getUniqueId())) {
+        Game game = (plugin.getGameDataManager().alreadyHosting(player.getUniqueId())) ? plugin.getGameDataManager().getHostingGame(player.getUniqueId()) :  null;
+
+        if (game == null) {
+            player.closeInventory();
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cJe host geen game!"));
+                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cEr is geen game vonden die jij host, het menu sluit!"));
+            new PanelMenu().open(player);
             return;
         }
 
-        Game game = plugin.getSQL().sqlSelect.playerHostGame(player.getUniqueId());
-
-        if (!player.getWorld().getUID().equals(game.getMap())) {
+        if (!game.getMap().equals(player.getWorld().getUID())) {
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cJe bent niet in de juiste game om dit te doen."));
+                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cJe bent niet in de correcte wereld, het menu sluit!"));
+            player.closeInventory();
+            new PanelMenu().open(player);
             return;
         }
 

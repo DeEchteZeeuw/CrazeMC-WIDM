@@ -48,7 +48,7 @@ public class Unclaim extends Commands {
 
     @Override
     public String name() {
-        return null;
+        return "unclaim";
     }
 
     @Override

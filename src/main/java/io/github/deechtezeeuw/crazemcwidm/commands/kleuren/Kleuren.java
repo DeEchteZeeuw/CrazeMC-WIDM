@@ -56,7 +56,7 @@ public class Kleuren extends Commands {
 
     @Override
     public String name() {
-        return null;
+        return "kleuren";
     }
 
     @Override
