@@ -41,9 +41,6 @@ public class Unclaim extends Commands {
                     plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cEr is iets mis gegaan bij het unclaimen!"));
             return;
         }
-
-        player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&aSuccesvol je game geunclaimed!"));
     }
 
     @Override

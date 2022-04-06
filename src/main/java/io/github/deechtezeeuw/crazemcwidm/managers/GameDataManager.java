@@ -121,6 +121,15 @@ public class GameDataManager {
             }
         }
 
+        if (game.getMap() == null || Bukkit.getServer().getWorld(game.getMap()) == null) return;
+        World mapWorld = Bukkit.getServer().getWorld(game.getMap());
+        World lobbyWorld = (Bukkit.getServer().getWorld("WIDM-Lobby") == null) ? Bukkit.getServer().getWorlds().get(0) : Bukkit.getServer().getWorld("WIDM-Lobby");
+        for (Player singlePlayer : mapWorld.getPlayers()) {
+            singlePlayer.teleport(lobbyWorld.getSpawnLocation());
+            singlePlayer.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&aDe game waarin je zat is geunclaimed! Je wordt naar de lobby geteleporteerd."));
+        }
+
         // Delete map
         if (game.getMap() != null) {
             if (Bukkit.getServer().getWorld(game.getMap()) != null) {
@@ -131,20 +140,6 @@ public class GameDataManager {
                 Bukkit.dispatchCommand(console, command);
                 Bukkit.dispatchCommand(console, "mv confirm");
             }
-        }
-
-        if (game.getMap() == null || Bukkit.getServer().getWorld(game.getMap()) == null) return;
-        World world = Bukkit.getServer().getWorld(game.getMap());
-        World lobbyWorld = (Bukkit.getServer().getWorld("WIDM-Lobby") == null) ? Bukkit.getServer().getWorlds().get(0) : Bukkit.getServer().getWorld("WIDM-Lobby");
-        for (Player singlePlayer : world.getPlayers()) {
-            singlePlayer.teleport(lobbyWorld.getSpawnLocation());
-            singlePlayer.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&aDe game waarin je zat is geunclaimed! Je wordt naar de lobby geteleporteerd."));
-        }
-
-        if (!Bukkit.getServer().getPlayer(player).getWorld().getUID().equals(game.getMap())) {
-            Bukkit.getServer().getPlayer(player).sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&aSuccesvol de game geunclaimed!"));
         }
     }
 
