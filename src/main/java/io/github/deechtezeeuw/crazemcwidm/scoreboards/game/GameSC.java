@@ -21,7 +21,7 @@ public class GameSC {
         if (game == null) return;
 
         Scoreboard board = Bukkit.getScoreboardManager().getNewScoreboard();
-        Objective obj = board.registerNewObjective("sidebar", "dummy");
+        Objective obj = board.registerNewObjective("widmSC", "dummy");
         obj.setDisplaySlot(DisplaySlot.SIDEBAR);
         obj.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&7&m---[&5&lCraze&d&lMC&7&m]---"));
 
@@ -104,7 +104,7 @@ public class GameSC {
                 if (player.getScoreboard() == null) { cancel(); return; }
                 if (player.getScoreboard().getObjective(DisplaySlot.SIDEBAR) == null) { cancel(); return; }
                 if (player.getScoreboard().getObjective(DisplaySlot.SIDEBAR).getScoreboard() == null) { cancel(); return; }
-
+                if (!player.getScoreboard().getObjective(DisplaySlot.SIDEBAR).getName().equalsIgnoreCase("widmsc")) { cancel(); return; }
                 // Check if world were user is now is an game map
                 Game game = (plugin.getGameDataManager().worldIsPartOfGame(player.getWorld().getUID())) ? plugin.getGameDataManager().getWorldGame(player.getWorld().getUID()) : null;
                 if (game == null) cancel();
