@@ -12,20 +12,6 @@ import java.util.UUID;
 public class SQLInsert {
     private final CrazeMCWIDM plugin = CrazeMCWIDM.getInstance();
 
-    public void insertPlayer(Player player) {
-        try {
-            UUID uuid = player.getUniqueId();
-            if (!plugin.getSQL().sqlSelect.playerExists(uuid)) {
-                PreparedStatement ps = plugin.getSQL().getConnection().prepareStatement("INSERT INTO players"
-                + " (UUID) VALUES (?)");
-                ps.setString(1, uuid.toString());
-                ps.executeUpdate();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
     public void insertGame(Game game) {
         if (game == null) return;
         if (game.getUuid() == null || game.getHosts() == null || game.getMap() == null) return;
