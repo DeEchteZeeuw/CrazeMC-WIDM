@@ -154,6 +154,12 @@ public class InventoryClick implements Listener {
             return;
         }
 
+        // Click while having itemclear gui open
+        if (ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new ItemClear().title())))) {
+            itemclearMenuInteraction(e);
+            return;
+        }
+
         // Check if the world is in a game
         Player player = (Player) e.getWhoClicked();
         if (plugin.getGameDataManager().worldIsPartOfGame(player.getWorld().getUID())) {
@@ -1822,12 +1828,161 @@ public class InventoryClick implements Listener {
 
                 player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);
 
+                for (Player singlePlayer : player.getWorld().getPlayers()) {
+                    singlePlayer.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                            plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + youContestant.getChatColor() + youContestant.getColorName() + " &fheeft " + contestant.getChatColor() + contestant.getColorName() + " &fop " + clickedItem.getItemMeta().getDisplayName() + " &fgecheckt en er zijn &7&l(&a&l" + amount + "&7&l) &faanwezig"));
+                }
+
+                player.closeInventory();
+            }
+        }
+    }
+
+    // Itemcheck
+    protected void itemclearMenuInteraction(InventoryClickEvent e) {
+        e.setCancelled(true);
+
+        if (e.getClickedInventory() == null) return;
+        if (e.getClickedInventory().getType() == null) return;
+
+        if (!(e.getClickedInventory().getType().equals(InventoryType.CHEST))) return;
+        Player player = (Player) e.getWhoClicked();
+
+        // Check if you are in a game
+        if (!plugin.getGameDataManager().alreadyContestant(player.getUniqueId())) return;
+        Game game = (plugin.getGameDataManager().alreadyContestant(player.getUniqueId())) ? plugin.getGameDataManager().getContestingGame(player.getUniqueId()) : null;
+
+        if (e.getInventory().getItem(e.getSlot()) == null) return;
+        ItemStack clickedItem = e.getInventory().getItem(e.getSlot());
+        // Stained glass or barrier
+        if (clickedItem.getType().equals(Material.STAINED_GLASS_PANE)) return;
+
+        // Check if its an head
+        if (clickedItem.getType().equals(Material.SKULL_ITEM)) {
+            String clickedHead = ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()).replaceAll(" >>", "");
+
+            if (ChatColor.stripColor(clickedItem.getItemMeta().getLore().get(0)).replaceAll(">> ", "").equalsIgnoreCase(" Kies het item hieronder!")) return;
+            // Get UUID
+            UUID clickHeadUUID = (Bukkit.getServer().getPlayer(clickedHead) != null) ? Bukkit.getServer().getPlayer(clickedHead).getUniqueId() : Bukkit.getServer().getOfflinePlayer(clickedHead).getUniqueId();
+            if (clickHeadUUID == null) return;
+
+            Contestant youContestant = (game.isContestant(player.getUniqueId())) ? game.getContestant(player.getUniqueId()) : null;
+            Contestant contestant = (game.isContestant(clickHeadUUID)) ? game.getContestant(clickHeadUUID) : null;
+
+            if (contestant == null) {
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + contestant.getChatColor() + contestant.getColorName() + " &fheeft &7&l(&f&l" + amount + "&7&l) " + clickedItem.getItemMeta().getDisplayName()));
+                        plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cDe gekozen speler zit niet in het spel"));
+                return;
+            }
+
+            // Check if the player is in the right world
+            if (Bukkit.getServer().getPlayer(contestant.getPlayer()) == null) {
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                        plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cDe gekozen speler is niet online!"));
+                return;
+            }
+
+            Player otherPlayer = Bukkit.getServer().getPlayer(contestant.getPlayer());
+
+            if (!otherPlayer.getWorld().getUID().equals(player.getWorld().getUID())) {
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                        plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cDe gekozen speler is niet in de juiste wereld!"));
+                return;
+            }
+
+            player.closeInventory();
+            new ItemClear().openPlayer(player, otherPlayer);
+        } else {
+            if (clickedItem.getType().equals(Material.DIAMOND_BLOCK) || clickedItem.getType().equals(Material.GOLD_BLOCK) || clickedItem.getType().equals(Material.BOOK)) {
+                String clickedHead = ChatColor.stripColor(e.getClickedInventory().getItem(4).getItemMeta().getDisplayName()).replaceAll(" >>", "");
+
+                if (ChatColor.stripColor(clickedItem.getItemMeta().getLore().get(0)).replaceAll(">> ", "").equalsIgnoreCase(" Kies het item hieronder!")) return;
+                // Get UUID
+                UUID clickHeadUUID = (Bukkit.getServer().getPlayer(clickedHead) != null) ? Bukkit.getServer().getPlayer(clickedHead).getUniqueId() : Bukkit.getServer().getOfflinePlayer(clickedHead).getUniqueId();
+                if (clickHeadUUID == null) return;
+
+                Contestant youContestant = (game.isContestant(player.getUniqueId())) ? game.getContestant(player.getUniqueId()) : null;
+                Contestant contestant = (game.isContestant(clickHeadUUID)) ? game.getContestant(clickHeadUUID) : null;
+
+                if (contestant == null) {
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                            plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cDe gekozen speler zit niet in het spel"));
+                    return;
+                }
+
+                // Check if the player is in the right world
+                if (Bukkit.getServer().getPlayer(contestant.getPlayer()) == null) {
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                            plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cDe gekozen speler is niet online!"));
+                    return;
+                }
+
+                Player otherPlayer = Bukkit.getServer().getPlayer(contestant.getPlayer());
+
+                if (!otherPlayer.getWorld().getUID().equals(player.getWorld().getUID())) {
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                            plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cDe gekozen speler is niet in de juiste wereld!"));
+                    return;
+                }
+
+                String materialItems = null;
+                if (!clickedItem.getType().equals(Material.DIAMOND_BLOCK) && !clickedItem.getType().equals(Material.DIAMOND_SWORD) && !clickedItem.getType().equals(Material.BOOK)) {
+                    return;
+                }
+
+                if (clickedItem.getType().equals(Material.DIAMOND_BLOCK)) {
+                    materialItems = "Block(s)";
+
+                    for (ItemStack item : otherPlayer.getInventory().getContents()) {
+                        if (item == null || item.getType() == null) continue;
+                        if (item.getType().equals(Material.DIAMOND_BLOCK) ||
+                            item.getType().equals(Material.GOLD_BLOCK) ||
+                            item.getType().equals(Material.EMERALD_BLOCK) ||
+                            item.getType().equals(Material.OBSIDIAN) ||
+                            item.getType().equals(Material.WEB) ||
+                            item.getType().equals(Material.LADDER)) {
+                            otherPlayer.getInventory().remove(item);
+                        }
+                    }
+                }
+
+                if (clickedItem.getType().equals(Material.DIAMOND_SWORD)) {
+                    materialItems = "Wapen(s)";
+
+                    for (ItemStack item : otherPlayer.getInventory().getContents()) {
+                        if (item == null || item.getType() == null) continue;
+                        if (item.getType().equals(Material.DIAMOND_SWORD) ||
+                                item.getType().equals(Material.GOLD_SWORD) ||
+                                item.getType().equals(Material.IRON_SWORD) ||
+                                item.getType().equals(Material.STONE_SWORD) ||
+                                item.getType().equals(Material.WOOD_SWORD) ||
+                                item.getType().equals(Material.BOW) ||
+                                item.getType().equals(Material.ARROW) ||
+                                item.getType().equals(Material.TIPPED_ARROW) ||
+                                item.getType().equals(Material.SPECTRAL_ARROW) ||
+                                item.getType().equals(Material.INK_SACK) ||
+                                item.getType().equals(Material.STICK)) {
+                            otherPlayer.getInventory().remove(item);
+                        }
+                    }
+                }
+
+                if (clickedItem.getType().equals(Material.BOOK)) {
+                    materialItems = "Book(s)";
+
+                    for (ItemStack item : otherPlayer.getInventory().getContents()) {
+                        if (item == null || item.getType() == null) continue;
+                        if (item.getType().equals(Material.BOOK)) {
+                            otherPlayer.getInventory().remove(item);
+                        }
+                    }
+                }
+
+                player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);
 
                 for (Player singlePlayer : player.getWorld().getPlayers()) {
                     singlePlayer.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                            plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + youContestant.getChatColor() + youContestant.getColorName() + " &fheeft een &a&lItemcheck &fgebruikt op " + contestant.getChatColor() + contestant.getColorName()));
+                            plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + youContestant.getChatColor() + youContestant.getColorName() + " &fheeft " + contestant.getChatColor() + contestant.getColorName() + " &fgecleared op " + materialItems));
                 }
 
                 player.closeInventory();
