@@ -66,7 +66,7 @@ public class BlockPlaceEvent implements Listener {
                 List<String> message = new ArrayList<>();
 
                 message.add(ChatColor.translateAlternateColorCodes('&',
-                        "&7&m&l----------------[ " + plugin.getConfigManager().getMain().serverPrefix + " &c&lAfgelopen &7&m&l]----------------"));
+                        "&7&m&l---------[&f " + plugin.getConfigManager().getMain().serverPrefix + " &c&lAfgelopen &7&m&l]---------"));
 
                 String Players = "";
                 String Egoists = "";
@@ -126,7 +126,7 @@ public class BlockPlaceEvent implements Listener {
                         "&dFinisher: "+contestant.getChatColor()+"✤ &c"+contestant.getPlayername()));
 
                 message.add(ChatColor.translateAlternateColorCodes('&',
-                        "&7&m&l----------------[ " + plugin.getConfigManager().getMain().serverPrefix + " &c&lAfgelopen &7&m&l]----------------"));
+                        "&7&m&l---------[&f " + plugin.getConfigManager().getMain().serverPrefix + " &c&lAfgelopen &7&m&l]---------"));
 
                 for (Player singlePlayer : Bukkit.getServer().getWorld(game.getMap()).getPlayers()) {
                     singlePlayer.sendMessage(message.toArray(new String[0]));

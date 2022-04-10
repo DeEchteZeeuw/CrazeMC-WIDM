@@ -5,16 +5,16 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class MySQL {
-//    protected String host = "localhost";
-//    protected String port = "3306";
-//    protected String database = "crazemc";
-//    protected String username = "root";
-//    protected String password = "lol123lol";
-    protected String host = "144.91.110.15";
+    protected String host = "localhost";
     protected String port = "3306";
-    protected String database = "s1_crazemc";
-    protected String username = "u1_EQ9jCkdYE3";
-    protected String password = "YFbmPpcQ0.KmMV3VfdX@b@4k";
+    protected String database = "crazemc";
+    protected String username = "root";
+    protected String password = "lol123lol";
+//    protected String host = "144.91.110.15";
+//    protected String port = "3306";
+//    protected String database = "s1_crazemc";
+//    protected String username = "u1_EQ9jCkdYE3";
+//    protected String password = "YFbmPpcQ0.KmMV3VfdX@b@4k";
 
     private Connection connection;
 

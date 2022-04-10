@@ -4,6 +4,7 @@ import io.github.deechtezeeuw.crazemcwidm.CrazeMCWIDM;
 import io.github.deechtezeeuw.crazemcwidm.commands.Commands;
 import io.github.deechtezeeuw.crazemcwidm.commands.WIDM;
 import io.github.deechtezeeuw.crazemcwidm.commands.color.Color;
+import io.github.deechtezeeuw.crazemcwidm.commands.egowin.Egowin;
 import io.github.deechtezeeuw.crazemcwidm.commands.game.Game;
 import io.github.deechtezeeuw.crazemcwidm.commands.host.Host;
 import io.github.deechtezeeuw.crazemcwidm.commands.itemlock.ItemLock;
@@ -43,6 +44,7 @@ public class CommandManager implements CommandExecutor {
     public String kleuren = "kleuren";
     public String msgh = "msgh";
     public String msgc = "msgc";
+    public String egowin = "egowin";
 
     public void setup() {
         plugin.getCommand(main).setExecutor(this);
@@ -58,6 +60,7 @@ public class CommandManager implements CommandExecutor {
         plugin.getCommand(kleuren).setExecutor(this);
         plugin.getCommand(msgh).setExecutor(this);
         plugin.getCommand(msgc).setExecutor(this);
+        plugin.getCommand(egowin).setExecutor(this);
 
         for (String color : plugin.getGameManager().getColors()) {
             plugin.getCommand(color).setExecutor(this);
@@ -149,6 +152,12 @@ public class CommandManager implements CommandExecutor {
         // Msgc
         if (command.getName().equalsIgnoreCase(msgc)) {
             new Msgc().onCommand(sender, command, args);
+            return true;
+        }
+
+        // Egowin
+        if (command.getName().equalsIgnoreCase(egowin)) {
+            new Egowin().onCommand(sender, command, args);
             return true;
         }
 

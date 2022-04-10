@@ -89,6 +89,9 @@ commands:
   msgc:
     usage: /<command>
     description: Does the msgc comand
+  egowin:
+    usage: /<command>
+    description: Does the egowin command
 permissions:
   crazemc.tempvuller:
     description: tempvuller permissions
