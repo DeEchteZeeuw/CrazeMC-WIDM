@@ -46,7 +46,7 @@ public class Kleuren extends Commands {
         }
 
         if (numbers == 0)  message.add(ChatColor.translateAlternateColorCodes('&',
-                "&l                       &c&lGeen spelers geregistreerd!"));
+                "&l           &c&lGeen spelers geregistreerd!"));
 
         message.add(ChatColor.translateAlternateColorCodes('&',
                 "&7&m&l---------[&f " + plugin.getConfigManager().getMain().serverPrefix + " &a&lKleuren &7&m&l]---------"));
