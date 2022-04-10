@@ -56,11 +56,11 @@ public class PlayerChangedWorld implements Listener {
 
                     @Override
                     public void run() {
-                        if (player.getGameMode().equals(GameMode.ADVENTURE)) {
+                        if (player.getGameMode().equals(GameMode.SURVIVAL)) {
                             cancel();
                             return;
                         }
-                        player.setGameMode(GameMode.ADVENTURE);
+                        player.setGameMode(GameMode.SURVIVAL);
                     }
                 }.runTaskTimer(plugin, 1, 1 * 20L);
                 return;

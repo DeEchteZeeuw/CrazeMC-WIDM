@@ -884,7 +884,7 @@ public class InventoryClick implements Listener {
             new ColorPanel().openColor(contestant, player);
             if (Bukkit.getServer().getPlayer(contestant.getUuid()) != null) {
                 Bukkit.getServer().getPlayer(contestant.getUuid()).teleport(player.getLocation());
-                Bukkit.getServer().getPlayer(contestant.getUuid()).setGameMode(GameMode.ADVENTURE);
+                Bukkit.getServer().getPlayer(contestant.getUuid()).setGameMode(GameMode.SURVIVAL);
             }
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                     plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&aSuccesvol de death aangepast!"));
@@ -1464,8 +1464,8 @@ public class InventoryClick implements Listener {
             if (rebornPlayer.getWorld().getUID().equals(player.getWorld().getUID())) {
                 if (game.getMap().equals(player.getWorld().getUID())) {
                     rebornPlayer.teleport(player.getLocation());
-                    if (!rebornPlayer.getGameMode().equals(GameMode.ADVENTURE)) {
-                        rebornPlayer.setGameMode(GameMode.ADVENTURE);
+                    if (!rebornPlayer.getGameMode().equals(GameMode.SURVIVAL)) {
+                        rebornPlayer.setGameMode(GameMode.SURVIVAL);
                     }
                 }
             }
