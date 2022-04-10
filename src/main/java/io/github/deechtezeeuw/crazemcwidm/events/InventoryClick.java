@@ -142,6 +142,12 @@ public class InventoryClick implements Listener {
             return;
         }
 
+        // Click while having invseePlayer gui open
+        if (ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new InvseePlayer().title())))) {
+            invseePlayerMenuInteraction(e);
+            return;
+        }
+
         // Check if the world is in a game
         Player player = (Player) e.getWhoClicked();
         if (plugin.getGameDataManager().worldIsPartOfGame(player.getWorld().getUID())) {
@@ -1698,13 +1704,17 @@ public class InventoryClick implements Listener {
         }
 
         player.closeInventory();
-        player.openInventory(Bukkit.getServer().getPlayer(contestant.getPlayer()).getInventory());
+        player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);
+        new InvseePlayer().openWithItems(player, Bukkit.getServer().getPlayer(contestant.getPlayer()).getInventory().getContents());
 
         for (Player singlePlayer : player.getWorld().getPlayers()) {
             singlePlayer.sendMessage(ChatColor.translateAlternateColorCodes('&',
                     plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + youContestant.getChatColor() + youContestant.getColorName() + " &fheeft een &d&lInvsee &fgebruikt op " + contestant.getChatColor() + contestant.getColorName()));
         }
+    }
 
-        player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);
+    // Invsee player
+    protected void invseePlayerMenuInteraction(InventoryClickEvent e) {
+        e.setCancelled(true);
     }
 }
