@@ -17,5 +17,6 @@ public class EventManager {
         plugin.getServer().getPluginManager().registerEvents(new PlayerDropItem(), plugin);
         plugin.getServer().getPluginManager().registerEvents(new PlayerDeath(), plugin);
         plugin.getServer().getPluginManager().registerEvents(new BlockPlaceEvent(), plugin);
+        plugin.getServer().getPluginManager().registerEvents(new BlockBreak(), plugin);
     }
 }
