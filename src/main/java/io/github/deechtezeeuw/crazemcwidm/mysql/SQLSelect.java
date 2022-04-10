@@ -16,20 +16,6 @@ import java.util.UUID;
 public class SQLSelect {
     private final CrazeMCWIDM plugin = CrazeMCWIDM.getInstance();
 
-    // Check if player exists
-    public boolean playerExists(UUID uuid) {
-        try {
-            PreparedStatement ps = plugin.getSQL().getConnection().prepareStatement("SELECT * FROM players WHERE UUID=?");
-            ps.setString(1, uuid.toString());
-
-            ResultSet resultSet = ps.executeQuery();
-            return  (resultSet.next());
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
     // Check if user is an contestant
     public boolean playerIsContestant(UUID uuid) {
         ArrayList<Game> gameArrayList = this.gameList();
@@ -58,122 +44,6 @@ public class SQLSelect {
             }
         }
         return false;
-    }
-
-    // check if user is in a game
-    public boolean playerIsInAGame(UUID uuid) {
-        if (this.playerIsHost(uuid)) return true;
-        if (this.playerIsContestant(uuid)) return true;
-        return false;
-    }
-
-    // Get game that user is in
-    public Game playerContestantGame(UUID player) {
-        if (player == null) return null;
-        Game game = null;
-        Contestant contestant = this.getPlayerContestant(player);
-        if (contestant == null) return null;
-
-        try {
-            PreparedStatement ps = plugin.getSQL().getConnection().prepareStatement("SELECT * FROM widm_games WHERE UUID=?");
-            ps.setString(1, contestant.getGame().toString());
-            ResultSet resultSet = ps.executeQuery();
-
-            if(resultSet.next()) {
-                // Set game UUID
-                if (resultSet.getString("UUID") != null) {
-                    game = new Game(UUID.fromString(resultSet.getString("UUID")));
-                }
-                // Set real map UUID
-                if (resultSet.getString("Map") != null) {
-                    UUID uuidWorld = UUID.fromString(resultSet.getString("Map"));
-                    if (Bukkit.getServer().getWorld(uuidWorld) != null) {
-                        game.setMap(uuidWorld);
-                    }
-                }
-                // Set all hosts
-                if (resultSet.getString("Hosts") != null) {
-                    String stringHosts = resultSet.getString("Hosts");
-                    stringHosts = stringHosts.replaceAll("\\[", "").replaceAll("\\]", "");
-
-                    for (String playerStr : stringHosts.split(",\\s*")) {
-                        if (player == null) continue;
-                        game.setHost(UUID.fromString(playerStr));
-                    }
-                }
-                // Set theme
-                if (resultSet.getString("Theme") != null) {
-                    game.setTheme(resultSet.getString("Theme"));
-                }
-                // Set Status
-                if (resultSet.getString("GameStatus") != null) {
-                    game.setGameStatus(resultSet.getInt("GameStatus"));
-                }
-                // Set Time
-                if (resultSet.getString("GameTime") != null) {
-                    game.setTime(resultSet.getInt("GameTime"));
-                }
-                game.setContestantsList(this.contestants(game));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
-        }
-
-        return game;
-    }
-
-    // Get game from world
-    public Game worldGame(UUID world) {
-        if (world == null) return null;
-        Game game = null;
-
-        try {
-            PreparedStatement ps = plugin.getSQL().getConnection().prepareStatement("SELECT * FROM widm_games WHERE Map=?");
-            ps.setString(1, world.toString());
-            ResultSet resultSet = ps.executeQuery();
-
-            if(resultSet.next()) {
-                // Set game UUID
-                if (resultSet.getString("UUID") != null) {
-                    game = new Game(UUID.fromString(resultSet.getString("UUID")));
-                }
-                // Set real map UUID
-                if (resultSet.getString("Map") != null) {
-                    UUID uuidWorld = UUID.fromString(resultSet.getString("Map"));
-                    if (Bukkit.getServer().getWorld(uuidWorld) != null) {
-                        game.setMap(uuidWorld);
-                    }
-                }
-                // Set all hosts
-                if (resultSet.getString("Hosts") != null) {
-                    String stringHosts = resultSet.getString("Hosts");
-                    stringHosts = stringHosts.replaceAll("\\[", "").replaceAll("\\]", "");
-
-                    for (String playerStr : stringHosts.split(",\\s*")) {
-                        game.setHost(UUID.fromString(playerStr));
-                    }
-                }
-                // Set theme
-                if (resultSet.getString("Theme") != null) {
-                    game.setTheme(resultSet.getString("Theme"));
-                }
-                // Set Status
-                if (resultSet.getString("GameStatus") != null) {
-                    game.setGameStatus(resultSet.getInt("GameStatus"));
-                }
-                // Set Time
-                if (resultSet.getString("GameTime") != null) {
-                    game.setTime(resultSet.getInt("GameTime"));
-                }
-                game.setContestantsList(this.contestants(game));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
-        }
-
-        return game;
     }
 
     // Get game from world
@@ -245,22 +115,6 @@ public class SQLSelect {
         return game;
     }
 
-    // Get game that user is playing
-    public Game playerGame(UUID uuid) {
-        Game game = null;
-        if (playerIsHost(uuid)) {
-            for (Game singleGame : gameList()) {
-                for (UUID singleGamePlayer : singleGame.AllPlayersInsideGame()) {
-                    if (singleGamePlayer.equals(uuid)) {
-                        return singleGame;
-                    }
-                }
-            }
-        }
-
-        return game;
-    }
-
     // Check if contestant exists
     public boolean contestantExists(UUID contestant) {
         try {
@@ -294,20 +148,6 @@ public class SQLSelect {
         try {
             PreparedStatement ps = plugin.getSQL().getConnection().prepareStatement("SELECT * FROM widm_games WHERE UUID=?");
             ps.setString(1, uuid.toString());
-
-            ResultSet resultSet = ps.executeQuery();
-            return  (resultSet.next());
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-    // Check if game exists in world
-    public boolean mapExists(UUID world) {
-        try {
-            PreparedStatement ps = plugin.getSQL().getConnection().prepareStatement("SELECT * FROM widm_games WHERE Map=?");
-            ps.setString(1, world.toString());
 
             ResultSet resultSet = ps.executeQuery();
             return  (resultSet.next());
@@ -371,75 +211,6 @@ public class SQLSelect {
         }
     }
 
-    public Contestant getPlayerContestant(UUID player) {
-        Contestant contestant = null;
-        if (player == null) return null;
-
-        try {
-            PreparedStatement ps = plugin.getSQL().getConnection().prepareStatement("SELECT * FROM widm_contestants WHERE Player=?");
-            ps.setString(1, player.toString());
-
-            ResultSet resultSet = ps.executeQuery();
-
-            if(resultSet.next()) {
-                contestant = new Contestant();
-                // UUID
-                if (resultSet.getString("UUID") == null) return null;
-                contestant.setUuid(UUID.fromString(resultSet.getString("UUID")));
-                // Game
-                if (resultSet.getString("Game") == null) return null;
-                contestant.setGame(UUID.fromString(resultSet.getString("Game")));
-                // Color
-                if (resultSet.getString("Color") == null) return null;
-                contestant.setColor(resultSet.getInt("Color"));
-                // Player
-                if (resultSet.getString("Player") != null) {
-                    contestant.setPlayer(UUID.fromString(resultSet.getString("Player")));
-                }
-                // Rol
-                if (resultSet.getString("Role") != null) {
-                    contestant.setRole(resultSet.getInt("Role"));
-                }
-                // Kills
-                if (resultSet.getString("Kills") != null) {
-                    contestant.setKills(resultSet.getInt("Kills"));
-                }
-                // Death
-                if (resultSet.getString("Death") != null) {
-                    contestant.setDeath(resultSet.getBoolean("Death"));
-                }
-                // Peacekeeper
-                if (resultSet.getString("Peacekeeper") != null) {
-                    contestant.setPeacekeeper(resultSet.getBoolean("Peacekeeper"));
-                }
-                // PKKills
-                if (resultSet.getString("PKKills") != null) {
-                    contestant.setPeacekeeperKills(resultSet.getInt("PKKills"));
-                }
-                // Spawn
-                if (resultSet.getString("Spawn") != null) {
-                    String[] locationStr = resultSet.getString("Spawn").split("#");
-                    World world = Bukkit.getServer().getWorld(locationStr[0]);
-                    int blockX = Integer.parseInt(locationStr[1]);
-                    int blockY = Integer.parseInt(locationStr[2]);
-                    int blockZ = Integer.parseInt(locationStr[3]);
-                    float pitch = Float.parseFloat(locationStr[4]);
-                    float yawn = Float.parseFloat(locationStr[5]);
-
-                    Location location = new Location(world, blockX, blockY, blockZ);
-                    location.setPitch(pitch);
-                    location.setYaw(yawn);
-                    contestant.setSpawn(location);
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
-        }
-
-        return contestant;
-    }
-
     // Get all contestants of an game
     public ArrayList<Contestant> contestants(Game game) {
         ArrayList<Contestant> contestantArrayList = new ArrayList<>();
@@ -499,6 +270,10 @@ public class SQLSelect {
                     location.setPitch(pitch);
                     location.setYaw(yawn);
                     contestant.setSpawn(location);
+                }
+                // Booklock
+                if (resultSet.getString("Booklock") != null) {
+                    contestant.setBooklock(resultSet.getBoolean("Booklock"));
                 }
                 contestantArrayList.add(contestant);
             }

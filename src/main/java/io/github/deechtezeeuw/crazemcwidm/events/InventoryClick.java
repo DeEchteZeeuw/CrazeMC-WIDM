@@ -160,6 +160,12 @@ public class InventoryClick implements Listener {
             return;
         }
 
+        // Click while having book lock gui open
+        if (ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new Booklock().title())))) {
+            booklockMenuInteraction(e);
+            return;
+        }
+
         // Check if the world is in a game
         Player player = (Player) e.getWhoClicked();
         if (plugin.getGameDataManager().worldIsPartOfGame(player.getWorld().getUID())) {
@@ -371,6 +377,7 @@ public class InventoryClick implements Listener {
             contestant.setPeacekeeper(false);
             contestant.setPeacekeeperKills(0);
             contestant.setSpawn(null);
+            contestant.setBooklock(false);
 
             // Get random color
             if (colorCodes.size() > 0) {
@@ -1987,6 +1994,68 @@ public class InventoryClick implements Listener {
 
                 player.closeInventory();
             }
+        }
+    }
+
+    // Booklock
+    protected void booklockMenuInteraction(InventoryClickEvent e) {
+        e.setCancelled(true);
+
+        if (e.getClickedInventory() == null) return;
+        if (e.getClickedInventory().getType() == null) return;
+
+        if (!(e.getClickedInventory().getType().equals(InventoryType.CHEST))) return;
+        Player player = (Player) e.getWhoClicked();
+
+        // Check if you are in a game
+        if (!plugin.getGameDataManager().alreadyContestant(player.getUniqueId())) return;
+        Game game = (plugin.getGameDataManager().alreadyContestant(player.getUniqueId())) ? plugin.getGameDataManager().getContestingGame(player.getUniqueId()) : null;
+
+        if (e.getInventory().getItem(e.getSlot()) == null) return;
+        ItemStack clickedItem = e.getInventory().getItem(e.getSlot());
+        // Stained glass or barrier
+        if (clickedItem.getType().equals(Material.STAINED_GLASS_PANE)) return;
+
+        // Check if its an head
+        if (!clickedItem.getType().equals(Material.SKULL_ITEM)) return;
+        String clickedHead = ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()).replaceAll(" >>", "");
+
+        // Get UUID
+        UUID clickHeadUUID = (Bukkit.getServer().getPlayer(clickedHead) != null) ? Bukkit.getServer().getPlayer(clickedHead).getUniqueId() : Bukkit.getServer().getOfflinePlayer(clickedHead).getUniqueId();
+        if (clickHeadUUID == null) return;
+
+        Contestant youContestant = (game.isContestant(player.getUniqueId())) ? game.getContestant(player.getUniqueId()) : null;
+        Contestant contestant = (game.isContestant(clickHeadUUID)) ? game.getContestant(clickHeadUUID) : null;
+
+        if (contestant == null) {
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cDe gekozen speler zit niet in het spel"));
+            return;
+        }
+
+        // Check if the player is in the right world
+        if (Bukkit.getServer().getPlayer(contestant.getPlayer()) == null) {
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cDe gekozen speler is niet online!"));
+            return;
+        }
+
+        Player otherPlayer = Bukkit.getServer().getPlayer(contestant.getPlayer());
+
+        if (!otherPlayer.getWorld().getUID().equals(player.getWorld().getUID())) {
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cDe gekozen speler is niet in de juiste wereld!"));
+            return;
+        }
+
+        contestant.setBooklock(true);
+        game.updateContestant(contestant);
+        player.closeInventory();
+        player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);
+
+        for (Player singlePlayer : player.getWorld().getPlayers()) {
+            singlePlayer.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + youContestant.getChatColor() + youContestant.getColorName() + " &fheeft een &7&lBooklock &fgebruikt op " + contestant.getChatColor() + contestant.getColorName()));
         }
     }
 }

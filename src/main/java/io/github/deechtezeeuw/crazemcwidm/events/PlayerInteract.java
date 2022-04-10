@@ -245,7 +245,8 @@ public class PlayerInteract implements Listener {
                 !bookTitle.equalsIgnoreCase("switch") &&
                 !bookTitle.equalsIgnoreCase("invsee") &&
                 !bookTitle.equalsIgnoreCase("itemcheck") &&
-                !bookTitle.equalsIgnoreCase("itemclear")) return;
+                !bookTitle.equalsIgnoreCase("itemclear") &&
+                !bookTitle.equalsIgnoreCase("book lock")) return;
 
         // Check if world is a game
         Game game = (plugin.getGameDataManager().worldIsPartOfGame(player.getWorld().getUID())) ? plugin.getGameDataManager().getWorldGame(player.getWorld().getUID()) : null;
@@ -259,6 +260,21 @@ public class PlayerInteract implements Listener {
         if (game.getGameStatus() != 1) {
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                     plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cJe kan dit boekje alleen gebruiken als de game bezig is!"));
+            return;
+        }
+
+        // Check if player is contestant
+        if (!game.isContestant(player.getUniqueId())) {
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cJe kan dit alleen gebruiken als speler!"));
+            return;
+        }
+
+        Contestant contestant = game.getContestant(player.getUniqueId());
+
+        if (contestant.hasBooklock()) {
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cJe kan dit boekje niet gebruiken, want je hebt een book lock!"));
             return;
         }
 
@@ -302,6 +318,9 @@ public class PlayerInteract implements Listener {
                 break;
             case "itemclear":
                 new ItemClear().open(player);
+                break;
+            case "book lock":
+                new Booklock().open(player);
                 break;
         }
     }

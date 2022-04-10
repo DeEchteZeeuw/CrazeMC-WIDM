@@ -57,8 +57,13 @@ public class SQLUpdate {
                     ps.setString(1, contestant.getSpawn().getWorld().getName() + "#" + contestant.getSpawn().getBlockX() + "#" + contestant.getSpawn().getBlockY() + "#" + contestant.getSpawn().getBlockZ() + "#" + contestant.getSpawn().getPitch() + "#" + contestant.getSpawn().getYaw() );
                     ps.setString(2, contestant.getUuid().toString());
                     break;
+                case "booklock":
+                    ps = plugin.getSQL().getConnection().prepareStatement("UPDATE widm_contestants SET Booklock = ? WHERE UUID = ?");
+                    ps.setBoolean(1, contestant.hasBooklock());
+                    ps.setString(2, contestant.getUuid().toString());
+                    break;
                 case "all":
-                    ps = plugin.getSQL().getConnection().prepareStatement("UPDATE widm_contestants SET Player = ?, Role = ?, Kills = ?, Death = ?, Peacekeeper = ?, PKKills = ?, Spawn = ? WHERE UUID = ?");
+                    ps = plugin.getSQL().getConnection().prepareStatement("UPDATE widm_contestants SET Player = ?, Role = ?, Kills = ?, Death = ?, Peacekeeper = ?, PKKills = ?, Spawn = ?, Booklock = ? WHERE UUID = ?");
                     if (contestant.getPlayer() == null) {
                         ps.setString(1, null);
                     } else {
@@ -74,7 +79,8 @@ public class SQLUpdate {
                     } else {
                         ps.setString(7, contestant.getSpawn().getWorld().getName() + "#" + contestant.getSpawn().getBlockX() + "#" + contestant.getSpawn().getBlockY() + "#" + contestant.getSpawn().getBlockZ() + "#" + contestant.getSpawn().getPitch() + "#" + contestant.getSpawn().getYaw() );
                     }
-                    ps.setString(8, contestant.getUuid().toString());
+                    ps.setBoolean(8, contestant.hasBooklock());
+                    ps.setString(9, contestant.getUuid().toString());
                     break;
             }
 

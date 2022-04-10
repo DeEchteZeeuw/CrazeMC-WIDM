@@ -17,6 +17,7 @@ public class Contestant {
     protected Boolean peacekeeper; // True if the player is the peacekeeper or false if its negative
     protected Integer peacekeeperKills; // The kills of the player has made while he was peacekeeper
     protected Location spawn = null;
+    protected boolean booklock;
 
     // Contestant id
     public void setUuid(UUID uuid) {
@@ -240,5 +241,14 @@ public class Contestant {
 
     public Location getSpawn() {
         return spawn;
+    }
+
+    // Contestant book lock
+    public boolean hasBooklock() {
+        return booklock;
+    }
+
+    public void setBooklock(boolean booklock) {
+        this.booklock = booklock;
     }
 }

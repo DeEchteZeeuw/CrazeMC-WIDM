@@ -23,7 +23,7 @@ public class SQLCreate {
         PreparedStatement ps;
         try {
             ps = plugin.getSQL().getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS widm_contestants "
-                    + "(UUID VARCHAR(128), Game VARCHAR(128), Color INTEGER(2), Player VARCHAR(128), Role Integer(1) DEFAULT 0, Kills INTEGER(3) DEFAULT 0, Death TINYINT(1) DEFAULT 0, Peacekeeper TINYINT(1) DEFAULT 0, PKKills INTEGER(2) DEFAULT 0, Spawn VARCHAR(128), PRIMARY KEY (UUID))");
+                    + "(UUID VARCHAR(128), Game VARCHAR(128), Color INTEGER(2), Player VARCHAR(128), Role Integer(1) DEFAULT 0, Kills INTEGER(3) DEFAULT 0, Death TINYINT(1) DEFAULT 0, Peacekeeper TINYINT(1) DEFAULT 0, PKKills INTEGER(2) DEFAULT 0, Spawn VARCHAR(128), Booklock TINYINT(1), PRIMARY KEY (UUID))");
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

@@ -112,6 +112,8 @@ public class PanelMenu extends GraphicalUserInterface {
             lore.add(ChatColor.translateAlternateColorCodes('&', "&8>> &f&lPeacekeeper: " + (contestant.getPeacekeeper() ? "&2&l✔" : "&4&l✘")));
             // Contestant peacekeeper kills
             lore.add(ChatColor.translateAlternateColorCodes('&', "&8>> &f&lPKKill(s): " + contestant.getPeacekeeperKills()));
+            // Contestant book lock
+            lore.add(ChatColor.translateAlternateColorCodes('&', "&8>> &f&lBook lock: " + (contestant.hasBooklock() ? "&2&l✔" : "&4&l✘")));
             // Contestant spawn
             if (contestant.getSpawn() != null) {
                 Location location = contestant.getSpawn();
