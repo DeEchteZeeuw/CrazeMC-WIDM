@@ -34,13 +34,13 @@ public class Kleuren extends Commands {
         List<String> message = new ArrayList<>();
 
         message.add(ChatColor.translateAlternateColorCodes('&',
-                "&7&m&l----------------[ " + plugin.getConfigManager().getMain().serverPrefix + " &a&lKleuren &7&m&l]----------------"));
+                "&7&m&l---------[&f " + plugin.getConfigManager().getMain().serverPrefix + " &a&lKleuren &7&m&l]---------"));
 
         int numbers = 0;
         for (Contestant contestant : game.getContestant()) {
             if (contestant.getPlayer() != null) {
                 message.add(ChatColor.translateAlternateColorCodes('&',
-                        contestant.getChatColor() + contestant.getColorName() + "&f: &5&l" + contestant.getPlayername() + ((contestant.getDeath()) ? "&2&l✔" : "&4&l✘") ));
+                        contestant.getChatColor() + contestant.getColorName() + "&f: &5&l" + contestant.getPlayername() + ((contestant.getDeath()) ? " &4&l✘" : " &2&l✔") ));
                 numbers++;
             }
         }
@@ -49,7 +49,7 @@ public class Kleuren extends Commands {
                 "&l                       &c&lGeen spelers geregistreerd!"));
 
         message.add(ChatColor.translateAlternateColorCodes('&',
-                "&7&m&l----------------[ " + plugin.getConfigManager().getMain().serverPrefix + " &a&lKleuren &7&m&l]----------------"));
+                "&7&m&l---------[&f " + plugin.getConfigManager().getMain().serverPrefix + " &a&lKleuren &7&m&l]---------"));
 
         player.sendMessage(message.toArray(new String[0]));
     }

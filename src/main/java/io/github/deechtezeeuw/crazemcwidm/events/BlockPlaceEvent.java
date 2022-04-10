@@ -11,6 +11,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.scheduler.BukkitScheduler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -126,6 +127,17 @@ public class BlockPlaceEvent implements Listener {
 
                 message.add(ChatColor.translateAlternateColorCodes('&',
                         "&7&m&l----------------[ " + plugin.getConfigManager().getMain().serverPrefix + " &c&lAfgelopen &7&m&l]----------------"));
+
+                for (Player singlePlayer : Bukkit.getServer().getWorld(game.getMap()).getPlayers()) {
+                    singlePlayer.sendMessage(message.toArray(new String[0]));
+
+                    Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+                        @Override
+                        public void run() {
+                            singlePlayer.teleport(Bukkit.getServer().getWorld("WIDM-Lobby").getSpawnLocation());
+                        }
+                    }, 200L);
+                }
             } else {
                 e.setCancelled(true);
             }
