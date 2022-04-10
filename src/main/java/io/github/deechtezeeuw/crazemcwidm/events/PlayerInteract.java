@@ -243,7 +243,8 @@ public class PlayerInteract implements Listener {
                 !bookTitle.equalsIgnoreCase("speler count") &&
                 !bookTitle.equalsIgnoreCase("pk check") &&
                 !bookTitle.equalsIgnoreCase("switch") &&
-                !bookTitle.equalsIgnoreCase("invsee")) return;
+                !bookTitle.equalsIgnoreCase("invsee") &&
+                !bookTitle.equalsIgnoreCase("itemcheck")) return;
 
         // Check if world is a game
         Game game = (plugin.getGameDataManager().worldIsPartOfGame(player.getWorld().getUID())) ? plugin.getGameDataManager().getWorldGame(player.getWorld().getUID()) : null;
@@ -294,6 +295,9 @@ public class PlayerInteract implements Listener {
                 break;
             case "invsee":
                 new Invsee().open(player);
+                break;
+            case "itemcheck":
+                new ItemCheck().open(player);
                 break;
         }
     }

@@ -148,6 +148,12 @@ public class InventoryClick implements Listener {
             return;
         }
 
+        // Click while having itemcheck gui open
+        if (ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase(ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', new ItemCheck().title())))) {
+            itemcheckMenuInteraction(e);
+            return;
+        }
+
         // Check if the world is in a game
         Player player = (Player) e.getWhoClicked();
         if (plugin.getGameDataManager().worldIsPartOfGame(player.getWorld().getUID())) {
@@ -1716,5 +1722,116 @@ public class InventoryClick implements Listener {
     // Invsee player
     protected void invseePlayerMenuInteraction(InventoryClickEvent e) {
         e.setCancelled(true);
+    }
+
+    // Itemcheck
+    protected void itemcheckMenuInteraction(InventoryClickEvent e) {
+        e.setCancelled(true);
+
+        if (e.getClickedInventory() == null) return;
+        if (e.getClickedInventory().getType() == null) return;
+
+        if (!(e.getClickedInventory().getType().equals(InventoryType.CHEST))) return;
+        Player player = (Player) e.getWhoClicked();
+
+        // Check if you are in a game
+        if (!plugin.getGameDataManager().alreadyContestant(player.getUniqueId())) return;
+        Game game = (plugin.getGameDataManager().alreadyContestant(player.getUniqueId())) ? plugin.getGameDataManager().getContestingGame(player.getUniqueId()) : null;
+
+        if (e.getInventory().getItem(e.getSlot()) == null) return;
+        ItemStack clickedItem = e.getInventory().getItem(e.getSlot());
+        // Stained glass or barrier
+        if (clickedItem.getType().equals(Material.STAINED_GLASS_PANE)) return;
+
+        // Check if its an head
+        if (clickedItem.getType().equals(Material.SKULL_ITEM)) {
+            String clickedHead = ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName()).replaceAll(" >>", "");
+
+            if (ChatColor.stripColor(clickedItem.getItemMeta().getLore().get(0)).replaceAll(">> ", "").equalsIgnoreCase(" Kies het item hieronder!")) return;
+            // Get UUID
+            UUID clickHeadUUID = (Bukkit.getServer().getPlayer(clickedHead) != null) ? Bukkit.getServer().getPlayer(clickedHead).getUniqueId() : Bukkit.getServer().getOfflinePlayer(clickedHead).getUniqueId();
+            if (clickHeadUUID == null) return;
+
+            Contestant youContestant = (game.isContestant(player.getUniqueId())) ? game.getContestant(player.getUniqueId()) : null;
+            Contestant contestant = (game.isContestant(clickHeadUUID)) ? game.getContestant(clickHeadUUID) : null;
+
+            if (contestant == null) {
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                        plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cDe gekozen speler zit niet in het spel"));
+                return;
+            }
+
+            // Check if the player is in the right world
+            if (Bukkit.getServer().getPlayer(contestant.getPlayer()) == null) {
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                        plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cDe gekozen speler is niet online!"));
+                return;
+            }
+
+            Player otherPlayer = Bukkit.getServer().getPlayer(contestant.getPlayer());
+
+            if (!otherPlayer.getWorld().getUID().equals(player.getWorld().getUID())) {
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                        plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cDe gekozen speler is niet in de juiste wereld!"));
+                return;
+            }
+
+            player.closeInventory();
+            new ItemCheck().openPlayer(player, otherPlayer);
+        } else {
+            if (clickedItem.getType().equals(Material.DIAMOND_BLOCK) || clickedItem.getType().equals(Material.GOLD_BLOCK) || clickedItem.getType().equals(Material.BOOK)) {
+                String clickedHead = ChatColor.stripColor(e.getClickedInventory().getItem(4).getItemMeta().getDisplayName()).replaceAll(" >>", "");
+
+                if (ChatColor.stripColor(clickedItem.getItemMeta().getLore().get(0)).replaceAll(">> ", "").equalsIgnoreCase(" Kies het item hieronder!")) return;
+                // Get UUID
+                UUID clickHeadUUID = (Bukkit.getServer().getPlayer(clickedHead) != null) ? Bukkit.getServer().getPlayer(clickedHead).getUniqueId() : Bukkit.getServer().getOfflinePlayer(clickedHead).getUniqueId();
+                if (clickHeadUUID == null) return;
+
+                Contestant youContestant = (game.isContestant(player.getUniqueId())) ? game.getContestant(player.getUniqueId()) : null;
+                Contestant contestant = (game.isContestant(clickHeadUUID)) ? game.getContestant(clickHeadUUID) : null;
+
+                if (contestant == null) {
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                            plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cDe gekozen speler zit niet in het spel"));
+                    return;
+                }
+
+                // Check if the player is in the right world
+                if (Bukkit.getServer().getPlayer(contestant.getPlayer()) == null) {
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                            plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cDe gekozen speler is niet online!"));
+                    return;
+                }
+
+                Player otherPlayer = Bukkit.getServer().getPlayer(contestant.getPlayer());
+
+                if (!otherPlayer.getWorld().getUID().equals(player.getWorld().getUID())) {
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                            plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cDe gekozen speler is niet in de juiste wereld!"));
+                    return;
+                }
+
+                int amount = 0;
+                for (ItemStack item : Bukkit.getServer().getPlayer(contestant.getPlayer()).getInventory().getContents()) {
+                    if (item == null || item.getType() == null) continue;
+
+                    if (item.getType().equals(clickedItem.getType())) {
+                        amount = amount + item.getAmount();
+                    }
+                }
+
+                player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);
+
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                        plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + contestant.getChatColor() + contestant.getColorName() + " &fheeft &7&l(&f&l" + amount + "&7&l) " + clickedItem.getItemMeta().getDisplayName()));
+
+                for (Player singlePlayer : player.getWorld().getPlayers()) {
+                    singlePlayer.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                            plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + youContestant.getChatColor() + youContestant.getColorName() + " &fheeft een &a&lItemcheck &fgebruikt op " + contestant.getChatColor() + contestant.getColorName()));
+                }
+
+                player.closeInventory();
+            }
+        }
     }
 }

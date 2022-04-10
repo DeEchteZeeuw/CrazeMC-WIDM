@@ -14,8 +14,44 @@ import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.ArrayList;
 
-public class Invsee extends GraphicalUserInterface {
+public class ItemCheck extends GraphicalUserInterface {
     private final CrazeMCWIDM plugin = CrazeMCWIDM.getInstance();
+
+    public void openPlayer(Player player, Player choosen) {
+        // check if user is in a game
+        if (!plugin.getGameDataManager().alreadyContestant(player.getUniqueId())) {
+            player.closeInventory();
+            return;
+        }
+
+        Game game = plugin.getGameDataManager().getContestingGame(player.getUniqueId());
+
+        Inventory gui = Bukkit.getServer().createInventory(
+                player,
+                27,
+                ChatColor.translateAlternateColorCodes('&', this.title())
+        );
+
+        // Set background
+        for (int i = 0; i < 27;i++) {
+            gui.setItem(i, this.background());
+        }
+
+        ArrayList<String> lore = new ArrayList<>();
+        lore.add(ChatColor.translateAlternateColorCodes('&', "&8>> &7Kies het item hieronder!"));
+        gui.setItem(4, this.headItem(player, null, lore));
+        lore = new ArrayList<>();
+        lore.add(ChatColor.translateAlternateColorCodes('&', "&8>> &7Klik om &b&l" + choosen.getName() + " &7te checken op diamond blocks!"));
+        gui.setItem(11, this.menuItem("&b&lDiamond block(s)", "DIAMOND_BLOCK", 1, 0, lore));
+        lore = new ArrayList<>();
+        lore.add(ChatColor.translateAlternateColorCodes('&', "&8>> &7Klik om &b&l" + choosen.getName() + " &7te checken op gold blocks!"));
+        gui.setItem(13, this.menuItem("&e&lGold block(s)", "GOLD_BLOCK", 1, 0, lore));
+        lore = new ArrayList<>();
+        lore.add(ChatColor.translateAlternateColorCodes('&', "&8>> &7Klik om &b&l" + choosen.getName() + " &7te checken op books!"));
+        gui.setItem(15, this.menuItem("&d&lBook(s)", "BOOK", 1, 0, lore));
+
+        player.openInventory(gui);
+    }
 
     @Override
     public void open(Player player) {
@@ -54,7 +90,7 @@ public class Invsee extends GraphicalUserInterface {
         }
 
         ArrayList<String> lore = new ArrayList<>();
-        lore.add(ChatColor.translateAlternateColorCodes('&', "&8>> &7Klik op deze speler om zijn/haar inventory te bekijken"));
+        lore.add(ChatColor.translateAlternateColorCodes('&', "&8>> &7Klik op deze speler om zijn/haar items te checken"));
         int place = 10;
         for (Contestant contestant : alivePlayers) {
             if (place == 17) place = place+2;
@@ -71,7 +107,7 @@ public class Invsee extends GraphicalUserInterface {
 
     @Override
     public String title() {
-        return plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&d&lInvsee";
+        return plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&a&lItemcheck";
     }
 
     @Override
