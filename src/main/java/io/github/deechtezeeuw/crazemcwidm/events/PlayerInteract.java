@@ -221,6 +221,8 @@ public class PlayerInteract implements Listener {
                                     plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cEr is iets fout gegaan!"));
                             return;
                         }
+
+                        
                         return;
                     }
                     return;
