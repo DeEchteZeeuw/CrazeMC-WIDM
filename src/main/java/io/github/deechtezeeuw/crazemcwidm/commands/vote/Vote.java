@@ -118,6 +118,12 @@ public class Vote extends Commands {
             return;
         }
         Contestant playerContestant = game.getContestant(player.getUniqueId());
+        // Check if your dead
+        if (playerContestant.getDeath()) {
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cJe bent dood en kunt dus niet stemmen!"));
+            return;
+        }
         // Check if player already voted
         if (plugin.getVoteManager().hasVoted(game.getUuid(), playerContestant.getUuid())) {
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
