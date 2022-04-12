@@ -305,8 +305,7 @@ public class PlayerInteract implements Listener {
                 int alive = 0;
 
                 for (Contestant singleContestant : game.getContestant()) {
-                    if (singleContestant.getPlayer() == null) continue;
-                    if (singleContestant.getRole() != 1) continue;
+                    if (singleContestant.getPlayer() == null || singleContestant.getRole() != 1 || singleContestant.getDeath()) continue;
                     alive++;
                 }
 
