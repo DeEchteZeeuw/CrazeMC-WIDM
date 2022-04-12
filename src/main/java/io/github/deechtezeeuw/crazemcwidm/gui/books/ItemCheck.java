@@ -39,7 +39,7 @@ public class ItemCheck extends GraphicalUserInterface {
 
         ArrayList<String> lore = new ArrayList<>();
         lore.add(ChatColor.translateAlternateColorCodes('&', "&8>> &7Kies het item hieronder!"));
-        gui.setItem(4, this.headItem(player, null, lore));
+        gui.setItem(4, this.headItem(choosen, null, lore));
         lore = new ArrayList<>();
         lore.add(ChatColor.translateAlternateColorCodes('&', "&8>> &7Klik om &b&l" + choosen.getName() + " &7te checken op diamond blocks!"));
         gui.setItem(11, this.menuItem("&b&lDiamond block(s)", "DIAMOND_BLOCK", 1, 0, lore));

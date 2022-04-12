@@ -39,7 +39,7 @@ public class ItemClear extends GraphicalUserInterface {
 
         ArrayList<String> lore = new ArrayList<>();
         lore.add(ChatColor.translateAlternateColorCodes('&', "&8>> &7Kies het item hieronder!"));
-        gui.setItem(4, this.headItem(player, null, lore));
+        gui.setItem(4, this.headItem(choosen, null, lore));
         lore = new ArrayList<>();
         lore.add(ChatColor.translateAlternateColorCodes('&', "&8>> &7Klik om &b&l" + choosen.getName() + " &7zijn block(s) te verwijderen!"));
         gui.setItem(11, this.menuItem("&b&lBlock(s)", "DIAMOND_BLOCK", 1, 0, lore));
