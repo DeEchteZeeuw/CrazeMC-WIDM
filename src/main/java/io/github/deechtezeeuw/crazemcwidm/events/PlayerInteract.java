@@ -3,6 +3,7 @@ package io.github.deechtezeeuw.crazemcwidm.events;
 import io.github.deechtezeeuw.crazemcwidm.CrazeMCWIDM;
 import io.github.deechtezeeuw.crazemcwidm.classes.Contestant;
 import io.github.deechtezeeuw.crazemcwidm.classes.Game;
+import io.github.deechtezeeuw.crazemcwidm.classes.Peacekeeper;
 import io.github.deechtezeeuw.crazemcwidm.gui.books.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -222,7 +223,17 @@ public class PlayerInteract implements Listener {
                             return;
                         }
 
-                        
+                        // Peacekeeper armor
+                        player.getInventory().setHelmet(new Peacekeeper().helmet());
+                        player.getInventory().setChestplate(new Peacekeeper().chestplate());
+                        player.getInventory().setLeggings(new Peacekeeper().leggings());
+                        player.getInventory().setBoots(new Peacekeeper().leggings());
+                        player.getInventory().setItemInOffHand(new Peacekeeper().sword());
+
+                        for (Player singlePlayer : Bukkit.getServer().getWorld(game.getMap()).getPlayers()) {
+                            singlePlayer.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + contestant.getChatColor() + contestant.getColorName() + " &fis de &bPeacekeeper &fgeworden! Hij/zij moet 2 kills maken."));
+                        }
                         return;
                     }
                     return;
