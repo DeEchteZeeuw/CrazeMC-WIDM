@@ -58,15 +58,7 @@ public class PlayerDeath implements Listener {
                     }
 
                     try {
-                        if ((killerWasContestant.getPeacekeeper())) {
-
-                            game.updateContestant(killerWasContestant);
-                            if (killerWasContestant.getPeacekeeperKills() >= 2) {
-                                game.updateContestant(killerWasContestant);
-                            }
-                        } else {
-                            game.updateContestant(killerWasContestant);
-                        }
+                        game.updateContestant(killerWasContestant);
                     } catch (Exception ex) {
                         ex.printStackTrace();
                         return;
@@ -74,6 +66,10 @@ public class PlayerDeath implements Listener {
                     for (Player player : world.getPlayers()) {
                         player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                                 plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + deadPlayerWasContestant.getChatColor() + deadPlayerWasContestant.getColorName() + " &f is vermoord door " + killerWasContestant.getChatColor() + killerWasContestant.getColorName()));
+                        if (killerWasContestant.getPeacekeeper()) {
+                            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&fDe &bPeacekeeper heeft &7&l(" + killerWasContestant.getPeacekeeperKills() + "&7&l) &fkills gemaakt"));
+                        }
                     }
                     return;
                 }

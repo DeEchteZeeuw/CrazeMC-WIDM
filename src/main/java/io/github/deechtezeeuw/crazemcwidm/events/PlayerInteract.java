@@ -84,6 +84,19 @@ public class PlayerInteract implements Listener {
         Block clickedBlock = e.getClickedBlock();
         if (clickedBlock.getType() == null) return;
 
+        // door click
+        if (game.isContestant(player.getUniqueId()) && (clickedBlock.getType().equals(Material.ACACIA_DOOR) ||
+                clickedBlock.getType().equals(Material.DARK_OAK_DOOR) ||
+                clickedBlock.getType().equals(Material.BIRCH_DOOR) ||
+                clickedBlock.getType().equals(Material.JUNGLE_DOOR)) ||
+                clickedBlock.getType().equals(Material.SPRUCE_DOOR) ||
+                clickedBlock.getType().equals(Material.TRAP_DOOR) ||
+                clickedBlock.getType().equals(Material.WOOD_DOOR) ||
+                clickedBlock.getType().equals(Material.WOODEN_DOOR)) {
+            e.setCancelled(true);
+            return;
+        }
+
         // Check if player is interacting with shulker
         if (shulkers.contains(clickedBlock.getType())) checkIfUserCanOpenShulker(e, game, player, clickedBlock);
 
