@@ -52,6 +52,13 @@ public class PlayerInteract implements Listener {
         Game game = (plugin.getGameDataManager().worldIsPartOfGame(player.getWorld().getUID())) ? plugin.getGameDataManager().getWorldGame(player.getWorld().getUID()) : null;
         if (game == null) return;
 
+        if (!game.isContestant(player.getUniqueId()) && !game.isHost(player.getUniqueId())) {
+            e.setCancelled(true);
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cJe mag dit alleen doen als je in het spel zit!"));
+            return;
+        }
+
         Contestant contestant = null;
         for (Contestant singleContestant : game.getContestant()) {
             if (singleContestant.getPlayer() == null) continue;
@@ -81,30 +88,30 @@ public class PlayerInteract implements Listener {
         if (shulkers.contains(clickedBlock.getType())) checkIfUserCanOpenShulker(e, game, player, clickedBlock);
 
         // Check if player is interacting with chest while not playing
-        if ((contestant.getPeacekeeper() || game.getGameStatus() != 1) && clickedBlock.getType().equals(Material.CHEST) ||
-                (contestant.getPeacekeeper() || game.getGameStatus() != 1) && clickedBlock.getType().equals(Material.TRAPPED_CHEST) ||
-                (contestant.getPeacekeeper() || game.getGameStatus() != 1) && clickedBlock.getType().equals(Material.HOPPER) ||
-                (contestant.getPeacekeeper() || game.getGameStatus() != 1) && clickedBlock.getType().equals(Material.HOPPER_MINECART) ||
-                (contestant.getPeacekeeper() || game.getGameStatus() != 1) && clickedBlock.getType().equals(Material.ANVIL) ||
-                (contestant.getPeacekeeper() || game.getGameStatus() != 1) && clickedBlock.getType().equals(Material.WORKBENCH) ||
-                (contestant.getPeacekeeper() || game.getGameStatus() != 1) && clickedBlock.getType().equals(Material.ENCHANTMENT_TABLE) ||
-                (contestant.getPeacekeeper() || game.getGameStatus() != 1) && clickedBlock.getType().equals(Material.ENDER_CHEST) ||
-                (contestant.getPeacekeeper() || game.getGameStatus() != 1) && clickedBlock.getType().equals(Material.FURNACE) ||
-                (contestant.getPeacekeeper() || game.getGameStatus() != 1) && clickedBlock.getType().equals(Material.BURNING_FURNACE) ||
-                (contestant.getPeacekeeper() || game.getGameStatus() != 1) && clickedBlock.getType().equals(Material.BED) ||
-                (contestant.getPeacekeeper() || game.getGameStatus() != 1) && clickedBlock.getType().equals(Material.DISPENSER) ||
-                (contestant.getPeacekeeper() || game.getGameStatus() != 1) && clickedBlock.getType().equals(Material.DROPPER) ||
-                (contestant.getPeacekeeper() || game.getGameStatus() != 1) && clickedBlock.getType().equals(Material.OBSERVER) ||
-                (contestant.getPeacekeeper() || game.getGameStatus() != 1) && clickedBlock.getType().equals(Material.MINECART) ||
-                (contestant.getPeacekeeper() || game.getGameStatus() != 1) && clickedBlock.getType().equals(Material.COMMAND_MINECART) ||
-                (contestant.getPeacekeeper() || game.getGameStatus() != 1) && clickedBlock.getType().equals(Material.EXPLOSIVE_MINECART) ||
-                (contestant.getPeacekeeper() || game.getGameStatus() != 1) && clickedBlock.getType().equals(Material.STORAGE_MINECART) ||
-                (contestant.getPeacekeeper() || game.getGameStatus() != 1) && clickedBlock.getType().equals(Material.BOAT) ||
-                (contestant.getPeacekeeper() || game.getGameStatus() != 1) && clickedBlock.getType().equals(Material.BOAT_ACACIA) ||
-                (contestant.getPeacekeeper() || game.getGameStatus() != 1) && clickedBlock.getType().equals(Material.BOAT_BIRCH) ||
-                (contestant.getPeacekeeper() || game.getGameStatus() != 1) && clickedBlock.getType().equals(Material.BOAT_DARK_OAK) ||
-                (contestant.getPeacekeeper() || game.getGameStatus() != 1) && clickedBlock.getType().equals(Material.BOAT_JUNGLE) ||
-                (contestant.getPeacekeeper() || game.getGameStatus() != 1) && clickedBlock.getType().equals(Material.BOAT_SPRUCE)) {
+        if ((contestant.getPeacekeeper() || contestant.getDeath() || game.getGameStatus() != 1) && clickedBlock.getType().equals(Material.CHEST) ||
+                (contestant.getPeacekeeper() || contestant.getDeath() || game.getGameStatus() != 1) && clickedBlock.getType().equals(Material.TRAPPED_CHEST) ||
+                (contestant.getPeacekeeper() || contestant.getDeath() || game.getGameStatus() != 1) && clickedBlock.getType().equals(Material.HOPPER) ||
+                (contestant.getPeacekeeper() || contestant.getDeath() || game.getGameStatus() != 1) && clickedBlock.getType().equals(Material.HOPPER_MINECART) ||
+                (contestant.getPeacekeeper() || contestant.getDeath() || game.getGameStatus() != 1) && clickedBlock.getType().equals(Material.ANVIL) ||
+                (contestant.getPeacekeeper() || contestant.getDeath() || game.getGameStatus() != 1) && clickedBlock.getType().equals(Material.WORKBENCH) ||
+                (contestant.getPeacekeeper() || contestant.getDeath() || game.getGameStatus() != 1) && clickedBlock.getType().equals(Material.ENCHANTMENT_TABLE) ||
+                (contestant.getPeacekeeper() || contestant.getDeath() || game.getGameStatus() != 1) && clickedBlock.getType().equals(Material.ENDER_CHEST) ||
+                (contestant.getPeacekeeper() || contestant.getDeath() || game.getGameStatus() != 1) && clickedBlock.getType().equals(Material.FURNACE) ||
+                (contestant.getPeacekeeper() || contestant.getDeath() || game.getGameStatus() != 1) && clickedBlock.getType().equals(Material.BURNING_FURNACE) ||
+                (contestant.getPeacekeeper() || contestant.getDeath() || game.getGameStatus() != 1) && clickedBlock.getType().equals(Material.BED) ||
+                (contestant.getPeacekeeper() || contestant.getDeath() || game.getGameStatus() != 1) && clickedBlock.getType().equals(Material.DISPENSER) ||
+                (contestant.getPeacekeeper() || contestant.getDeath() || game.getGameStatus() != 1) && clickedBlock.getType().equals(Material.DROPPER) ||
+                (contestant.getPeacekeeper() || contestant.getDeath() || game.getGameStatus() != 1) && clickedBlock.getType().equals(Material.OBSERVER) ||
+                (contestant.getPeacekeeper() || contestant.getDeath() || game.getGameStatus() != 1) && clickedBlock.getType().equals(Material.MINECART) ||
+                (contestant.getPeacekeeper() || contestant.getDeath() || game.getGameStatus() != 1) && clickedBlock.getType().equals(Material.COMMAND_MINECART) ||
+                (contestant.getPeacekeeper() || contestant.getDeath() || game.getGameStatus() != 1) && clickedBlock.getType().equals(Material.EXPLOSIVE_MINECART) ||
+                (contestant.getPeacekeeper() || contestant.getDeath() || game.getGameStatus() != 1) && clickedBlock.getType().equals(Material.STORAGE_MINECART) ||
+                (contestant.getPeacekeeper() || contestant.getDeath() || game.getGameStatus() != 1) && clickedBlock.getType().equals(Material.BOAT) ||
+                (contestant.getPeacekeeper() || contestant.getDeath() || game.getGameStatus() != 1) && clickedBlock.getType().equals(Material.BOAT_ACACIA) ||
+                (contestant.getPeacekeeper() || contestant.getDeath() || game.getGameStatus() != 1) && clickedBlock.getType().equals(Material.BOAT_BIRCH) ||
+                (contestant.getPeacekeeper() || contestant.getDeath() || game.getGameStatus() != 1) && clickedBlock.getType().equals(Material.BOAT_DARK_OAK) ||
+                (contestant.getPeacekeeper() || contestant.getDeath() || game.getGameStatus() != 1) && clickedBlock.getType().equals(Material.BOAT_JUNGLE) ||
+                (contestant.getPeacekeeper() || contestant.getDeath() || game.getGameStatus() != 1) && clickedBlock.getType().equals(Material.BOAT_SPRUCE)) {
             e.setCancelled(true);
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
                     plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cJe kan geen dit niet gebruiken!"));
