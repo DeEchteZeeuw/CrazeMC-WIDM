@@ -127,7 +127,7 @@ public class PlayerInteract implements Listener {
                 (contestant.getPeacekeeper() || contestant.getDeath() || game.getGameStatus() != 1) && clickedBlock.getType().equals(Material.BOAT_SPRUCE)) {
             e.setCancelled(true);
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cJe kan geen dit niet gebruiken!"));
+                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cJe kan dit niet gebruiken!"));
         }
     }
 
@@ -164,7 +164,7 @@ public class PlayerInteract implements Listener {
         if (contestant.getPeacekeeper()) {
             e.setCancelled(true);
             player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cJe kan geen dit niet gebruiken!"));
+                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + "&cJe kan dit niet gebruiken!"));
             return;
         }
 
