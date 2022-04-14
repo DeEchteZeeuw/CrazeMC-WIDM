@@ -23,7 +23,7 @@ public class BowsMenu extends GraphicalUserInterface {
 
     @Override
     public void open(Player player) {
-        Game game = plugin.getSQL().sqlSelect.playerHostGame(player.getUniqueId());
+        Game game = (plugin.getGameDataManager().alreadyHosting(player.getUniqueId())) ? plugin.getGameDataManager().getHostingGame(player.getUniqueId()) : null;
 
         if (game == null) {
             player.closeInventory();

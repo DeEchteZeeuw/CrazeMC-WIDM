@@ -114,7 +114,7 @@ public class NonLeatherMenu extends GraphicalUserInterface {
         if (page == 0) this.open(player);
 
         if (page > 0) {
-            Game game = plugin.getSQL().sqlSelect.playerHostGame(player.getUniqueId());
+            Game game = (plugin.getGameDataManager().alreadyHosting(player.getUniqueId())) ? plugin.getGameDataManager().getHostingGame(player.getUniqueId()) : null;
 
             if (game == null) {
                 player.closeInventory();
