@@ -1597,10 +1597,13 @@ public class InventoryClick implements Listener {
         }
 
         if (contestant == null) return;
+        Contestant youContestant = game.getContestant(player.getUniqueId());
 
         String text = (contestant.getPeacekeeper()) ? "&2&lwel" : "&4&lniet";
-        player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-                plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + contestant.getChatColor() + contestant.getPlayername() + " &fis " + text + " &fde &bPeacekeeper" ));
+        for (Player singlePlayer : Bukkit.getServer().getWorld(game.getMap()).getPlayers()) {
+            singlePlayer.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    plugin.getConfigManager().getMain().serverPrefix + plugin.getConfigManager().getMain().serverDivider + youContestant.getChatColor() + youContestant.getPlayername() + " &fheeft een PK check gedaan op " + contestant.getChatColor() + contestant.getPlayername() + " &fen hij/zij is " + text + " &fde &bPeacekeeper" ));
+        }
         player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);
     }
 
